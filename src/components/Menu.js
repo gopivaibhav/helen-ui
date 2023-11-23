@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 const Menu = ({ setTopic, setIsActive = () => {} }) => {
   return (
     <div className="menu-container App">
-      <div className="menu-text">What’s on your mind?</div>
+      <div className="menu-text">What's on your mind?</div>
       {/* <Link to="helen"> */}
       <MenuItem
         setTopic={setTopic}
