@@ -5,11 +5,27 @@ import { useEffect, useState } from "react";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-const Helen = ({ topic }) => {
+const Helen = ({ topic = "" }) => {
   const { transcript, listening } = useSpeechRecognition();
   const [response, setResponse] = useState();
   const [chat, setChat] = useState([]);
   const [helenIcon, setHelenIcon] = useState("");
+  const [fullText, setFullText] = useState("");
+  useEffect(() => {
+    let currentIndex = 0;
+    setTimeout(() => {
+      const intervalId = setInterval(() => {
+        if (currentIndex <= fullText.length) {
+          setResponse(fullText.substring(0, currentIndex));
+          currentIndex++;
+        } else {
+          clearInterval(intervalId);
+        }
+      }, 50); // Adjust the interval time as needed
+      return () => clearInterval(intervalId); // Cleanup on component unmount
+    }, 4000);
+    console.log(fullText);
+  }, [fullText]);
   useEffect(() => {
     console.log(listening);
     if (!listening) {
@@ -29,7 +45,7 @@ const Helen = ({ topic }) => {
       SpeechRecognition.startListening({ language: "en-UK", continuos: true });
       console.log("listening>>>>>>>>>> ", listening);
     }, 3000);
-  }; 
+  };
 
   useEffect(() => {
     callAudio();
@@ -53,7 +69,7 @@ const Helen = ({ topic }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          chat: chat
+          chat: chat,
         }),
       })
         .then((data) => {
@@ -61,14 +77,14 @@ const Helen = ({ topic }) => {
         })
         .then((data) => {
           console.log(data);
-          setResponse(data.AI);
           const audio = new Audio(
             `${process.env.REACT_APP_PORT}/file/${data.filename}`
           );
           audio.muted = false;
           setHelenIcon("./03.svg");
           audio.play();
-          setChat((prev) => [...prev, { "role": "assistant", "content": data.AI }]);
+          setFullText(data.AI);
+          setChat((prev) => [...prev, { role: "assistant", content: data.AI }]);
           audio.onended = () => {
             console.log("ended");
             callAudio();
@@ -119,7 +135,7 @@ const Helen = ({ topic }) => {
             width: "100%",
             textAlign: "center",
             color: "black",
-            fontSize: 32,
+            fontSize: 18,
             fontFamily: "Nunito Sans",
             fontWeight: "900",
             wordWrap: "break-word",
@@ -129,16 +145,12 @@ const Helen = ({ topic }) => {
           <br />
           {chat.map((item) => {
             return (
-              <div style={{fontSize: '15px'}}>
-                Chat so far with Helen- 
+              <div style={{ fontSize: "15px" }}>
+                Chat so far with Helen-
                 {item.role === "user" ? (
-                  <div>
-                    USER - {item.content}
-                  </div>
+                  <div>USER - {item.content}</div>
                 ) : (
-                  <div>
-                    HELEN - {item.content}
-                  </div>
+                  <div>HELEN - {item.content}</div>
                 )}
               </div>
             );

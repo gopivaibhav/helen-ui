@@ -9,11 +9,12 @@ const Layout = () => {
   return (
     <div className="App">
       <Header setIsActive={setIsActive}/>
-      {isActive === true ? (
+      <Helen/>
+      {/* {isActive === true ? (
         <Helen topic = {topic}/>
       ) : (
         <Menu setTopic = {setTopic} setIsActive={setIsActive} />
-      )}
+      )} */}
     </div>
   );
 };
