@@ -100,7 +100,7 @@ const Helen = ({ topic = "" }) => {
           <div className={helenRippleEffect ? "ripple-effect-helen" : ""} />
           <img
             style={{ width: "200px", height: "200px", borderRadius: 9999 }}
-            src="./helen-photo.png"
+            src="./helen.jpeg"
             alt="helen"
           />
         </div>
@@ -121,7 +121,7 @@ const Helen = ({ topic = "" }) => {
           />
         )}
       </div>
-      <div style={{ position: "absolute", right: 10, bottom: "20vh", }}>
+      <div style={{ position: "absolute", right: 10, bottom: "20vh" }}>
         <div className={userRippleEffect ? "ripple-effect-user" : ""} />
         <img
           style={{
@@ -149,7 +149,7 @@ const Helen = ({ topic = "" }) => {
           margin: 0,
         }}
       >
-        <div
+        <button
           onClick={() => {
             SpeechRecognition.startListening({
               language: "en-UK",
@@ -177,7 +177,7 @@ const Helen = ({ topic = "" }) => {
           >
             Start
           </div>
-        </div>
+        </button>
       </div>
     </>
   );
