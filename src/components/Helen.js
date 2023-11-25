@@ -32,9 +32,9 @@ const Helen = ({ topic = "" }) => {
     }, 3000);
   };
 
-  useEffect(() => {
-    callAudio();
-  }, []);
+  // useEffect(() => {
+  //   callAudio();
+  // }, []);
 
   if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
     return (
@@ -163,21 +163,15 @@ const Helen = ({ topic = "" }) => {
             height: "61px",
             background: "white",
             borderRadius: 14,
-            borderColor: "white"
+            borderColor: "white",
+            textAlign: "center",
+            color: "#FF7777",
+            fontSize: 40,
+            fontFamily: "Nunito Sans",
+            fontWeight: "700",
+            wordWrap: "break-word",
           }}
-        >
-          <div
-            style={{
-              textAlign: "center",
-              color: "#FF7777",
-              fontSize: 40,
-              fontFamily: "Nunito Sans",
-              fontWeight: "700",
-              wordWrap: "break-word",
-            }}
-          >
-            Start
-          </div>
+        >Start
         </button>
       </div>
     </>
