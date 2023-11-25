@@ -7,40 +7,25 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 const Helen = ({ topic = "" }) => {
   const { transcript, listening } = useSpeechRecognition();
-  const [response, setResponse] = useState();
+  const [loader, setLoader] = useState(false);
   const [chat, setChat] = useState([]);
-  const [helenIcon, setHelenIcon] = useState("");
-  const [fullText, setFullText] = useState("");
-  useEffect(() => {
-    let currentIndex = 0;
-    setTimeout(() => {
-      const intervalId = setInterval(() => {
-        if (currentIndex <= fullText.length) {
-          setResponse(fullText.substring(0, currentIndex));
-          currentIndex++;
-        } else {
-          clearInterval(intervalId);
-        }
-      }, 50); // Adjust the interval time as needed
-      return () => clearInterval(intervalId); // Cleanup on component unmount
-    }, 4000);
-    console.log(fullText);
-  }, [fullText]);
+  const [helenRippleEffect, setHelenRippleEffect] = useState(false);
+  const [userRippleEffect, setUserRippleEffect] = useState(false);
+
   useEffect(() => {
     console.log(listening);
     if (!listening) {
       console.log("sent an API request", transcript);
-      setHelenIcon("./02.svg");
+      setUserRippleEffect(false);
       handleRequest();
     } else {
-      setHelenIcon("./01.gif");
     }
   }, [listening]);
   const callAudio = () => {
     setTimeout(() => {
       console.log("started listening");
+      setUserRippleEffect(true);
       if (listening) {
-        setHelenIcon("./03.svg");
       }
       SpeechRecognition.startListening({ language: "en-UK", continuos: true });
       console.log("listening>>>>>>>>>> ", listening);
@@ -62,8 +47,9 @@ const Helen = ({ topic = "" }) => {
   const handleRequest = () => {
     console.log(transcript);
     if (transcript && transcript.length >= 2) {
-      setChat((prev) => [...prev, { "role": "user", "content": transcript }]);
-      fetch(`${process.env.REACT_APP_PORT}/checkaudio?q=${transcript}`, {
+      setChat((prev) => [...prev, { role: "user", content: transcript }]);
+      setLoader(true);
+      fetch(`https://therapy-iiitl.koyeb.app/checkaudio?q=${transcript}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -78,18 +64,19 @@ const Helen = ({ topic = "" }) => {
         .then((data) => {
           console.log(data);
           const audio = new Audio(
-            `${process.env.REACT_APP_PORT}/file/${data.filename}`
+            `https://therapy-iiitl.koyeb.app/file/${data.filename}`
           );
           audio.muted = false;
-          setHelenIcon("./03.svg");
+
           audio.play();
-          setFullText(data.AI);
+          setHelenRippleEffect(true);
+          setLoader(false);
           setChat((prev) => [...prev, { role: "assistant", content: data.AI }]);
           audio.onended = () => {
             console.log("ended");
+            setHelenRippleEffect(false);
             callAudio();
           };
-          setHelenIcon("./02.svg");
         });
     }
   };
@@ -104,6 +91,65 @@ const Helen = ({ topic = "" }) => {
         }}
       >
         <div
+          style={{
+            borderRadius: " 50%",
+            border: "none",
+            outline: "none",
+          }}
+        >
+          <div className={helenRippleEffect ? "ripple-effect-helen" : ""} />
+          <img
+            style={{ width: "200px", height: "200px", borderRadius: 9999 }}
+            src="./helen-photo.png"
+            alt="helen"
+          />
+        </div>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "99px",
+        }}
+      >
+        {loader && (
+          <img
+            style={{ width: "99px", height: "99px" }}
+            src="./loader.gif"
+            alt="loader"
+          />
+        )}
+      </div>
+      <div style={{ position: "absolute", right: 10, bottom: "20vh", }}>
+        <div className={userRippleEffect ? "ripple-effect-user" : ""} />
+        <img
+          style={{
+            width: "90px",
+            height: "90px",
+            background: "grey",
+            borderRadius: 5,
+          }}
+          src="./user.png"
+          alt="helen"
+        />
+      </div>
+      <div
+        style={{
+          width: "100%",
+          height: "100px",
+          background: "#FF7777",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          padding: 0,
+          margin: 0,
+        }}
+      >
+        <div
           onClick={() => {
             SpeechRecognition.startListening({
               language: "en-UK",
@@ -112,51 +158,27 @@ const Helen = ({ topic = "" }) => {
             console.log("listening");
             console.log(listening);
           }}
-        >
-          <img src={helenIcon} alt="voice assistant" />
-        </div>
-      </div>
-      <div
-        style={{
-          width: "100%",
-          textAlign: "center",
-          color: "black",
-          fontSize: 24,
-          fontFamily: "Nunito Sans",
-          fontWeight: "400",
-          wordWrap: "break-word",
-        }}
-      >
-        {transcript}
-      </div>
-      {response && (
-        <div
           style={{
-            width: "100%",
-            textAlign: "center",
-            color: "black",
-            fontSize: 18,
-            fontFamily: "Nunito Sans",
-            fontWeight: "900",
-            wordWrap: "break-word",
+            width: "238px",
+            height: "61px",
+            background: "white",
+            borderRadius: 14,
           }}
         >
-          Helen Response - {response}
-          <br />
-          {chat.map((item) => {
-            return (
-              <div style={{ fontSize: "15px" }}>
-                Chat so far with Helen-
-                {item.role === "user" ? (
-                  <div>USER - {item.content}</div>
-                ) : (
-                  <div>HELEN - {item.content}</div>
-                )}
-              </div>
-            );
-          })}
+          <div
+            style={{
+              textAlign: "center",
+              color: "#FF7777",
+              fontSize: 40,
+              fontFamily: "Nunito Sans",
+              fontWeight: "700",
+              wordWrap: "break-word",
+            }}
+          >
+            Start
+          </div>
         </div>
-      )}
+      </div>
     </>
   );
 };

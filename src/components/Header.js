@@ -6,7 +6,7 @@ const Header = ({ setIsActive }) => {
   };
   return (
     <>
-      <button
+      {/* <button
         onClick={handleClick}
         style={{
           position: "absolute",
@@ -30,13 +30,13 @@ const Header = ({ setIsActive }) => {
           src="https://widget.collegeit.org/icons/close.svg"
           alt="close button"
         />{" "}
-      </button>
+      </button> */}
       <div
         style={{
           textAlign: "center",
           color: "black",
-          padding: "50px 0",
-          fontSize: 60,
+          padding: "20px 0",
+          fontSize: 50,
           fontWeight: "700",
           wordWrap: "break-word",
         }}
