@@ -163,6 +163,7 @@ const Helen = ({ topic = "" }) => {
             height: "61px",
             background: "white",
             borderRadius: 14,
+            borderColor: "white"
           }}
         >
           <div
