@@ -1,17 +1,20 @@
 import React from "react";
+import RefreshIcon from "@mui/icons-material/Refresh";
 
 const Header = ({ setIsActive }) => {
-  const handleClick = () => {
-    setIsActive(false);
+  // const handleClick = () => {
+  //   setIsActive(false);
+  // };
+  const RefreshHandler = () => {
+    window.location.reload();
   };
   return (
     <>
-      {/* <button
-        onClick={handleClick}
+      <button
         style={{
           position: "absolute",
           top: "0",
-          right: "25px",
+          right: "5px",
           margin: "1rem",
           cursor: "pointer",
           outline: "none",
@@ -25,12 +28,8 @@ const Header = ({ setIsActive }) => {
           marginRight: "0.5rem",
         }}
       >
-        {" "}
-        <img
-          src="https://widget.collegeit.org/icons/close.svg"
-          alt="close button"
-        />{" "}
-      </button> */}
+        <RefreshIcon onClick={RefreshHandler}/>
+      </button>
       <div
         style={{
           textAlign: "center",

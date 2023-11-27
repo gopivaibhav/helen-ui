@@ -1,6 +1,5 @@
 import React from "react";
 import "../styles/Menu.css";
-
 import { useEffect, useState } from "react";
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -11,7 +10,7 @@ const Helen = ({ topic = "" }) => {
   const [chat, setChat] = useState([]);
   const [helenRippleEffect, setHelenRippleEffect] = useState(false);
   const [userRippleEffect, setUserRippleEffect] = useState(false);
-
+  const [changeButtonFunction, setChangeButtonFunction] = useState(true);
   useEffect(() => {
     console.log(listening);
     if (!listening) {
@@ -43,6 +42,24 @@ const Helen = ({ topic = "" }) => {
       </div>
     );
   }
+  
+  const ChangeButtonFunctionHandler = () => {
+    if (changeButtonFunction) {
+      SpeechRecognition.startListening({
+        language: "en-UK",
+        continuos: true,
+      });
+      console.log("listening");
+      console.log(listening);
+    } else {
+      SpeechRecognition.abortListening({
+        language: "en-UK",
+      });
+      console.log("listening abort");
+      console.log(listening);
+    }
+    setChangeButtonFunction(!changeButtonFunction);
+  };
 
   const handleRequest = () => {
     console.log(transcript);
@@ -99,7 +116,12 @@ const Helen = ({ topic = "" }) => {
         >
           <div className={helenRippleEffect ? "ripple-effect-helen" : ""} />
           <img
-            style={{ width: "200px", height: "200px", borderRadius: 9999 }}
+            style={{
+              width: "200px",
+              height: "200px",
+              borderRadius: 9999,
+              boxShadow: "0px 1px 30px rgba(0, 0, 0, 0.2)",
+            }}
             src="./helen.jpeg"
             alt="helen"
           />
@@ -111,15 +133,31 @@ const Helen = ({ topic = "" }) => {
           justifyContent: "center",
           alignItems: "center",
           height: "99px",
+          marginTop: "7px",
         }}
       >
         {loader && (
           <img
-            style={{ width: "99px", height: "99px" }}
+            style={{ width: "99px", height: "99px"}}
             src="./loader.gif"
             alt="loader"
           />
         )}
+      </div>
+      <div
+        style={{
+          width: "100%",
+          height: "40vh",
+          textAlign: "center",
+          color: "black",
+          fontSize: 18,
+          fontFamily: "Nunito Sans",
+          fontWeight: "400",
+          wordWrap: "break-word",
+          marginBottom: 10
+        }}
+      >
+        {transcript}
       </div>
       <div style={{ position: "absolute", right: 10, bottom: "20vh" }}>
         <div className={userRippleEffect ? "ripple-effect-user" : ""} />
@@ -150,14 +188,7 @@ const Helen = ({ topic = "" }) => {
         }}
       >
         <button
-          onClick={() => {
-            SpeechRecognition.startListening({
-              language: "en-UK",
-              continuos: true,
-            });
-            console.log("listening");
-            console.log(listening);
-          }}
+          onClick={ChangeButtonFunctionHandler}
           style={{
             width: "238px",
             height: "61px",
@@ -171,7 +202,8 @@ const Helen = ({ topic = "" }) => {
             fontWeight: "700",
             wordWrap: "break-word",
           }}
-        >Start
+        >
+          {changeButtonFunction ? "Start" : "Stop"}
         </button>
       </div>
     </>
