@@ -132,19 +132,19 @@ const Helen = ({ topic = "" }) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "99px",
-          marginTop: "7px",
+          height: "60px",
+          marginTop: "27px",
         }}
       >
         {loader && (
           <img
-            style={{ width: "99px", height: "99px"}}
+            style={{ width: "60px", height: "60px"}}
             src="./loader.gif"
             alt="loader"
           />
         )}
       </div>
-      <div
+      {/* <div
         style={{
           width: "100%",
           height: "40vh",
@@ -158,7 +158,7 @@ const Helen = ({ topic = "" }) => {
         }}
       >
         {transcript}
-      </div>
+      </div> */}
       <div style={{ position: "absolute", right: 10, bottom: "20vh" }}>
         <div className={userRippleEffect ? "ripple-effect-user" : ""} />
         <img
