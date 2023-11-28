@@ -7,6 +7,7 @@ import SpeechRecognition, {
 const Helen = ({ topic = "" }) => {
   const { transcript, listening } = useSpeechRecognition();
   const [loader, setLoader] = useState(false);
+  const [listeningLoader, setListeningLoader] = useState(false);
   const [chat, setChat] = useState([]);
   const [helenRippleEffect, setHelenRippleEffect] = useState(false);
   const [userRippleEffect, setUserRippleEffect] = useState(false);
@@ -16,6 +17,7 @@ const Helen = ({ topic = "" }) => {
     if (!listening) {
       console.log("sent an API request", transcript);
       setUserRippleEffect(false);
+      setListeningLoader(false);
       handleRequest();
     } else {
     }
@@ -24,6 +26,7 @@ const Helen = ({ topic = "" }) => {
     setTimeout(() => {
       console.log("started listening");
       setUserRippleEffect(true);
+      setListeningLoader(true);
       if (listening) {
       }
       SpeechRecognition.startListening({ language: "en-UK", continuos: true });
@@ -42,9 +45,10 @@ const Helen = ({ topic = "" }) => {
       </div>
     );
   }
-  
+
   const ChangeButtonFunctionHandler = () => {
     if (changeButtonFunction) {
+      setListeningLoader(true);
       SpeechRecognition.startListening({
         language: "en-UK",
         continuos: true,
@@ -138,10 +142,13 @@ const Helen = ({ topic = "" }) => {
       >
         {loader && (
           <img
-            style={{ width: "60px", height: "60px"}}
+            style={{ width: "60px", height: "60px" }}
             src="./loader.gif"
             alt="loader"
           />
+        )}
+        {listeningLoader && (
+          <span className="fade-in-text">Listening...</span>
         )}
       </div>
       {/* <div

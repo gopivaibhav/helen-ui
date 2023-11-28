@@ -92,3 +92,18 @@
   background-color: #222225;
   animation: ripple-animation 2s ease-in-out 1s infinite forwards;
 }
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.fade-in-text {
+  opacity: 0; /* Set initial opacity to 0 */
+  animation: fadeIn 3s infinite; /* Apply the fadeIn animation with a duration of 3 seconds and infinite iteration */
+}
