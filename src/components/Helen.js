@@ -31,7 +31,7 @@ const Helen = ({ topic = "" }) => {
       }
       SpeechRecognition.startListening({ language: "en-UK", continuos: true });
       console.log("listening>>>>>>>>>> ", listening);
-    }, 0);
+    }, 1000);
   };
 
   // useEffect(() => {
