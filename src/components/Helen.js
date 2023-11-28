@@ -148,7 +148,7 @@ const Helen = ({ topic = "" }) => {
           />
         )}
         {listeningLoader && (
-          <span className="fade-in-text">Listening...</span>
+          <span className="fade-in-text" style={{fontSize: "24px"}}>Listening...</span>
         )}
       </div>
       {/* <div
