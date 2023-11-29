@@ -31,7 +31,7 @@ const Helen = ({ topic = "" }) => {
       }
       SpeechRecognition.startListening({ language: "en-UK", continuos: true });
       console.log("listening>>>>>>>>>> ", listening);
-    }, 3000);
+    }, 1000);
   };
 
   // useEffect(() => {
@@ -92,12 +92,12 @@ const Helen = ({ topic = "" }) => {
           audio.play();
           setHelenRippleEffect(true);
           setLoader(false);
-          setChat((prev) => [...prev, { role: "assistant", content: data.AI }]);
           audio.onended = () => {
             console.log("ended");
             setHelenRippleEffect(false);
             callAudio();
           };
+          setChat((prev) => [...prev, { role: "assistant", content: data.AI }]);
         });
     }
   };
@@ -148,7 +148,9 @@ const Helen = ({ topic = "" }) => {
           />
         )}
         {listeningLoader && (
-          <span className="fade-in-text" style={{fontSize: "24px"}}>Listening...</span>
+          <span className="fade-in-text" style={{ fontSize: "24px" }}>
+            Listening...
+          </span>
         )}
       </div>
       {/* <div
