@@ -14,6 +14,31 @@ const Header = ({ setIsActive }) => {
         style={{
           position: "absolute",
           top: "0",
+          left: "5px",
+          margin: "1rem",
+          cursor: "pointer",
+          outline: "none",
+          border: "2px solid #FF7777", // Added border property with a solid red color
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "transparent",
+          color: "#FF7777",
+          padding: "0.2rem 10px",
+          borderRadius: "10px",
+          marginRight: "0.5rem",
+          fontSize: "16px",
+          fontWeight: 700,
+          fontFamily: "Nunito Sans",
+        }}
+      >
+        SOS
+      </button>
+
+      <button
+        style={{
+          position: "absolute",
+          top: "0",
           right: "5px",
           margin: "1rem",
           cursor: "pointer",
@@ -28,12 +53,13 @@ const Header = ({ setIsActive }) => {
           marginRight: "0.5rem",
         }}
       >
-        <RefreshIcon onClick={RefreshHandler}/>
+        <RefreshIcon sx={{ color: "#FF7777" }} onClick={RefreshHandler} />
       </button>
       <div
         style={{
           textAlign: "center",
           color: "black",
+          marginTop: "10vh",
           padding: "20px 0",
           fontSize: 50,
           fontWeight: "700",
