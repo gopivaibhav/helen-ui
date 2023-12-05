@@ -196,13 +196,13 @@ const Helen = ({ topic = "" }) => {
           margin: 0,
         }}
       >
-        <button
-          onClick={ChangeButtonFunctionHandler}
+        <div
+          // onClick={ChangeButtonFunctionHandler}
           style={{
-            width: "238px",
-            height: "61px",
+            width: "100px",
+            height: "100px",
             background: "white",
-            borderRadius: 14,
+            borderRadius: "50%",
             borderColor: "white",
             textAlign: "center",
             color: "#FF7777",
@@ -210,10 +210,50 @@ const Helen = ({ topic = "" }) => {
             fontFamily: "Nunito Sans",
             fontWeight: "700",
             wordWrap: "break-word",
+            position: "absolute",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            top: "-48px",
           }}
         >
-          {changeButtonFunction ? "Start" : "Stop"}
-        </button>
+          <button
+            onClick={ChangeButtonFunctionHandler}
+            style={{
+              width: "92px",
+              height: "92px",
+              background: "#FF7777",
+              borderRadius: "50%",
+              textAlign: "center",
+              color: "white",
+              borderColor: "white",
+              fontSize: 12,
+              fontFamily: "Nunito Sans",
+              fontWeight: "700",
+              wordWrap: "break-word",
+              border: "none",
+            }}
+          >
+            {changeButtonFunction ? (
+              <img
+                style={{ width: "43px", height: "43px" }}
+                src="./mic.svg"
+                alt="loader"
+              />
+            ) : (
+              <img
+                style={{
+                  width: "50px",
+                  height: "45px",
+                  position: "relative",
+                  left: "5px",
+                }}
+                src="./send.svg"
+                alt="loader"
+              />
+            )}
+          </button>
+        </div>
       </div>
     </>
   );

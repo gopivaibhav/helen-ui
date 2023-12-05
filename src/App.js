@@ -10,8 +10,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" exact element={<Layout/>} />
-        <Route path="/helen" element={<HelenMain/>} />
+        <Route path="/helen" exact element={<Layout/>} />
+        <Route path="/" element={<HelenMain/>} />
       </Routes>
     </Router>
   );

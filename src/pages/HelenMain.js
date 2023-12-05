@@ -1,11 +1,12 @@
 import React from "react";
-import Header from "../components/Header";
+import UserPofile from "../components/UserPofile";
+import NewSession from "../components/NewSession";
 
 const HelenMain = () => {
   return (
     <div>
-      <Header />
-      <div className="container">hellen </div>
+      <UserPofile />
+        <NewSession />
     </div>
   );
 };
