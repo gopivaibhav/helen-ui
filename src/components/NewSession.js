@@ -24,7 +24,7 @@ const NewSession = () => {
           <div style={{ display: "flex", flexWrap: "wrap" }}>
             <div
               style={{
-                width: "70% ",
+                width: "80% ",
                 color: "black",
                 fontSize: 18,
                 fontFamily: "Nunito Sans",
@@ -36,7 +36,7 @@ const NewSession = () => {
             </div>
             <div
               style={{
-                width: "28%",
+                width: "20%",
                 textAlign: "right",
                 color: "#FF7777",
                 fontSize: 12,

@@ -31,6 +31,7 @@ const Helen = ({ topic = "" }) => {
       }
       SpeechRecognition.startListening({ language: "en-UK", continuos: true });
       console.log("listening>>>>>>>>>> ", listening);
+      setChangeButtonFunction(false);
     }, 500);
   };
 
@@ -95,6 +96,8 @@ const Helen = ({ topic = "" }) => {
           audio.onended = () => {
             console.log("ended");
             setHelenRippleEffect(false);
+
+            setChangeButtonFunction(true);
             callAudio();
           };
           setChat((prev) => [...prev, { role: "assistant", content: data.AI }]);
