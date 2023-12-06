@@ -26,14 +26,14 @@ const PreviousSession = () => {
             fontWeight: "800",
             lineHeight: "40px",
             wordWrap: "break-word",
-            width: "70%",
+            width: "80%",
           }}
         >
           Revisit your previous sessions
         </div>
         <div
           style={{
-            width: "20%",
+            width: "10%",
             color: "#FF7777",
             display: "flex",
             justifyContent: "right",
@@ -58,7 +58,7 @@ const PreviousSession = () => {
             >
               <div
                 style={{
-                  width: "70%",
+                  width: "85%",
                 }}
               >
                 <div
@@ -75,7 +75,7 @@ const PreviousSession = () => {
                 </div>
                 <div
                   style={{
-                    width: "70%",
+                    width: "85%",
                     color: "#4E4D4D",
                     fontSize: 12,
                     fontFamily: "Nunito Sans",
