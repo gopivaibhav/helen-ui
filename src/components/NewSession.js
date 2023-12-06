@@ -21,7 +21,14 @@ const NewSession = () => {
 
       <Link to="helen" style={{ textDecoration: "none" }}>
         <div className="FeatureCardWrapper" style={{ margin: "10px 20px" }}>
-          <div style={{ display: "flex", flexWrap: "wrap" }}>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+          >
             <div
               style={{
                 width: "80% ",

@@ -92,12 +92,12 @@ const Helen = ({ topic = "" }) => {
 
           audio.play();
           setHelenRippleEffect(true);
+          setChangeButtonFunction(!changeButtonFunction);
           setLoader(false);
           audio.onended = () => {
             console.log("ended");
             setHelenRippleEffect(false);
-
-            setChangeButtonFunction(true);
+            setChangeButtonFunction(!changeButtonFunction);
             callAudio();
           };
           setChat((prev) => [...prev, { role: "assistant", content: data.AI }]);
