@@ -11,7 +11,42 @@ const Helen = ({ topic = "" }) => {
   const [chat, setChat] = useState([]);
   const [helenRippleEffect, setHelenRippleEffect] = useState(false);
   const [userRippleEffect, setUserRippleEffect] = useState(false);
-  const [changeButtonFunction, setChangeButtonFunction] = useState(true);
+  const [changeButtonFunction, setChangeButtonFunction] = useState(true);  
+  const [isHolding, setIsHolding] = useState(false);
+
+  let holdTimeout;
+
+  const handleMouseDown = () => {
+    // Set a timeout to detect the hold
+    holdTimeout = setTimeout(() => {
+      setIsHolding(true);
+      setChangeButtonFunction(false)
+      setListeningLoader(true);
+      SpeechRecognition.startListening({
+        language: "en-UK",
+        continuous: true,
+      });
+      console.log("listening");
+      console.log(listening);
+      // Add your tap and hold logic here
+      console.log('Button tapped and held!');
+    }, 200); // Adjust the duration as needed
+  };
+
+  const handleMouseUp = () => {
+    // Clear the timeout when the mouse is released
+    clearTimeout(holdTimeout);
+    SpeechRecognition.abortListening({
+      language: "en-UK",
+    });
+    console.log("listening abort");
+    console.log(listening);
+    
+    setChangeButtonFunction(true);
+    // Reset the holding state
+    setIsHolding(false);
+  };
+
   useEffect(() => {
     console.log(listening);
     if (!listening) {
@@ -29,9 +64,9 @@ const Helen = ({ topic = "" }) => {
       setListeningLoader(true);
       if (listening) {
       }
-      SpeechRecognition.startListening({ language: "en-UK", continuos: true });
+      SpeechRecognition.startListening({ language: "en-UK", continuous: true });
       console.log("listening>>>>>>>>>> ", listening);
-      setChangeButtonFunction(false);
+      // setChangeButtonFunction(false);
     }, 500);
   };
 
@@ -92,12 +127,12 @@ const Helen = ({ topic = "" }) => {
 
           audio.play();
           setHelenRippleEffect(true);
-          setChangeButtonFunction(!changeButtonFunction);
+          // setChangeButtonFunction(!changeButtonFunction);
           setLoader(false);
           audio.onended = () => {
             console.log("ended");
             setHelenRippleEffect(false);
-            setChangeButtonFunction(!changeButtonFunction);
+            // setChangeButtonFunction(!changeButtonFunction);
             // callAudio();
           };
           setChat((prev) => [...prev, { role: "assistant", content: data.AI }]);
@@ -224,7 +259,10 @@ const Helen = ({ topic = "" }) => {
           }}
         >
           <button
-            onClick={ChangeButtonFunctionHandler}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onTouchStart={handleMouseDown}
+            onTouchEnd={handleMouseUp}
             style={{
               width: "92px",
               height: "92px",

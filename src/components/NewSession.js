@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const NewSession = () => {
   return (
-    <div style={{ marginLeft: "22px" }}>
+    <div style={{ marginLeft: "22px", marginTop: "15px"}}>
       <div
         style={{
           color: "black",
@@ -14,13 +14,14 @@ const NewSession = () => {
           fontWeight: "800",
           lineHeight: "40px",
           wordWrap: "break-word",
+          margin: "20px 0px"
         }}
       >
         Begin your healing journey
       </div>
 
       <Link to="/helen" style={{ textDecoration: "none" }}>
-        <div className="FeatureCardWrapper" style={{ margin: "10px 20px" }}>
+        <div className="FeatureCardWrapper" style={{ margin: "30px 30px 30px 20px" }}>
           <div
             style={{
               display: "flex",
