@@ -11,7 +11,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HelenMain />} />
-        <Route path="/helen" element={<Layout />} />
+        <Route path="/helen" exact element={<Layout />} />
       </Routes>
     </Router>
   );

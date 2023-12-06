@@ -19,7 +19,7 @@ const NewSession = () => {
         Begin your healing journey
       </div>
 
-      <Link to="helen" style={{ textDecoration: "none" }}>
+      <Link to="/helen" style={{ textDecoration: "none" }}>
         <div className="FeatureCardWrapper" style={{ margin: "10px 20px" }}>
           <div
             style={{
