@@ -98,7 +98,7 @@ const Helen = ({ topic = "" }) => {
             console.log("ended");
             setHelenRippleEffect(false);
             setChangeButtonFunction(!changeButtonFunction);
-            callAudio();
+            // callAudio();
           };
           setChat((prev) => [...prev, { role: "assistant", content: data.AI }]);
         });
@@ -176,12 +176,15 @@ const Helen = ({ topic = "" }) => {
         <img
           style={{
             width: "90px",
-            height: "90px",
-            background: "grey",
+            height: "100px",
+            background: "#FF7777",
             borderRadius: 5,
+            backdropFilter: "blur(10px)",
+            borderTopLeftRadius: "15px",
+            borderTopRightRadius: "15px",
           }}
           src="./user.png"
-          alt="helen"
+          alt="user"
         />
       </div>
       <div

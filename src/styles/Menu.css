@@ -85,7 +85,7 @@
 .ripple-effect-user {
   position: absolute;
   width: 90px;
-  height: 90px;
+  height: 100px;
   opacity: 0;
   z-index: -111;
   border-radius: 5px;
