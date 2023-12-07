@@ -6,7 +6,7 @@ const UserPofile = () => {
       style={{
         background: "#FF7777",
         width: "100%",
-        height: "285px",
+        height: "220px",
       }}
     >
       <div
@@ -19,7 +19,7 @@ const UserPofile = () => {
           justifyContent: "center",
           color: "white",
           padding: "0px 10px",
-          paddingTop: "75px",
+          paddingTop: "20px",
           fontSize: "18px",
           fontWeight: 800,
           fontFamily: "Nunito Sans",
@@ -38,7 +38,7 @@ const UserPofile = () => {
           alignItems: "center",
           justifyContent: "center",
           paddingRight: "10px",
-          paddingTop: "85px",
+          paddingTop: "25px",
           borderRadius: 7,
           marginRight: "0.5rem",
           width: "60px",
@@ -56,7 +56,7 @@ const UserPofile = () => {
           position: "absolute",
           left: "5px",
           margin: "1rem",
-          top: "150px",
+          top: "100px",
         }}
       >
         <h1
