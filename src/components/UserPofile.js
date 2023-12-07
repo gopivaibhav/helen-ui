@@ -12,14 +12,13 @@ const UserPofile = () => {
       <div
         style={{
           position: "absolute",
-          left: "5px",
-          margin: "1rem",
+          left: "0px",
+          marginLeft: "9.3vw",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           color: "white",
-          padding: "0px 10px",
-          paddingTop: "20px",
+          marginTop: "53px",
           fontSize: "18px",
           fontWeight: 800,
           fontFamily: "Nunito Sans",
@@ -31,14 +30,14 @@ const UserPofile = () => {
       <div
         style={{
           position: "absolute",
-          right: "5px",
+          right: "6vw",
           margin: "1rem",
           cursor: "pointer",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           paddingRight: "10px",
-          paddingTop: "25px",
+          paddingTop: "57px",
           borderRadius: 7,
           marginRight: "0.5rem",
           width: "60px",
@@ -54,9 +53,12 @@ const UserPofile = () => {
       <div
         style={{
           position: "absolute",
-          left: "5px",
+          left: "0",
           margin: "1rem",
-          top: "100px",
+          top: "75px",
+          marginBottom: "45px",
+          marginTop: "22px",
+          marginLeft: "9.3vw",
         }}
       >
         <h1

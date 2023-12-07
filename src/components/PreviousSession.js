@@ -10,7 +10,7 @@ const previousData = [
 ];
 const PreviousSession = () => {
   return (
-    <div style={{ marginLeft: "22px" }}>
+    <div style={{ marginLeft: "9.3vw" }}>
       <div
         style={{
           display: "flex",
@@ -27,7 +27,8 @@ const PreviousSession = () => {
             lineHeight: "40px",
             wordWrap: "break-word",
             width: "80%",
-            marginBottom: "20px"
+            marginBottom: "20px",
+            marginLeft: "1px"
           }}
         >
           Revisit your previous sessions
@@ -39,7 +40,7 @@ const PreviousSession = () => {
             display: "flex",
             justifyContent: "right",
             alignItems: "center",
-            marginRight: "30px",
+            marginRight: "8vw",
           }}
         >
           <ImportExportIcon />
@@ -47,7 +48,7 @@ const PreviousSession = () => {
       </div>
       {previousData.map((prev) => {
         return (
-          <div className="FeatureCardWrapper" style={{ margin: "15px 30px 25px 20px" }}>
+          <div className="FeatureCardWrapper" style={{ margin: "15px 8vw 25px 0px" }}>
             <div
               style={{
                 display: "flex",
