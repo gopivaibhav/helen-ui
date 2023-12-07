@@ -1,6 +1,7 @@
 import React from "react";
 import "../styles/Menu.css";
 import { useEffect, useState } from "react";
+import MicIcon from "@mui/icons-material/Mic";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
@@ -11,7 +12,7 @@ const Helen = ({ topic = "" }) => {
   const [chat, setChat] = useState([]);
   const [helenRippleEffect, setHelenRippleEffect] = useState(false);
   const [userRippleEffect, setUserRippleEffect] = useState(false);
-  const [changeButtonFunction, setChangeButtonFunction] = useState(true);  
+  const [changeButtonFunction, setChangeButtonFunction] = useState(true);
   const [isHolding, setIsHolding] = useState(false);
 
   let holdTimeout;
@@ -20,7 +21,7 @@ const Helen = ({ topic = "" }) => {
     // Set a timeout to detect the hold
     holdTimeout = setTimeout(() => {
       setIsHolding(true);
-      setChangeButtonFunction(false)
+      setChangeButtonFunction(false);
       setListeningLoader(true);
       SpeechRecognition.startListening({
         language: "en-UK",
@@ -29,7 +30,7 @@ const Helen = ({ topic = "" }) => {
       console.log("listening");
       console.log(listening);
       // Add your tap and hold logic here
-      console.log('Button tapped and held!');
+      console.log("Button tapped and held!");
     }, 200); // Adjust the duration as needed
   };
 
@@ -41,7 +42,7 @@ const Helen = ({ topic = "" }) => {
     });
     console.log("listening abort");
     console.log(listening);
-    
+
     setChangeButtonFunction(true);
     // Reset the holding state
     setIsHolding(false);
@@ -237,8 +238,12 @@ const Helen = ({ topic = "" }) => {
           margin: 0,
         }}
       >
-        <div
+        <button
           // onClick={ChangeButtonFunctionHandler}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onTouchStart={handleMouseDown}
+          onTouchEnd={handleMouseUp}
           style={{
             width: "100px",
             height: "100px",
@@ -248,6 +253,7 @@ const Helen = ({ topic = "" }) => {
             textAlign: "center",
             color: "#FF7777",
             fontSize: 40,
+            border: "none",
             fontFamily: "Nunito Sans",
             fontWeight: "700",
             wordWrap: "break-word",
@@ -258,11 +264,7 @@ const Helen = ({ topic = "" }) => {
             top: "-48px",
           }}
         >
-          <button
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onTouchStart={handleMouseDown}
-            onTouchEnd={handleMouseUp}
+          <div
             style={{
               width: "92px",
               height: "92px",
@@ -276,28 +278,14 @@ const Helen = ({ topic = "" }) => {
               fontWeight: "700",
               wordWrap: "break-word",
               border: "none",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            {changeButtonFunction ? (
-              <img
-                style={{ width: "43px", height: "43px" }}
-                src="./mic.svg"
-                alt="loader"
-              />
-            ) : (
-              <img
-                style={{
-                  width: "50px",
-                  height: "45px",
-                  position: "relative",
-                  left: "5px",
-                }}
-                src="./send.svg"
-                alt="loader"
-              />
-            )}
-          </button>
-        </div>
+            <MicIcon sx={{ width: "45px", height: "45px" }} />
+          </div>
+        </button>
       </div>
     </>
   );
