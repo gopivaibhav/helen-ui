@@ -36,11 +36,13 @@ const Helen = ({ topic = "" }) => {
   const handleMouseUp = () => {
     // Clear the timeout when the mouse is released
     clearTimeout(holdTimeout);
-    // SpeechRecognition.abortListening({
-    //   language: "en-UK",
-    // });
-    console.log("listening abort");
-    console.log(listening);
+    setTimeout(() => {
+      SpeechRecognition.abortListening({
+        language: "en-UK",
+      });
+      console.log("listening abort");
+      console.log(listening);
+    }, 2000);
 
     setChangeButtonFunction(true);
     // Reset the holding state
@@ -191,7 +193,7 @@ const Helen = ({ topic = "" }) => {
           </span>
         )}
       </div>
-      <div
+      {/* <div
         style={{
           width: "100%",
           height: "40vh",
@@ -205,7 +207,7 @@ const Helen = ({ topic = "" }) => {
         }}
       >
         {transcript}
-      </div>
+      </div> */}
       <div style={{ position: "absolute", right: 10, bottom: "20vh" }}>
         <div className={userRippleEffect ? "ripple-effect-user" : ""} />
         <img
