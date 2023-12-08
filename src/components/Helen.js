@@ -31,7 +31,7 @@ const Helen = ({ topic = "" }) => {
       console.log(listening);
       // Add your tap and hold logic here
       console.log("Button tapped and held!");
-    }, 200); // Adjust the duration as needed
+    }, 100); // Adjust the duration as needed
   };
 
   const handleMouseUp = () => {
