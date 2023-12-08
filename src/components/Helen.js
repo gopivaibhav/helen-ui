@@ -192,7 +192,7 @@ const Helen = ({ topic = "" }) => {
           </span>
         )}
       </div>
-      {/* <div
+      <div
         style={{
           width: "100%",
           height: "40vh",
@@ -206,7 +206,7 @@ const Helen = ({ topic = "" }) => {
         }}
       >
         {transcript}
-      </div> */}
+      </div>
       <div style={{ position: "absolute", right: 10, bottom: "20vh" }}>
         <div className={userRippleEffect ? "ripple-effect-user" : ""} />
         <img
