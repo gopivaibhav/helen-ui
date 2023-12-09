@@ -1,6 +1,6 @@
 import React from "react";
 import "../styles/Menu.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import MicIcon from "@mui/icons-material/Mic";
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -14,7 +14,8 @@ const Helen = ({ topic = "" }) => {
   const [userRippleEffect, setUserRippleEffect] = useState(false);
   const [changeButtonFunction, setChangeButtonFunction] = useState(true);
   const [isHolding, setIsHolding] = useState(false);
-
+  const [fsmState, setFsmState] = useState("Introduction");
+  const [fsmCount, setFsmCount] = useState(1);
   let holdTimeout;
 
   const handleMouseDown = () => {
@@ -72,9 +73,9 @@ const Helen = ({ topic = "" }) => {
     }, 500);
   };
 
-  // useEffect(() => {
-  //   callAudio();
-  // }, []);
+  useEffect(() => {
+    sendAPIRequest("");
+  }, []);
 
   if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
     return (
@@ -106,41 +107,52 @@ const Helen = ({ topic = "" }) => {
   const handleRequest = () => {
     console.log(transcript);
     if (transcript && transcript.length >= 2) {
-      setChat((prev) => [...prev, { role: "user", content: transcript }]);
-      setLoader(true);
-      fetch(`https://therapy-iiitl.koyeb.app/checkaudio?q=${transcript}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          chat: chat,
-        }),
-      })
-        .then((data) => {
-          return data.json();
-        })
-        .then((data) => {
-          console.log(data);
-          const audio = new Audio(
-            `https://therapy-iiitl.koyeb.app/file/${data.filename}`
-          );
-          audio.muted = false;
-
-          audio.play();
-          setHelenRippleEffect(true);
-          // setChangeButtonFunction(!changeButtonFunction);
-          setLoader(false);
-          audio.onended = () => {
-            console.log("ended");
-            setHelenRippleEffect(false);
-            // setChangeButtonFunction(!changeButtonFunction);
-            // callAudio();
-          };
-          setChat((prev) => [...prev, { role: "assistant", content: data.AI }]);
-        });
+      console.log("initiated")
+      sendAPIRequest(transcript);
     }
   };
+
+  const sendAPIRequest = async (transcript) => {
+    setChat((prev) => [...prev, { role: "user", content: transcript }]);
+    setLoader(true);
+    fetch(`${process.env.REACT_APP_PORT}/checkaudio/${fsmCount}?q=${transcript}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        chat: chat,
+      }),
+    })
+    .then((data) => {
+      return data.json();
+    })
+    .then((data) => {
+      console.log(data);
+      const audio = new Audio(
+        `${process.env.REACT_APP_PORT}/file/${data.filename}`
+        );
+      audio.muted = false;
+
+      audio.play();
+      if(fsmState === data.curstate){
+        setFsmCount((prev) => prev + 1)
+      }else{
+        setFsmCount(1);
+        setFsmState(data.curstate);
+      }
+      setHelenRippleEffect(true);
+      // setChangeButtonFunction(!changeButtonFunction);
+      setLoader(false);
+      audio.onended = () => {
+        console.log("ended");
+        setHelenRippleEffect(false);
+        // setChangeButtonFunction(!changeButtonFunction);
+        // callAudio();
+      };
+      setChat((prev) => [...prev, { role: "assistant", content: data.AI }]);
+    });
+  }
 
   return (
     <>
