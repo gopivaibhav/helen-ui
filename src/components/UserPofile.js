@@ -1,6 +1,11 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import React from "react";
 
 const UserPofile = () => {
+  const { loginWithRedirect } = useAuth0();
+
+  const { user, isAuthenticated, isLoading } = useAuth0();
+  console.log("user information >>>>>> ", user);
   return (
     <div
       style={{
@@ -24,9 +29,9 @@ const UserPofile = () => {
           fontFamily: "Nunito Sans",
         }}
       >
-        Hi John! <span style={{ fontSize: "24px" }}>👋🏻</span>
+        {user ? user.name : "Hi John"}!{" "}
+        <span style={{ fontSize: "24px" }}>👋🏻</span>
       </div>
-
       <div
         style={{
           position: "absolute",
@@ -46,7 +51,7 @@ const UserPofile = () => {
       >
         <img
           style={{ width: "45px", height: "45px", borderRadius: 7 }}
-          src="./profile.png"
+          src={"./profile.png"}
           alt="user-profile"
         />
       </div>
@@ -74,6 +79,7 @@ const UserPofile = () => {
           How’s your day going today?
         </h1>
       </div>
+      <button onClick={() => loginWithRedirect()}>Log In</button>
     </div>
   );
 };
