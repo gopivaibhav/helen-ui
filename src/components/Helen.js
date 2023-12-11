@@ -132,14 +132,16 @@ const Helen = ({ topic = "" }) => {
       const audio = new Audio(
         `${process.env.REACT_APP_PORT}/file/${data.filename}`
         );
-      audio.muted = false;
-
-      audio.play();
-      if(fsmState === data.curstate){
+      audio.muted = true;
+      audio.play().then(() => {
+        audio.muted = false;
+      });
+      if(fsmState === data.nextstate){
         setFsmCount((prev) => prev + 1)
       }else{
         setFsmCount(1);
-        setFsmState(data.curstate);
+        setFsmState(data.nextstate);
+        console.log("count made 1")
       }
       setHelenRippleEffect(true);
       // setChangeButtonFunction(!changeButtonFunction);

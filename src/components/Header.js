@@ -6,7 +6,12 @@ const Header = ({ setIsActive }) => {
   //   setIsActive(false);
   // };
   const RefreshHandler = () => {
-    window.location.reload();
+    fetch(`${process.env.REACT_APP_PORT}/reset`, {
+      method: "POST"
+    })
+    .then((data) => {
+      window.location.reload();
+    })
   };
   return (
     <>
