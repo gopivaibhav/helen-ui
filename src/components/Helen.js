@@ -26,7 +26,6 @@ const Helen = ({ topic = "" }) => {
       setListeningLoader(true);
       SpeechRecognition.startListening({
         language: "en-UK",
-        continuous: "true"
       });
       console.log("listening");
       console.log(listening);
@@ -39,12 +38,12 @@ const Helen = ({ topic = "" }) => {
     // Clear the timeout when the mouse is released
     clearTimeout(holdTimeout);
     setTimeout(() => {
-      SpeechRecognition.abortListening({
-        language: "en-UK",
-      });
+      // SpeechRecognition.abortListening({
+      //   language: "en-UK",
+      // });
       console.log("listening abort");
       console.log(listening);
-    }, 2000);
+    }, 100);
 
     setChangeButtonFunction(true);
     // Reset the holding state
