@@ -195,7 +195,7 @@ const Helen = ({ topic = "", filename }) => {
               borderRadius: 9999,
               boxShadow: "0px 1px 30px rgba(0, 0, 0, 0.2)",
             }}
-            src="./helen.jpeg"
+            src="/helen.jpeg"
             alt="helen"
           />
         </div>
@@ -249,7 +249,7 @@ const Helen = ({ topic = "", filename }) => {
             borderTopLeftRadius: "15px",
             borderTopRightRadius: "15px",
           }}
-          src="./user.png"
+          src="/user.png"
           alt="user"
         />
       </div>
