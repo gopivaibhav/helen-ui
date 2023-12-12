@@ -7,25 +7,6 @@ import { useNavigate } from "react-router-dom";
 const NewSession = () => {
   const navigate = useNavigate();
 
-  const startSession = () => {
-    console.log("start session");
-    fetch(`${process.env.REACT_APP_PORT}/checkaudio/1?q=`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        chat: [],
-      })
-    })
-    .then((data) => {
-      return data.json();
-    }).then((data) => {
-      console.log(data);
-      navigate(`/helen/${data.filename}`);
-    })
-  }
-
   return (
     <div style={{ marginLeft: "9.3vw", marginTop: "15px"}}>
       <div
@@ -43,7 +24,7 @@ const NewSession = () => {
       </div>
 
       {/* <Link to="/helen" style={{ textDecoration: "none" }}> */}
-        <div className="FeatureCardWrapper" style={{ margin: "30px 8vw 30px 0px" }} onClick={startSession}>
+        <div className="FeatureCardWrapper" style={{ margin: "30px 8vw 30px 0px" }} onClick={() => {navigate(`/starting`)}}>
           <div
             style={{
               display: "flex",
