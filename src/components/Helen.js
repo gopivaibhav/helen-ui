@@ -26,6 +26,7 @@ const Helen = ({ topic = "" }) => {
       setListeningLoader(true);
       SpeechRecognition.startListening({
         language: "en-UK",
+        continuous: "true"
       });
       console.log("listening");
       console.log(listening);
@@ -85,24 +86,24 @@ const Helen = ({ topic = "" }) => {
     );
   }
 
-  const ChangeButtonFunctionHandler = () => {
-    if (changeButtonFunction) {
-      setListeningLoader(true);
-      SpeechRecognition.startListening({
-        language: "en-UK",
-        continuos: true,
-      });
-      console.log("listening");
-      console.log(listening);
-    } else {
-      SpeechRecognition.abortListening({
-        language: "en-UK",
-      });
-      console.log("listening abort");
-      console.log(listening);
-    }
-    setChangeButtonFunction(!changeButtonFunction);
-  };
+  // const ChangeButtonFunctionHandler = () => {
+  //   if (changeButtonFunction) {
+  //     setListeningLoader(true);
+  //     SpeechRecognition.startListening({
+  //       language: "en-UK",
+  //       continuos: true,
+  //     });
+  //     console.log("listening");
+  //     console.log(listening);
+  //   } else {
+  //     SpeechRecognition.abortListening({
+  //       language: "en-UK",
+  //     });
+  //     console.log("listening abort");
+  //     console.log(listening);
+  //   }
+  //   setChangeButtonFunction(!changeButtonFunction);
+  // };
 
   const handleRequest = () => {
     console.log(transcript);
