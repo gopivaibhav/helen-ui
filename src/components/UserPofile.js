@@ -1,11 +1,37 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+
+const createUser = async (user) => {
+  try {
+    const { name, email, picture } = user;
+    const newUser = await axios.post(
+      "https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/profile/user",
+      { name, email, picture }
+    );
+  } catch (error) {
+    console.log("fetch user error: ", error);
+  }
+};
 
 const UserPofile = () => {
   const { loginWithRedirect } = useAuth0();
+  const [profilePic, setProfilePic] = useState("./profile.png");
 
   const { user, isAuthenticated, isLoading } = useAuth0();
-  console.log("user information >>>>>> ", user);
+  console.log("user information >>>>>> ", user, isLoading, isAuthenticated);
+  useEffect(() => {
+    const authData = async () => {
+      if (isAuthenticated && !isLoading) {
+        setProfilePic(user.picture);
+        await createUser(user);
+      }
+      if (!isAuthenticated && !isLoading) {
+        loginWithRedirect();
+      }
+    };
+    authData();
+  }, [user, isAuthenticated, isLoading, loginWithRedirect, setProfilePic]);
   return (
     <div
       style={{
@@ -51,7 +77,7 @@ const UserPofile = () => {
       >
         <img
           style={{ width: "45px", height: "45px", borderRadius: 7 }}
-          src={"./profile.png"}
+          src={profilePic}
           alt="user-profile"
         />
       </div>
@@ -79,7 +105,6 @@ const UserPofile = () => {
           How’s your day going today?
         </h1>
       </div>
-      <button onClick={() => loginWithRedirect()}>Log In</button>
     </div>
   );
 };

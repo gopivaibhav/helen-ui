@@ -5,6 +5,7 @@ import MicIcon from "@mui/icons-material/Mic";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
+import { useAuth0 } from "@auth0/auth0-react";
 const Helen = ({ topic = "" }) => {
   const { transcript, listening } = useSpeechRecognition();
   const [loader, setLoader] = useState(false);
@@ -16,7 +17,6 @@ const Helen = ({ topic = "" }) => {
   const [isHolding, setIsHolding] = useState(false);
 
   let holdTimeout;
-
   const handleMouseDown = () => {
     // Set a timeout to detect the hold
     holdTimeout = setTimeout(() => {

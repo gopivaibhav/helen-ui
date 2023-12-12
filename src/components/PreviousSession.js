@@ -1,14 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import "../styles/NewSession.css";
+import { useAuth0 } from "@auth0/auth0-react";
+import axios from "axios";
 const previousData = [
   { Heading: "Session 4", Date: "Thursday, 12 October 2023" },
   { Heading: "Session 3", Date: "Thursday, 12 October 2023" },
   { Heading: "Session 2", Date: "Thursday, 12 October 2023" },
   { Heading: "Session 1", Date: "Thursday, 12 October 2023" },
 ];
+const fetchUserSession = async (email) => {
+  try {
+    const userSession = await axios.get(
+      `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/profile/get/${email}`
+    );
+    return userSession.data.sessions;
+  } catch (error) {
+    console.log("fetch user error: ", error);
+  }
+};
 const PreviousSession = () => {
+  const { user, isAuthenticated, isLoading } = useAuth0();
+  const [userSession, setUserSession] = useState([]);
+  useEffect(() => {
+    const authData = async () => {
+      if (isAuthenticated && !isLoading) {
+        setUserSession(await fetchUserSession(user.email));
+      }
+    };
+    authData();
+  }, [user, isAuthenticated, isLoading, setUserSession]);
+  console.log("previous session >>>>> ", userSession);
   return (
     <div style={{ marginLeft: "9.3vw" }}>
       <div
@@ -28,7 +51,7 @@ const PreviousSession = () => {
             wordWrap: "break-word",
             width: "80%",
             marginBottom: "20px",
-            marginLeft: "1px"
+            marginLeft: "1px",
           }}
         >
           Revisit your previous sessions
@@ -48,7 +71,10 @@ const PreviousSession = () => {
       </div>
       {previousData.map((prev) => {
         return (
-          <div className="FeatureCardWrapper" style={{ margin: "15px 8vw 25px 0px" }}>
+          <div
+            className="FeatureCardWrapper"
+            style={{ margin: "15px 8vw 25px 0px" }}
+          >
             <div
               style={{
                 display: "flex",
