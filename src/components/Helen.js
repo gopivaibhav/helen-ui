@@ -14,8 +14,6 @@ const Helen = ({ topic = "", filename }) => {
   const [userRippleEffect, setUserRippleEffect] = useState(false);
   const [changeButtonFunction, setChangeButtonFunction] = useState(true);
   const [isHolding, setIsHolding] = useState(false);
-  const [fsmState, setFsmState] = useState("Introduction");
-  const [fsmCount, setFsmCount] = useState(1);
   let holdTimeout;
 
   const handleMouseDown = () => {
@@ -29,8 +27,6 @@ const Helen = ({ topic = "", filename }) => {
       });
       console.log("listening");
       console.log(listening);
-      // Add your tap and hold logic here
-      console.log("Button tapped and held!");
     }, 100); // Adjust the duration as needed
   };
 
@@ -53,7 +49,6 @@ const Helen = ({ topic = "", filename }) => {
   useEffect(() => {
     console.log(listening);
     if (!listening) {
-      console.log("sent an API request", transcript);
       setUserRippleEffect(false);
       setListeningLoader(false);
       handleRequest();
@@ -62,13 +57,11 @@ const Helen = ({ topic = "", filename }) => {
   }, [listening]);
   const callAudio = () => {
     setTimeout(() => {
-      console.log("started listening");
       setUserRippleEffect(true);
       setListeningLoader(true);
       if (listening) {
       }
       SpeechRecognition.startListening({ language: "en-UK", continuous: true });
-      console.log("listening>>>>>>>>>> ", listening);
       // setChangeButtonFunction(false);
     }, 500);
   };
@@ -120,9 +113,8 @@ const Helen = ({ topic = "", filename }) => {
   // };
 
   const handleRequest = () => {
-    console.log(transcript);
+    console.log('API Request', transcript);
     if (transcript && transcript.length >= 2) {
-      console.log("initiated")
       sendAPIRequest(transcript);
     }
   };
@@ -130,7 +122,7 @@ const Helen = ({ topic = "", filename }) => {
   const sendAPIRequest = async (transcript) => {
     setChat((prev) => [...prev, { role: "user", content: transcript }]);
     setLoader(true);
-    fetch(`${process.env.REACT_APP_PORT}/checkaudio/${fsmCount}?q=${transcript}`, {
+    fetch(`${process.env.REACT_APP_PORT}/checkaudio?q=${transcript}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -147,29 +139,21 @@ const Helen = ({ topic = "", filename }) => {
       const audio = new Audio(
         `${process.env.REACT_APP_PORT}/file/${data.filename}`
         );
-      audio.muted = true;
-      audio.play().then(() => {
-        audio.muted = false;
-      });
-      if(fsmState === data.nextstate){
-        setFsmCount((prev) => prev + 1)
-      }else{
-        setFsmCount(1);
-        setFsmState(data.nextstate);
-        console.log("count made 1")
-      }
-      setHelenRippleEffect(true);
-      // setChangeButtonFunction(!changeButtonFunction);
-      setLoader(false);
-      audio.onended = () => {
-        console.log("ended");
-        setHelenRippleEffect(false);
+        audio.muted = true;
+        audio.play().then(() => {
+          audio.muted = false;
+        });
+        setHelenRippleEffect(true);
         // setChangeButtonFunction(!changeButtonFunction);
-        // callAudio();
-      };
-      setChat((prev) => [...prev, { role: "assistant", content: data.AI }]);
-    });
-  }
+        setLoader(false);
+        audio.onended = () => {
+          setHelenRippleEffect(false);
+          // setChangeButtonFunction(!changeButtonFunction);
+          // callAudio();
+        };
+        setChat((prev) => [...prev, { role: "assistant", content: data.AI }]);
+      });
+    }
 
   return (
     <>
@@ -212,7 +196,7 @@ const Helen = ({ topic = "", filename }) => {
         {loader && (
           <img
             style={{ width: "60px", height: "60px" }}
-            src="./loader.gif"
+            src="/loader.gif"
             alt="loader"
           />
         )}
