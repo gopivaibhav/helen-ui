@@ -5,7 +5,7 @@ import MicIcon from "@mui/icons-material/Mic";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-const Helen = ({ topic = "" }) => {
+const Helen = ({ topic = "", filename }) => {
   const { transcript, listening } = useSpeechRecognition();
   const [loader, setLoader] = useState(false);
   const [listeningLoader, setListeningLoader] = useState(false);
@@ -74,7 +74,22 @@ const Helen = ({ topic = "" }) => {
   };
 
   useEffect(() => {
-    sendAPIRequest("");
+    const audio = new Audio(
+      `${process.env.REACT_APP_PORT}/file/${filename}`
+      );
+    audio.muted = true;
+    audio.play().then(() => {
+      audio.muted = false;
+    });
+    setHelenRippleEffect(true);
+    // setChangeButtonFunction(!changeButtonFunction);
+    setLoader(false);
+    audio.onended = () => {
+      console.log("ended");
+      setHelenRippleEffect(false);
+      // setChangeButtonFunction(!changeButtonFunction);
+      // callAudio();
+    };
   }, []);
 
   if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
