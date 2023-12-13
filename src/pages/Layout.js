@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import Header from "../components/Header";
 import Menu from "../components/Menu";
 import Helen from "../components/Helen";
 
 const Layout = () => {
-  const [isActive, setIsActive] = useState(false);
-  const [topic, setTopic] = useState("");
   return (
     <div className="App">
-      <Header setIsActive={setIsActive}/>
-      <Helen/>
+      <Header />
+      <Helen />
       {/* {isActive === true ? (
         <Helen topic = {topic}/>
       ) : (

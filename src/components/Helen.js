@@ -6,7 +6,8 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import { useAuth0 } from "@auth0/auth0-react";
-const Helen = ({ topic = "" }) => {
+import { useLocation } from "react-router-dom";
+const Helen = () => {
   const { transcript, listening } = useSpeechRecognition();
   const [loader, setLoader] = useState(false);
   const [listeningLoader, setListeningLoader] = useState(false);
@@ -16,6 +17,9 @@ const Helen = ({ topic = "" }) => {
   const [changeButtonFunction, setChangeButtonFunction] = useState(true);
   const [isHolding, setIsHolding] = useState(false);
 
+  const location = useLocation();
+  const state = location.state;
+  console.log(state)
   let holdTimeout;
   const handleMouseDown = () => {
     // Set a timeout to detect the hold
