@@ -69,7 +69,11 @@ const Helen = ({ topic = "", filename }) => {
   };
 
   useEffect(() => {
-    
+    console.log(textArray, 'in use effect')
+    if(helenRippleEffect) {
+      console.log('in if')
+      getTranscript()
+    }
   },[textArray])
 
   useEffect(() => {
@@ -78,22 +82,14 @@ const Helen = ({ topic = "", filename }) => {
       return data.json();
     }).then((data) => {
       setTextArray(() => data)
-      console.log(textArray, data, 'in response')
+      setHelenRippleEffect(true);
       const audio = new Audio(
         `${process.env.REACT_APP_PORT}/file/${filename}`
         );
       audio.muted = true;
       audio.play().then(() => {
-        const response = getTranscript();
-        if(response === "No data") {
-          console.log("second check", textArray)
-          setTimeout(() => {
-            getTranscript();
-          }, 1);
-        }
         audio.muted = false;
       });
-      setHelenRippleEffect(true);
       // setChangeButtonFunction(!changeButtonFunction);
       setLoader(false);
       audio.onended = () => {
@@ -162,14 +158,10 @@ const Helen = ({ topic = "", filename }) => {
         `${process.env.REACT_APP_PORT}/file/${data.filename}`
         );
         audio.muted = true;
+        setHelenRippleEffect(true);
         audio.play().then(() => {
-          const response = getTranscript();
-          if(response === "No data") {
-            getTranscript()
-          }
           audio.muted = false;
         });
-        setHelenRippleEffect(true);
         // setChangeButtonFunction(!changeButtonFunction);
         setLoader(false);
         audio.onended = () => {
@@ -196,6 +188,7 @@ const Helen = ({ topic = "", filename }) => {
       setTimeout(() => {
         setCaption("")
       }, intTime);
+      return "data"
     }
   return (
     <>
