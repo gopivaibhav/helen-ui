@@ -7,6 +7,17 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useLocation } from "react-router-dom";
+import axios from "axios";
+
+const addMessage = async (sender, content, session) => {
+  const res = await axios.post(
+    `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/session/${session}/messages`,
+    {
+      sender,
+      content,
+    }
+  );
+};
 const Helen = () => {
   const { transcript, listening } = useSpeechRecognition();
   const [loader, setLoader] = useState(false);
@@ -18,8 +29,8 @@ const Helen = () => {
   const [isHolding, setIsHolding] = useState(false);
 
   const location = useLocation();
-  const state = location.state;
-  console.log(state)
+  const state = location.state.sessionId;
+  console.log("state>>>>>>>>>>>>> ", state);
   let holdTimeout;
   const handleMouseDown = () => {
     // Set a timeout to detect the hold
@@ -110,6 +121,7 @@ const Helen = () => {
   const handleRequest = () => {
     console.log(transcript);
     if (transcript && transcript.length >= 2) {
+      addMessage("user", transcript, state);
       setChat((prev) => [...prev, { role: "user", content: transcript }]);
       setLoader(true);
       fetch(`https://therapy-iiitl.koyeb.app/checkaudio?q=${transcript}`, {
@@ -142,6 +154,7 @@ const Helen = () => {
             // callAudio();
           };
           setChat((prev) => [...prev, { role: "assistant", content: data.AI }]);
+          addMessage("assistant", transcript, state);
         });
     }
   };
