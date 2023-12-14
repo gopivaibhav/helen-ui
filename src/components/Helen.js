@@ -14,6 +14,8 @@ const Helen = ({ topic = "", filename }) => {
   const [userRippleEffect, setUserRippleEffect] = useState(false);
   const [changeButtonFunction, setChangeButtonFunction] = useState(true);
   const [isHolding, setIsHolding] = useState(false);
+  const [textArray, setTextArray] = useState([]);
+  const [caption, setCaption] = useState("");
   let holdTimeout;
 
   const handleMouseDown = () => {
@@ -67,22 +69,40 @@ const Helen = ({ topic = "", filename }) => {
   };
 
   useEffect(() => {
-    const audio = new Audio(
-      `${process.env.REACT_APP_PORT}/file/${filename}`
-      );
-    audio.muted = true;
-    audio.play().then(() => {
-      audio.muted = false;
-    });
-    setHelenRippleEffect(true);
-    // setChangeButtonFunction(!changeButtonFunction);
-    setLoader(false);
-    audio.onended = () => {
-      console.log("ended");
-      setHelenRippleEffect(false);
+    
+  },[textArray])
+
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_PORT}/transcript/${filename}`, {
+    }).then((data) => {
+      return data.json();
+    }).then((data) => {
+      setTextArray(() => data)
+      console.log(textArray, data, 'in response')
+      const audio = new Audio(
+        `${process.env.REACT_APP_PORT}/file/${filename}`
+        );
+      audio.muted = true;
+      audio.play().then(() => {
+        const response = getTranscript();
+        if(response === "No data") {
+          console.log("second check", textArray)
+          setTimeout(() => {
+            getTranscript();
+          }, 1);
+        }
+        audio.muted = false;
+      });
+      setHelenRippleEffect(true);
       // setChangeButtonFunction(!changeButtonFunction);
-      // callAudio();
-    };
+      setLoader(false);
+      audio.onended = () => {
+        console.log("ended");
+        setHelenRippleEffect(false);
+        // setChangeButtonFunction(!changeButtonFunction);
+        // callAudio();
+      };
+    })
   }, []);
 
   if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
@@ -136,11 +156,17 @@ const Helen = ({ topic = "", filename }) => {
     })
     .then((data) => {
       console.log(data);
+      setTextArray(() => data.transcript);
+      console.log(textArray)
       const audio = new Audio(
         `${process.env.REACT_APP_PORT}/file/${data.filename}`
         );
         audio.muted = true;
         audio.play().then(() => {
+          const response = getTranscript();
+          if(response === "No data") {
+            getTranscript()
+          }
           audio.muted = false;
         });
         setHelenRippleEffect(true);
@@ -155,6 +181,22 @@ const Helen = ({ topic = "", filename }) => {
       });
     }
 
+    const getTranscript = () => {
+      textArray.map((item) => {
+        let time = item.timestamp[0].split(':')[2]
+        let intTime = parseInt(time.replace(/,/g, ''), 10)
+          setTimeout(() => {
+            setCaption(item.text)
+          }, intTime);
+      })
+      // to clear the caption
+      if(textArray.length === 0) return "No data"
+      let time = textArray[textArray.length-1].timestamp[1].split(':')[2]
+      let intTime = parseInt(time.replace(/,/g, ''), 10)
+      setTimeout(() => {
+        setCaption("")
+      }, intTime);
+    }
   return (
     <>
       <div
@@ -206,7 +248,7 @@ const Helen = ({ topic = "", filename }) => {
           </span>
         )}
       </div>
-      {/* <div
+      <div
         style={{
           width: "100%",
           height: "40vh",
@@ -219,8 +261,13 @@ const Helen = ({ topic = "", filename }) => {
           marginBottom: 10
         }}
       >
-        {transcript}
-      </div> */}
+        {
+          caption !== "" &&
+          <span style={{ backgroundColor: "#F4F5F4", padding: "10px", borderRadius: "15px" }}>
+            {caption}
+          </span>
+        }
+      </div>
       <div style={{ position: "absolute", right: 10, bottom: "20vh" }}>
         <div className={userRippleEffect ? "ripple-effect-user" : ""} />
         <img

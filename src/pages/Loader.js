@@ -10,24 +10,28 @@ const Loader = () => {
         if(fileName !== ""){
             navigate(`/helen/${fileName}`);
         }
-    }, [fileName]);
+    }, [fileName, navigate]);
 
     useEffect(() => {
+      fetch(`${process.env.REACT_APP_PORT}/reset`, {
+        method: "POST"
+      }).then(() => {
         fetch(`${process.env.REACT_APP_PORT}/checkaudio?q=`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              chat: [],
-            })
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            chat: [],
           })
-          .then((data) => {
-            return data.json();
-          }).then((data) => {
-            console.log(data);
-            setFileName(data.filename);
-          })
+        })
+        .then((data) => {
+          return data.json();
+        }).then((data) => {
+          console.log(data);
+          setFileName(data.filename);
+        })
+      })
     },[]);
 
     const letters = Array.from("Setting Things Up For You");
