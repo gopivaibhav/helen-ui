@@ -2,12 +2,6 @@ import React from "react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import "../styles/NewSession.css";
-const previousData = [
-  { Heading: "Session 4", Date: "Thursday, 12 October 2023" },
-  { Heading: "Session 3", Date: "Thursday, 12 October 2023" },
-  { Heading: "Session 2", Date: "Thursday, 12 October 2023" },
-  { Heading: "Session 1", Date: "Thursday, 12 October 2023" },
-];
 const formatTime = (dateString) => {
   const dateObject = new Date(dateString);
   // Define options for formatting
