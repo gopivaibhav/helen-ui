@@ -7,11 +7,12 @@ import { useParams } from "react-router-dom";
 const Layout = () => {
   const [isActive, setIsActive] = useState(false);
   const [topic, setTopic] = useState("");
+  const [progress, setProgress] = useState(4.5);
   const params = useParams();
   return (
     <div className="App">
-      <Header setIsActive={setIsActive}/>
-      <Helen filename={params.filename}/>
+      <Header setIsActive={setIsActive} progress={progress}/>
+      <Helen filename={params.filename} setProgress={setProgress}/>
       {/* {isActive === true ? (
         <Helen topic = {topic}/>
       ) : (

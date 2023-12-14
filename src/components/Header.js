@@ -1,10 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import {useNavigate } from "react-router-dom";
+import CustomConfirmModal from "./CustomConfirmModal";
+import ProgressBar from "./ProgressBar";
+const Header = ({ setIsActive, progress }) => {
+  const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+  const navigateToHome = () => {
+    setShowModal(false);
+       navigate('/');
+   };
 
-const Header = ({ setIsActive }) => {
-  // const handleClick = () => {
-  //   setIsActive(false);
-  // };
+  const handleConfirm = () => {
+      setShowModal(false);
+      navigateToHome();
+  };
+
+  const handleCancel = () => {
+   
+    setShowModal(false);
+  };
+
+  const handleClick = () => {
+    setShowModal(true);
+  };
+
+  const handleBackButton =()=>{
+    handleClick();
+ 
+  }
   const RefreshHandler = () => {
     fetch(`${process.env.REACT_APP_PORT}/reset`, {
       method: "POST"
@@ -36,10 +60,26 @@ const Header = ({ setIsActive }) => {
           fontWeight: 700,
           fontFamily: "Nunito Sans",
         }}
+        onClick={handleBackButton} 
       >
-        SOS
+        
+         <img
+            style={{
+              width: "20px",
+              height: "20px",
+            }}
+            src="/back_button.svg"
+            alt="back button"
+          />
+       
       </button>
-
+      {showModal && (
+        <CustomConfirmModal
+          message="Do you really want to exit this session?"
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+        />
+      )}
       <button
         style={{
           position: "absolute",
@@ -60,11 +100,12 @@ const Header = ({ setIsActive }) => {
       >
         <RefreshIcon sx={{ color: "#FF7777" }} onClick={RefreshHandler} />
       </button>
+      <ProgressBar progress={progress} />
       <div
         style={{
           textAlign: "center",
           color: "black",
-          marginTop: "10vh",
+          marginTop: "1vh",
           padding: "20px 0",
           fontSize: 50,
           fontWeight: "700",

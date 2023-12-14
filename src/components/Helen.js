@@ -1,11 +1,12 @@
 import React from "react";
 import "../styles/Menu.css";
+import "../styles/Mic.css";
 import { useEffect, useState, useRef } from "react";
 import MicIcon from "@mui/icons-material/Mic";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-const Helen = ({ topic = "", filename }) => {
+const Helen = ({ topic = "", filename, setProgress }) => {
   const { transcript, listening } = useSpeechRecognition();
   const [loader, setLoader] = useState(false);
   const [listeningLoader, setListeningLoader] = useState(false);
@@ -16,6 +17,7 @@ const Helen = ({ topic = "", filename }) => {
   const [isHolding, setIsHolding] = useState(false);
   const [textArray, setTextArray] = useState([]);
   const [caption, setCaption] = useState("");
+  const [sidecaption, setSideCaption] = useState("");
   let holdTimeout;
 
   const handleMouseDown = () => {
@@ -69,36 +71,35 @@ const Helen = ({ topic = "", filename }) => {
   };
 
   useEffect(() => {
-    console.log(textArray, 'in use effect')
-    if(helenRippleEffect) {
-      console.log('in if')
-      getTranscript()
+    if (helenRippleEffect) {
+      getTranscript();
     }
-  },[textArray])
+  }, [textArray]);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_PORT}/transcript/${filename}`, {
-    }).then((data) => {
-      return data.json();
-    }).then((data) => {
-      setTextArray(() => data)
-      setHelenRippleEffect(true);
-      const audio = new Audio(
-        `${process.env.REACT_APP_PORT}/file/${filename}`
+    fetch(`${process.env.REACT_APP_PORT}/transcript/${filename}`, {})
+      .then((data) => {
+        return data.json();
+      })
+      .then((data) => {
+        setTextArray(() => data);
+        setHelenRippleEffect(true);
+        const audio = new Audio(
+          `${process.env.REACT_APP_PORT}/file/${filename}`
         );
-      audio.muted = true;
-      audio.play().then(() => {
-        audio.muted = false;
-      });
-      // setChangeButtonFunction(!changeButtonFunction);
-      setLoader(false);
-      audio.onended = () => {
-        console.log("ended");
-        setHelenRippleEffect(false);
+        audio.muted = true;
+        audio.play().then(() => {
+          audio.muted = false;
+        });
         // setChangeButtonFunction(!changeButtonFunction);
-        // callAudio();
-      };
-    })
+        setLoader(false);
+        audio.onended = () => {
+          console.log("ended");
+          setHelenRippleEffect(false);
+          // setChangeButtonFunction(!changeButtonFunction);
+          // callAudio();
+        };
+      });
   }, []);
 
   if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
@@ -129,7 +130,7 @@ const Helen = ({ topic = "", filename }) => {
   // };
 
   const handleRequest = () => {
-    console.log('API Request', transcript);
+    console.log("API Request-", transcript);
     if (transcript && transcript.length >= 2) {
       sendAPIRequest(transcript);
     }
@@ -153,43 +154,52 @@ const Helen = ({ topic = "", filename }) => {
     .then((data) => {
       console.log(data);
       setTextArray(() => data.transcript);
-      console.log(textArray)
+      console.log(textArray);
+      setProgress((data.total_count)*4.5);
       const audio = new Audio(
         `${process.env.REACT_APP_PORT}/file/${data.filename}`
-        );
-        audio.muted = true;
-        setHelenRippleEffect(true);
-        audio.play().then(() => {
-          audio.muted = false;
-        });
-        // setChangeButtonFunction(!changeButtonFunction);
-        setLoader(false);
-        audio.onended = () => {
-          setHelenRippleEffect(false);
-          // setChangeButtonFunction(!changeButtonFunction);
-          // callAudio();
-        };
-        setChat((prev) => [...prev, { role: "assistant", content: data.AI }]);
+      );
+      audio.muted = true;
+      setHelenRippleEffect(true);
+      audio.play().then(() => {
+        audio.muted = false;
       });
-    }
+      // setChangeButtonFunction(!changeButtonFunction);
+      setLoader(false);
+      audio.onended = () => {
+        setHelenRippleEffect(false);
+        // setChangeButtonFunction(!changeButtonFunction);
+        // callAudio();
+      };
+      setChat((prev) => [...prev, { role: "assistant", content: data.AI }]);
+    });
+  }
 
-    const getTranscript = () => {
-      textArray.map((item) => {
-        let time = item.timestamp[0].split(':')[2]
-        let intTime = parseInt(time.replace(/,/g, ''), 10)
-          setTimeout(() => {
-            setCaption(item.text)
-          }, intTime);
-      })
-      // to clear the caption
-      if(textArray.length === 0) return "No data"
-      let time = textArray[textArray.length-1].timestamp[1].split(':')[2]
-      let intTime = parseInt(time.replace(/,/g, ''), 10)
+  const getTranscript = () => {
+    textArray.map((item, index) => {
+      let time = item.timestamp[0].split(":")[2];
+      let intTime = parseInt(time.replace(/,/g, ""), 10);
       setTimeout(() => {
-        setCaption("")
+        setCaption(item.text);
       }, intTime);
-      return "data"
-    }
+      if (index !== textArray.length - 1) {
+        setTimeout(() => {
+          setSideCaption(textArray[index + 1].text);
+        }, intTime);
+      } else {
+        setTimeout(() => {
+          setSideCaption("");
+        }, intTime);
+      }
+    });
+    // to clear the caption
+    let time = textArray[textArray.length - 1].timestamp[1].split(":")[2];
+    let intTime = parseInt(time.replace(/,/g, ""), 10);
+    setTimeout(() => {
+      setCaption("");
+    }, intTime);
+    return "data";
+  };
   return (
     <>
       <div
@@ -250,18 +260,21 @@ const Helen = ({ topic = "", filename }) => {
           fontSize: 18,
           fontFamily: "Nunito Sans",
           fontWeight: "400",
-          wordWrap: "break-word",
-          marginBottom: 10
+          wordWrap: "break-word"
         }}
       >
-        {
-          caption !== "" &&
-          <span style={{ backgroundColor: "#F4F5F4", padding: "10px", borderRadius: "15px" }}>
-            {caption}
-          </span>
-        }
+        {caption !== "" && (
+          <div id="caption-container">
+            <span id="captiontext">{caption}</span>
+          </div>
+        )}
+        {sidecaption !== "" && (
+          <div id="caption-container">
+            <span id="captiontext" style={{ opacity: "0.5" }}>{sidecaption}</span>
+          </div>
+        )}
       </div>
-      <div style={{ position: "absolute", right: 10, bottom: "20vh" }}>
+      {/* <div style={{ position: "absolute", right: 10, bottom: "20vh" }}>
         <div className={userRippleEffect ? "ripple-effect-user" : ""} />
         <img
           style={{
@@ -276,7 +289,7 @@ const Helen = ({ topic = "", filename }) => {
           src="/user.png"
           alt="user"
         />
-      </div>
+      </div> */}
       <div
         style={{
           width: "100%",
@@ -298,6 +311,7 @@ const Helen = ({ topic = "", filename }) => {
           onMouseUp={handleMouseUp}
           onTouchStart={handleMouseDown}
           onTouchEnd={handleMouseUp}
+          id="micButton"
           style={{
             width: "100px",
             height: "100px",
@@ -337,7 +351,7 @@ const Helen = ({ topic = "", filename }) => {
               alignItems: "center",
             }}
           >
-            <MicIcon sx={{ width: "45px", height: "45px" }} />
+            <MicIcon id="MicImage" sx={{ width: "45px", height: "45px" }} />
           </div>
         </button>
       </div>
