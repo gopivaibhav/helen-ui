@@ -2,6 +2,7 @@
     background-color: #F4F5F4;
     padding: 10px;
     border-radius: 15px;
+    font-size: 1.1rem;
 }
 
 #caption-container{
@@ -12,7 +13,7 @@
     transition: all 700ms linear;
 }
 
-#MicImage:hover{
+#MicImage:active{
     transform:scale(1.3);
     cursor: pointer;
     animation-iteration-count: infinite;
@@ -23,7 +24,7 @@
     transition: all 700ms ease-out;
 }
 
-#micButton:hover{
+#micButton:active{
     cursor: pointer;
     transform:scale(1.4);
     animation-iteration-count: 1;

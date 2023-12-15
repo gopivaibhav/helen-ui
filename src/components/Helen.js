@@ -18,7 +18,26 @@ const Helen = ({ topic = "", filename, setProgress }) => {
   const [textArray, setTextArray] = useState([]);
   const [caption, setCaption] = useState("");
   const [sidecaption, setSideCaption] = useState("");
+  const [isActivated, setIsActivated] = useState(false);
+
   let holdTimeout;
+  const keyframes = {
+    Mic: {
+      '0%': {
+        transform: 'scale(1)',
+      },
+      '25%': {
+        transform: 'scale(1.25)',
+      },
+      '50%': {
+        transform: 'scale(1.15)',
+      },
+      '100%': {
+        transform: 'scale(1.4)',
+      },
+    },
+  };
+  
 
   const handleMouseDown = () => {
     // Set a timeout to detect the hold
@@ -26,6 +45,7 @@ const Helen = ({ topic = "", filename, setProgress }) => {
       setIsHolding(true);
       setChangeButtonFunction(false);
       setListeningLoader(true);
+
       SpeechRecognition.startListening({
         language: "en-UK",
       });
@@ -148,31 +168,31 @@ const Helen = ({ topic = "", filename, setProgress }) => {
         chat: chat,
       }),
     })
-    .then((data) => {
-      return data.json();
-    })
-    .then((data) => {
-      console.log(data);
-      setTextArray(() => data.transcript);
-      console.log(textArray);
-      setProgress((data.total_count)*4.5);
-      const audio = new Audio(
-        `${process.env.REACT_APP_PORT}/file/${data.filename}`
-      );
-      audio.muted = true;
-      setHelenRippleEffect(true);
-      audio.play().then(() => {
-        audio.muted = false;
-      });
-      // setChangeButtonFunction(!changeButtonFunction);
-      setLoader(false);
-      audio.onended = () => {
-        setHelenRippleEffect(false);
+      .then((data) => {
+        return data.json();
+      })
+      .then((data) => {
+        console.log(data);
+        setTextArray(() => data.transcript);
+        console.log(textArray);
+        setProgress((data.total_count) * 4.5);
+        const audio = new Audio(
+          `${process.env.REACT_APP_PORT}/file/${data.filename}`
+        );
+        audio.muted = true;
+        setHelenRippleEffect(true);
+        audio.play().then(() => {
+          audio.muted = false;
+        });
         // setChangeButtonFunction(!changeButtonFunction);
-        // callAudio();
-      };
-      setChat((prev) => [...prev, { role: "assistant", content: data.AI }]);
-    });
+        setLoader(false);
+        audio.onended = () => {
+          setHelenRippleEffect(false);
+          // setChangeButtonFunction(!changeButtonFunction);
+          // callAudio();
+        };
+        setChat((prev) => [...prev, { role: "assistant", content: data.AI }]);
+      });
   }
 
   const getTranscript = () => {
@@ -234,8 +254,7 @@ const Helen = ({ topic = "", filename, setProgress }) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "60px",
-          marginTop: "27px",
+          height: "10vh",
         }}
       >
         {loader && (
@@ -254,7 +273,7 @@ const Helen = ({ topic = "", filename, setProgress }) => {
       <div
         style={{
           width: "100%",
-          height: "40vh",
+          height: "32vh",
           textAlign: "center",
           color: "black",
           fontSize: 18,
@@ -268,6 +287,12 @@ const Helen = ({ topic = "", filename, setProgress }) => {
             <span id="captiontext">{caption}</span>
           </div>
         )}
+        <div id="caption-container">
+          {/* <span id="captiontext">hello there my name is ramanujan and what is </span> */}
+        </div>
+        <div id="caption-container">
+          {/* <span id="captiontext">hello</span> */}
+        </div>
         {sidecaption !== "" && (
           <div id="caption-container">
             <span id="captiontext" style={{ opacity: "0.5" }}>{sidecaption}</span>
