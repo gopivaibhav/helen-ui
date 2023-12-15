@@ -63,9 +63,10 @@ const PreviousSession = ({ sessionDetail }) => {
             <div
               className="FeatureCardWrapper"
               style={{ margin: "15px 8vw 25px 0px" }}
-              onClick={() =>
-                navigate("/session", { sessionId: prev.sessionId })
-              }
+              onClick={() => {
+                console.log(prev._id);
+                navigate("/session", { state: { sessionId: prev._id } });
+              }}
             >
               <div
                 style={{

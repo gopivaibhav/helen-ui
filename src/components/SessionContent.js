@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/NewSession.css";
+import { useLocation } from "react-router-dom";
 const formatTime = (dateString) => {
   const dateObject = new Date(dateString);
   // Define options for formatting
@@ -14,8 +15,10 @@ const formatTime = (dateString) => {
   const formattedDate = dateObject.toLocaleDateString("en-US", options);
   return formattedDate;
 };
-const SessionContent = ({ sessionDetail }) => {
-  console.log("previous session >>>>> ", sessionDetail);
+const SessionContent = () => {
+  const location = useLocation();
+  const sessionId = location.state.sessionId;
+  console.log("session content sessionId >>>>> ", sessionId);
   return (
     <div style={{ marginLeft: "9.3vw" }}>
       <div
