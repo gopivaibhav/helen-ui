@@ -2,6 +2,7 @@ import React from "react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import "../styles/NewSession.css";
+import { useNavigate } from "react-router-dom";
 const formatTime = (dateString) => {
   const dateObject = new Date(dateString);
   // Define options for formatting
@@ -17,6 +18,7 @@ const formatTime = (dateString) => {
   return formattedDate;
 };
 const PreviousSession = ({ sessionDetail }) => {
+  const navigate = useNavigate();
   console.log("previous session >>>>> ", sessionDetail);
   return (
     <div style={{ marginLeft: "9.3vw" }}>
@@ -61,6 +63,9 @@ const PreviousSession = ({ sessionDetail }) => {
             <div
               className="FeatureCardWrapper"
               style={{ margin: "15px 8vw 25px 0px" }}
+              onClick={() =>
+                navigate("/session", { sessionId: prev.sessionId })
+              }
             >
               <div
                 style={{
