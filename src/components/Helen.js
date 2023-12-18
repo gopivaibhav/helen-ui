@@ -94,7 +94,7 @@ const Helen = ({ topic = "", filename, setProgress }) => {
     if (helenRippleEffect) {
       getTranscript();
     }
-  }, [textArray]);
+  }, [textArray, helenRippleEffect]);
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_PORT}/transcript/${filename}`, {})
@@ -103,12 +103,12 @@ const Helen = ({ topic = "", filename, setProgress }) => {
       })
       .then((data) => {
         setTextArray(() => data);
-        setHelenRippleEffect(true);
         const audio = new Audio(
           `${process.env.REACT_APP_PORT}/file/${filename}`
         );
         audio.muted = true;
         audio.play().then(() => {
+          setHelenRippleEffect(true);
           audio.muted = false;
         });
         // setChangeButtonFunction(!changeButtonFunction);
@@ -175,13 +175,13 @@ const Helen = ({ topic = "", filename, setProgress }) => {
         console.log(data);
         setTextArray(() => data.transcript);
         console.log(textArray);
-        setProgress((data.total_count) * 4.5);
+        setProgress(data.total_count * 4.5);
         const audio = new Audio(
           `${process.env.REACT_APP_PORT}/file/${data.filename}`
         );
         audio.muted = true;
-        setHelenRippleEffect(true);
         audio.play().then(() => {
+          setHelenRippleEffect(true);
           audio.muted = false;
         });
         // setChangeButtonFunction(!changeButtonFunction);
@@ -193,12 +193,15 @@ const Helen = ({ topic = "", filename, setProgress }) => {
         };
         setChat((prev) => [...prev, { role: "assistant", content: data.AI }]);
       });
-  }
+  };
 
   const getTranscript = () => {
+    let intTime;
     textArray.map((item, index) => {
-      let time = item.timestamp[0].split(":")[2];
-      let intTime = parseInt(time.replace(/,/g, ""), 10);
+      // let time = item.timestamp[0].split(":")[2];
+      // let intTime = parseInt(time.replace(/,/g, ""), 10);
+      intTime = 1870 * (index + 1);
+      console.log("intTime >>> ", intTime);
       setTimeout(() => {
         setCaption(item.text);
       }, intTime);
@@ -214,10 +217,10 @@ const Helen = ({ topic = "", filename, setProgress }) => {
     });
     // to clear the caption
     let time = textArray[textArray.length - 1].timestamp[1].split(":")[2];
-    let intTime = parseInt(time.replace(/,/g, ""), 10);
+    // let intTime = parseInt(time.replace(/,/g, ""), 10);
     setTimeout(() => {
       setCaption("");
-    }, intTime);
+    }, intTime + 2000);
     return "data";
   };
   return (
@@ -279,7 +282,7 @@ const Helen = ({ topic = "", filename, setProgress }) => {
           fontSize: 18,
           fontFamily: "Nunito Sans",
           fontWeight: "400",
-          wordWrap: "break-word"
+          wordWrap: "break-word",
         }}
       >
         {caption !== "" && (
@@ -295,7 +298,9 @@ const Helen = ({ topic = "", filename, setProgress }) => {
         </div>
         {sidecaption !== "" && (
           <div id="caption-container">
-            <span id="captiontext" style={{ opacity: "0.5" }}>{sidecaption}</span>
+            <span id="captiontext" style={{ opacity: "0.5" }}>
+              {sidecaption}
+            </span>
           </div>
         )}
       </div>
