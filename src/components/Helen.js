@@ -96,6 +96,7 @@ const Helen = ({ topic = "", filename, setProgress }) => {
     }
   }, [textArray]);
 
+  
   useEffect(() => {
     fetch(`${process.env.REACT_APP_PORT}/transcript/${filename}`, {})
       .then((data) => {
