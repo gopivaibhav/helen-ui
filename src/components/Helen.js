@@ -94,9 +94,8 @@ const Helen = ({ topic = "", filename, setProgress }) => {
     if (helenRippleEffect) {
       getTranscript();
     }
-  }, [textArray, helenRippleEffect]);
+  }, [textArray]);
 
-  
   useEffect(() => {
     fetch(`${process.env.REACT_APP_PORT}/transcript/${filename}`, {})
       .then((data) => {
@@ -104,12 +103,12 @@ const Helen = ({ topic = "", filename, setProgress }) => {
       })
       .then((data) => {
         setTextArray(() => data);
+        setHelenRippleEffect(true);
         const audio = new Audio(
           `${process.env.REACT_APP_PORT}/file/${filename}`
         );
         audio.muted = true;
         audio.play().then(() => {
-          setHelenRippleEffect(true);
           audio.muted = false;
         });
         // setChangeButtonFunction(!changeButtonFunction);
@@ -181,8 +180,8 @@ const Helen = ({ topic = "", filename, setProgress }) => {
           `${process.env.REACT_APP_PORT}/file/${data.filename}`
         );
         audio.muted = true;
+        setHelenRippleEffect(true);
         audio.play().then(() => {
-          setHelenRippleEffect(true);
           audio.muted = false;
         });
         // setChangeButtonFunction(!changeButtonFunction);
@@ -197,12 +196,9 @@ const Helen = ({ topic = "", filename, setProgress }) => {
   };
 
   const getTranscript = () => {
-    let intTime;
     textArray.map((item, index) => {
-      // let time = item.timestamp[0].split(":")[2];
-      // let intTime = parseInt(time.replace(/,/g, ""), 10);
-      intTime = 1870 * (index + 1);
-      console.log("intTime >>> ", intTime);
+      let time = item.timestamp[0].split(":")[2];
+      let intTime = parseInt(time.replace(/,/g, ""), 10);
       setTimeout(() => {
         setCaption(item.text);
       }, intTime);
@@ -218,10 +214,10 @@ const Helen = ({ topic = "", filename, setProgress }) => {
     });
     // to clear the caption
     let time = textArray[textArray.length - 1].timestamp[1].split(":")[2];
-    // let intTime = parseInt(time.replace(/,/g, ""), 10);
+    let intTime = parseInt(time.replace(/,/g, ""), 10);
     setTimeout(() => {
       setCaption("");
-    }, intTime + 2000);
+    }, intTime);
     return "data";
   };
   return (
