@@ -30,7 +30,6 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
       groupedWords.push(chunk);
     }
 
-    console.log("hffjldjfjkfnj", groupedWords);
     await setTextArray(groupedWords);
     return groupedWords;
   }
@@ -212,8 +211,7 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
     textArray.map((item, index) => {
       // let time = item.timestamp[0].split(":")[2];
       // let intTime = parseInt(time.replace(/,/g, ""), 10);
-      intTime = 3600 * (index);
-      console.log(index, intTime);
+      intTime = 3600 * index;
       setTimeout(() => {
         setCaption(item);
       }, intTime);
@@ -313,7 +311,7 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
       <div
         style={{
           width: "100%",
-          height: "36vh",
+          height: "25vh",
           textAlign: "center",
           color: "black",
           fontSize: 18,
