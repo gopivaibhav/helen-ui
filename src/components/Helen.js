@@ -6,7 +6,7 @@ import MicIcon from "@mui/icons-material/Mic";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-const Helen = ({ topic = "", filename, setProgress }) => {
+const Helen = ({ topic = "", filename, setProgress, aiData }) => {
   const { transcript, listening } = useSpeechRecognition();
   const [loader, setLoader] = useState(false);
   const [listeningLoader, setListeningLoader] = useState(false);
@@ -21,23 +21,36 @@ const Helen = ({ topic = "", filename, setProgress }) => {
   const [isActivated, setIsActivated] = useState(false);
 
   let holdTimeout;
+  async function groupWordsInParagraph(paragraph) {
+    
+    const words = paragraph.split(/\s+/);
+    const groupedWords = [];
+
+    for (let i = 0; i < words.length; i += 6) {
+      const chunk = words.slice(i, i + 6).join(" ");
+      groupedWords.push(chunk);
+    }
+
+    console.log("hffjldjfjkfnj", groupedWords);
+    await setTextArray(groupedWords);
+    return groupedWords;
+  }
   const keyframes = {
     Mic: {
-      '0%': {
-        transform: 'scale(1)',
+      "0%": {
+        transform: "scale(1)",
       },
-      '25%': {
-        transform: 'scale(1.25)',
+      "25%": {
+        transform: "scale(1.25)",
       },
-      '50%': {
-        transform: 'scale(1.15)',
+      "50%": {
+        transform: "scale(1.15)",
       },
-      '100%': {
-        transform: 'scale(1.4)',
+      "100%": {
+        transform: "scale(1.4)",
       },
     },
   };
-  
 
   const handleMouseDown = () => {
     // Set a timeout to detect the hold
@@ -101,8 +114,9 @@ const Helen = ({ topic = "", filename, setProgress }) => {
       .then((data) => {
         return data.json();
       })
-      .then((data) => {
-        setTextArray(() => data);
+      .then(async (data) => {
+        const aiInfo = await groupWordsInParagraph(aiData);
+        setTextArray(aiInfo);
         setHelenRippleEffect(true);
         const audio = new Audio(
           `${process.env.REACT_APP_PORT}/file/${filename}`
@@ -171,9 +185,9 @@ const Helen = ({ topic = "", filename, setProgress }) => {
       .then((data) => {
         return data.json();
       })
-      .then((data) => {
+      .then(async (data) => {
         console.log(data);
-        setTextArray(() => data.transcript);
+        await groupWordsInParagraph(data.AI);
         console.log(textArray);
         setProgress(data.total_count * 4.5);
         const audio = new Audio(
@@ -194,32 +208,58 @@ const Helen = ({ topic = "", filename, setProgress }) => {
         setChat((prev) => [...prev, { role: "assistant", content: data.AI }]);
       });
   };
-
   const getTranscript = () => {
+    let intTime;
     textArray.map((item, index) => {
-      let time = item.timestamp[0].split(":")[2];
-      let intTime = parseInt(time.replace(/,/g, ""), 10);
+      // let time = item.timestamp[0].split(":")[2];
+      // let intTime = parseInt(time.replace(/,/g, ""), 10);
+      intTime = 1800 * (index + 1);
       setTimeout(() => {
-        setCaption(item.text);
+        setCaption(item);
       }, intTime);
       if (index !== textArray.length - 1) {
         setTimeout(() => {
-          setSideCaption(textArray[index + 1].text);
+          setSideCaption(textArray[index + 1]);
         }, intTime);
       } else {
         setTimeout(() => {
           setSideCaption("");
-        }, intTime);
+        }, intTime );
       }
     });
     // to clear the caption
-    let time = textArray[textArray.length - 1].timestamp[1].split(":")[2];
-    let intTime = parseInt(time.replace(/,/g, ""), 10);
+    // let time = textArray[textArray.length - 1].timestamp[1].split(":")[2];
+    // let intTime = parseInt(time.replace(/,/g, ""), 10);
     setTimeout(() => {
       setCaption("");
-    }, intTime);
+    }, intTime + 2000);
     return "data";
   };
+  // const getTranscript = () => {
+  //   textArray.map((item, index) => {
+  //     let time = item.timestamp[0].split(":")[2];
+  //     let intTime = parseInt(time.replace(/,/g, ""), 10);
+  //     setTimeout(() => {
+  //       setCaption(item.text);
+  //     }, intTime);
+  //     if (index !== textArray.length - 1) {
+  //       setTimeout(() => {
+  //         setSideCaption(textArray[index + 1].text);
+  //       }, intTime);
+  //     } else {
+  //       setTimeout(() => {
+  //         setSideCaption("");
+  //       }, intTime);
+  //     }
+  //   });
+  //   // to clear the caption
+  //   let time = textArray[textArray.length - 1].timestamp[1].split(":")[2];
+  //   let intTime = parseInt(time.replace(/,/g, ""), 10);
+  //   setTimeout(() => {
+  //     setCaption("");
+  //   }, intTime);
+  //   return "data";
+  // };
   return (
     <>
       <div

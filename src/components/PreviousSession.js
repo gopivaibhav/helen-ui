@@ -28,7 +28,7 @@ const PreviousSession = () => {
             wordWrap: "break-word",
             width: "80%",
             marginBottom: "20px",
-            marginLeft: "1px"
+            marginLeft: "1px",
           }}
         >
           Revisit your previous sessions
@@ -46,9 +46,13 @@ const PreviousSession = () => {
           <ImportExportIcon />
         </div>
       </div>
-      {previousData.map((prev) => {
+      {previousData.map((prev, key) => {
         return (
-          <div className="FeatureCardWrapper" style={{ margin: "15px 8vw 25px 0px" }}>
+          <div
+            className="FeatureCardWrapper"
+            key={key}
+            style={{ margin: "15px 8vw 25px 0px" }}
+          >
             <div
               style={{
                 display: "flex",
