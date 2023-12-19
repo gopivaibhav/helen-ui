@@ -212,7 +212,7 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
     textArray.map((item, index) => {
       // let time = item.timestamp[0].split(":")[2];
       // let intTime = parseInt(time.replace(/,/g, ""), 10);
-      intTime = 3600 * (index + 1);
+      intTime = 3600 * (index);
       console.log(index, intTime);
       setTimeout(() => {
         setCaption(item);
