@@ -113,14 +113,15 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
         return data.json();
       })
       .then(async (data) => {
-        const aiInfo = await groupWordsInParagraph(aiData);
-        setTextArray(aiInfo);
+        // const aiInfo = await groupWordsInParagraph(aiData);
+        // setTextArray(aiInfo);
         setHelenRippleEffect(true);
         const audio = new Audio(
           `${process.env.REACT_APP_PORT}/file/${filename}`
         );
         audio.muted = true;
-        audio.play().then(() => {
+        audio.play().then(async () => {
+          const aiInfo = await groupWordsInParagraph(aiData);
           audio.muted = false;
         });
         // setChangeButtonFunction(!changeButtonFunction);
@@ -185,7 +186,6 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
       })
       .then(async (data) => {
         console.log(data);
-        await groupWordsInParagraph(data.AI);
         console.log(textArray);
         setProgress(data.total_count * 4.5);
         const audio = new Audio(
@@ -193,7 +193,8 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
         );
         audio.muted = true;
         setHelenRippleEffect(true);
-        audio.play().then(() => {
+        audio.play().then(async () => {
+          await groupWordsInParagraph(data.AI);
           audio.muted = false;
         });
         // setChangeButtonFunction(!changeButtonFunction);
