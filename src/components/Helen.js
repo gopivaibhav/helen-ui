@@ -20,6 +20,10 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
   const [sidecaption, setSideCaption] = useState("");
   const [isActivated, setIsActivated] = useState(false);
 
+  const [remainingText, setRemainingText] = useState("");
+  const [remainingFile, setRemainingFile] = useState("");
+  const [playNow, setPlayNow] = useState(false);
+
   let holdTimeout;
   async function groupWordsInParagraph(paragraph) {
     const words = paragraph.split(/\s+/);
@@ -33,22 +37,6 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
     await setTextArray(groupedWords);
     return groupedWords;
   }
-  const keyframes = {
-    Mic: {
-      "0%": {
-        transform: "scale(1)",
-      },
-      "25%": {
-        transform: "scale(1.25)",
-      },
-      "50%": {
-        transform: "scale(1.15)",
-      },
-      "100%": {
-        transform: "scale(1.4)",
-      },
-    },
-  };
 
   const handleMouseDown = () => {
     // Set a timeout to detect the hold
@@ -108,8 +96,26 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
   }, [textArray]);
 
   useEffect(() => {
+    if (playNow) {
+      if(remainingFile !== "none") {
+        const audio = new Audio(
+          `${process.env.REACT_APP_PORT}/file/${remainingFile}`
+        );
+        audio.play().then(async () => {
+          console.log("captions ended here");
+          await groupWordsInParagraph(remainingText);
+        });
+        audio.onended = () => {
+          setHelenRippleEffect(false);
+          // setLoader(false);
+        }
+      }
+    }
+  }, [playNow, remainingFile]);
+
+  useEffect(() => {
     fetch(`${process.env.REACT_APP_PORT}/transcript/${filename}`, {})
-      .then((data) => {
+    .then((data) => {
         return data.json();
       })
       .then(async (data) => {
@@ -131,6 +137,7 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
           setHelenRippleEffect(false);
           // setChangeButtonFunction(!changeButtonFunction);
           // callAudio();
+          setLoader(false);
         };
       });
   }, []);
@@ -169,71 +176,128 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
     }
   };
 
+
   const sendAPIRequest = async (transcript) => {
     setChat((prev) => [...prev, { role: "user", content: transcript }]);
     setLoader(true);
-    fetch(`${process.env.REACT_APP_PORT}/checkaudio?q=${transcript}`, {
+    fetch(`${process.env.REACT_APP_PORT}/streaming?q=Thanks for letting me know.`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        chat: chat,
+        chat: [],
       }),
     })
       .then((data) => {
         return data.json();
       })
-      .then(async (data) => {
-        console.log(data);
-        console.log(textArray);
-        setProgress(data.total_count * 4.5);
-        const audio = new Audio(
-          `${process.env.REACT_APP_PORT}/file/${data.filename}`
-        );
-        audio.muted = true;
-        setHelenRippleEffect(true);
-        audio.play().then(async () => {
-          await groupWordsInParagraph(data.AI);
-          audio.muted = false;
-        });
-        // setChangeButtonFunction(!changeButtonFunction);
-        setLoader(false);
-        audio.onended = () => {
-          setHelenRippleEffect(false);
-          // setChangeButtonFunction(!changeButtonFunction);
-          // callAudio();
-        };
-        setChat((prev) => [...prev, { role: "assistant", content: data.AI }]);
+      .then((data) => {
+        console.log(data, 'stream response'); // check for progress bar total count
+        fetch(`${process.env.REACT_APP_PORT}/text/2`).then((data) => {
+          return data.json();
+        }).then(async(data) => {
+          console.log(data, 'response from text- stream 2')
+            let aiResponse = data.text
+            setHelenRippleEffect(true);
+            const audio = new Audio(
+              `${process.env.REACT_APP_PORT}/file/${data.filename}`
+            );
+            audio.play().then(async () => {
+              console.log("captions started");
+              await groupWordsInParagraph(data.text);
+              fetch(`${process.env.REACT_APP_PORT}/text/1`).then((data) => {
+                return data.json()
+              }).then((data) => {
+                console.log(data, 'response from text- stream 1')
+                aiResponse += data.text
+                setRemainingText(data.text);
+                setRemainingFile(data.filename);
+              })
+            });
+            audio.onended = () => {
+              console.log("captions ended here");
+              setPlayNow(true)
+            }
+            setChat((prev) => [...prev, { role: "assistant", content: aiResponse }]);
+            // setChangeButtonFunction(!changeButtonFunction);
+        })
+        // console.log(data);
+        // console.log(textArray);
+        // setProgress(data.total_count * 4.5);
+        // const audio = new Audio(
+        //   `${process.env.REACT_APP_PORT}/file/${data.filename}`
+        // );
+        // audio.muted = true;
+        // setHelenRippleEffect(true);
+        // audio.play().then(async () => {
+        //   await groupWordsInParagraph(data.AI);
+        //   audio.muted = false;
+        // });
+        // // setChangeButtonFunction(!changeButtonFunction);
+        // setLoader(false);
+        // audio.onended = () => {
+        //   setHelenRippleEffect(false);
+        //   // setChangeButtonFunction(!changeButtonFunction);
+        //   // callAudio();
+        // };
       });
   };
+  
+  // const sendAPIRequest = async (transcript) => {
+  //   setChat((prev) => [...prev, { role: "user", content: transcript }]);
+  //   setLoader(true);
+  //   fetch(`${process.env.REACT_APP_PORT}/checkaudio?q=${transcript}`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       chat: chat,
+  //     }),
+  //   })
+  //     .then((data) => {
+  //       return data.json();
+  //     })
+  //     .then(async (data) => {
+  //       console.log(data);
+  //       console.log(textArray);
+  //       setProgress(data.total_count * 4.5);
+  //       const audio = new Audio(
+  //         `${process.env.REACT_APP_PORT}/file/${data.filename}`
+  //       );
+  //       audio.muted = true;
+  //       setHelenRippleEffect(true);
+  //       audio.play().then(async () => {
+  //         await groupWordsInParagraph(data.AI);
+  //         audio.muted = false;
+  //       });
+  //       // setChangeButtonFunction(!changeButtonFunction);
+  //       setLoader(false);
+  //       audio.onended = () => {
+  //         setHelenRippleEffect(false);
+  //         // setChangeButtonFunction(!changeButtonFunction);
+  //         // callAudio();
+  //       };
+  //       setChat((prev) => [...prev, { role: "assistant", content: data.AI }]);
+  //     });
+  // };
+
+
   const getTranscript = () => {
     let intTime;
     textArray.map((item, index) => {
-      // let time = item.timestamp[0].split(":")[2];
-      // let intTime = parseInt(time.replace(/,/g, ""), 10);
       intTime = 3600 * index;
       setTimeout(() => {
         setCaption(item);
       }, intTime);
-      // if (index !== textArray.length - 1) {
-      //   setTimeout(() => {
-      //     setSideCaption(textArray[index + 1]);
-      //   }, intTime);
-      // } else {
-      //   setTimeout(() => {
-      //     setSideCaption("");
-      //   }, intTime);
-      // }
     });
-    // to clear the caption
-    // let time = textArray[textArray.length - 1].timestamp[1].split(":")[2];
-    // let intTime = parseInt(time.replace(/,/g, ""), 10);
     setTimeout(() => {
       setCaption("");
     }, intTime + 2000);
     return "data";
   };
+
   // const getTranscript = () => {
   //   textArray.map((item, index) => {
   //     let time = item.timestamp[0].split(":")[2];
@@ -259,6 +323,7 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
   //   }, intTime);
   //   return "data";
   // };
+
   return (
     <>
       <div
