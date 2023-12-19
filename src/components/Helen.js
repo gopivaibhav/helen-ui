@@ -22,12 +22,11 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
 
   let holdTimeout;
   async function groupWordsInParagraph(paragraph) {
-    
     const words = paragraph.split(/\s+/);
     const groupedWords = [];
 
-    for (let i = 0; i < words.length; i += 6) {
-      const chunk = words.slice(i, i + 6).join(" ");
+    for (let i = 0; i < words.length; i += 10) {
+      const chunk = words.slice(i, i + 10).join(" ");
       groupedWords.push(chunk);
     }
 
@@ -213,19 +212,20 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
     textArray.map((item, index) => {
       // let time = item.timestamp[0].split(":")[2];
       // let intTime = parseInt(time.replace(/,/g, ""), 10);
-      intTime = 1800 * (index + 1);
+      intTime = 3600 * (index + 1);
+      console.log(index, intTime);
       setTimeout(() => {
         setCaption(item);
       }, intTime);
-      if (index !== textArray.length - 1) {
-        setTimeout(() => {
-          setSideCaption(textArray[index + 1]);
-        }, intTime);
-      } else {
-        setTimeout(() => {
-          setSideCaption("");
-        }, intTime );
-      }
+      // if (index !== textArray.length - 1) {
+      //   setTimeout(() => {
+      //     setSideCaption(textArray[index + 1]);
+      //   }, intTime);
+      // } else {
+      //   setTimeout(() => {
+      //     setSideCaption("");
+      //   }, intTime);
+      // }
     });
     // to clear the caption
     // let time = textArray[textArray.length - 1].timestamp[1].split(":")[2];
@@ -313,7 +313,7 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
       <div
         style={{
           width: "100%",
-          height: "32vh",
+          height: "36vh",
           textAlign: "center",
           color: "black",
           fontSize: 18,
@@ -333,13 +333,13 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
         <div id="caption-container">
           {/* <span id="captiontext">hello</span> */}
         </div>
-        {sidecaption !== "" && (
+        {/* {sidecaption !== "" && (
           <div id="caption-container">
             <span id="captiontext" style={{ opacity: "0.5" }}>
               {sidecaption}
             </span>
           </div>
-        )}
+        )} */}
       </div>
       {/* <div style={{ position: "absolute", right: 10, bottom: "20vh" }}>
         <div className={userRippleEffect ? "ripple-effect-user" : ""} />
