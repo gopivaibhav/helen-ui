@@ -13,7 +13,7 @@ const Layout = () => {
   return (
     <div className="App">
       <Header setIsActive={setIsActive} progress={progress}/>
-      <Helen filename={params.filename} setProgress={setProgress} aiData = {location.state.aiData}/>
+      <Helen setProgress={setProgress} />
       {/* {isActive === true ? (
         <Helen topic = {topic}/>
       ) : (

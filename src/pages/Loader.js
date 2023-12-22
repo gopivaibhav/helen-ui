@@ -1,41 +1,74 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useWebSocket } from '../WebSocketProvider';
 
 const Loader = () => {
-  const [fileName, setFileName] = useState("");
-  const [aiData, setAiData] = useState("");
+  const socket = useWebSocket();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (fileName !== "") {
-      navigate(`/helen/${fileName}`, { state: { aiData } });
-    }
-  }, [fileName, navigate, aiData]);
+  // useEffect(() => {
+  //   if (fileName !== "") {
+  //     navigate(`/helen/${fileName}`, { state: { aiData } });
+  //   }
+  // }, [fileName, navigate, aiData]);
+
+  // useEffect(() => {
+  //   fetch(`${process.env.REACT_APP_PORT}/reset`, {
+  //     method: "POST",
+  //   }).then(() => {
+  //     fetch(`${process.env.REACT_APP_PORT}/checkaudio?q=`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         chat: [],
+  //       }),
+  //     })
+  //       .then((data) => {
+  //         return data.json();
+  //       })
+  //       .then((data) => {
+  //         console.log(data);
+  //         setFileName(data.filename);
+  //         setAiData(data.AI);
+  //       });
+  //   });
+  // }, []);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_PORT}/reset`, {
-      method: "POST",
-    }).then(() => {
-      fetch(`${process.env.REACT_APP_PORT}/checkaudio?q=`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          chat: [],
-        }),
-      })
-        .then((data) => {
-          return data.json();
-        })
-        .then((data) => {
-          console.log(data);
-          setFileName(data.filename);
-          setAiData(data.AI);
-        });
-    });
-  }, []);
+    // }, [navigate]);
+    
+    const handleClose = () => {
+      console.log('WebSocket connection ended');
+    };
+    
+    setTimeout(() => {
+      navigate(`/helen`);
+    }, 1500);
+
+    if (socket) {
+      console.log('socket')
+      // socket.send(JSON.stringify({'need': 'reset'}))
+      // socket.addEventListener('message', (event) => {
+      //   console.log('Message from server ', event.data);
+      //   if(event.data === 'reset done'){
+      //     setTimeout(() => {
+      //       navigate(`/helen`);
+      //     }, 1500);
+      //   }
+      // })
+      
+      socket.addEventListener('close', handleClose);
+    }
+
+    return () => {
+      if (socket) {
+        socket.removeEventListener('close', handleClose);
+      }
+    };
+  }, [socket]);
 
   const letters = Array.from("Setting Things Up For You");
 

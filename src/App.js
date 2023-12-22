@@ -13,7 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HelenMain />} />
         <Route path="/starting" element={<Loader />} />
-        <Route path="/helen/:filename"  element={<Layout />} />
+        <Route path="/helen"  element={<Layout />} />
       </Routes>
     </Router>
   );

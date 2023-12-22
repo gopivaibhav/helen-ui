@@ -6,7 +6,11 @@ import MicIcon from "@mui/icons-material/Mic";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-const Helen = ({ topic = "", filename, setProgress, aiData }) => {
+import { useWebSocket } from '../WebSocketProvider';
+
+const Helen = ({ topic = "", setProgress }) => {
+  const socket = useWebSocket();
+
   const { transcript, listening } = useSpeechRecognition();
   const [loader, setLoader] = useState(false);
   const [listeningLoader, setListeningLoader] = useState(false);
@@ -20,9 +24,35 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
   const [sidecaption, setSideCaption] = useState("");
   const [isActivated, setIsActivated] = useState(false);
 
-  const [remainingText, setRemainingText] = useState("");
-  const [remainingFile, setRemainingFile] = useState("");
-  const [playNow, setPlayNow] = useState(false);
+  const [blobQueue, setBlobQueue] = useState([]);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    if (blobQueue.length > 0 && !isPlaying) {
+      setIsPlaying(true);
+      setHelenRippleEffect(true);
+
+      const currentBlob = new Blob([blobQueue[0]], { type: 'audio/mp3' }); // MIME type should be changed ig
+
+      const audioUrl = URL.createObjectURL(currentBlob);
+
+      const audio = new Audio(audioUrl);
+
+      audio.play().catch((err) => {
+        console.log(err);
+        setChat((prev) => [...prev, { role: "assistant", content: caption }]);
+      });
+
+      audio.onended = () => {
+        setBlobQueue((prevQueue) => prevQueue.slice(1));
+        setIsPlaying(false);
+        setHelenRippleEffect(false);
+      };
+    }else if(blobQueue.length === 0){
+      setChat((prev) => [...prev, { role: "assistant", content: caption }]);
+      setCaption('')
+    }
+  }, [blobQueue, isPlaying]);
 
   let holdTimeout;
   async function groupWordsInParagraph(paragraph) {
@@ -78,69 +108,112 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
     } else {
     }
   }, [listening]);
-  const callAudio = () => {
-    setTimeout(() => {
-      setUserRippleEffect(true);
-      setListeningLoader(true);
-      if (listening) {
-      }
-      SpeechRecognition.startListening({ language: "en-UK", continuous: true });
-      // setChangeButtonFunction(false);
-    }, 500);
-  };
 
   useEffect(() => {
-    if (helenRippleEffect) {
-      getTranscript();
-    }
-  }, [textArray]);
+    const handleClose = () => {
+      console.log('WebSocket connection ended');
+    };
 
-  useEffect(() => {
-    if (playNow) {
-      if(remainingFile !== "none") {
-        const audio = new Audio(
-          `${process.env.REACT_APP_PORT}/file/${remainingFile}`
-        );
-        audio.play().then(async () => {
-          console.log("captions ended here");
-          await groupWordsInParagraph(remainingText);
-        });
-        audio.onended = () => {
-          setHelenRippleEffect(false);
-          // setLoader(false);
+    if (socket) {
+      console.log('socket', socket)
+      
+      // socket.send(JSON.stringify({'need': 'reset'}))
+      socket.send(JSON.stringify({'need': 'reset'}))
+
+      socket.send(JSON.stringify({'need': 'openai', 'query': '', 'chat': chat }))
+
+      console.log('sent socket a req')
+      // socket.addEventListener('message', onMessage)
+      socket.addEventListener('message', (event) => {
+        const message = event.data;
+        if(typeof(message) === 'string'){
+          const res = JSON.parse(message)
+          console.log(res)
+          if(res.AI)setCaption((prev) => prev + JSON.parse(message).AI);
+          else {
+            console.log('state', res)
+            setProgress(res.total_count * 4.5)
+          }
+        }else{
+          setBlobQueue((prevQueue) => [...prevQueue, message]);
         }
-      }
-    }
-  }, [playNow, remainingFile]);
-
-  useEffect(() => {
-    fetch(`${process.env.REACT_APP_PORT}/transcript/${filename}`, {})
-    .then((data) => {
-        return data.json();
-      })
-      .then(async (data) => {
-        // const aiInfo = await groupWordsInParagraph(aiData);
-        // setTextArray(aiInfo);
-        setHelenRippleEffect(true);
-        const audio = new Audio(
-          `${process.env.REACT_APP_PORT}/file/${filename}`
-        );
-        audio.muted = true;
-        audio.play().then(async () => {
-          const aiInfo = await groupWordsInParagraph(aiData);
-          audio.muted = false;
-        });
-        // setChangeButtonFunction(!changeButtonFunction);
-        setLoader(false);
-        audio.onended = () => {
-          console.log("ended");
-          setHelenRippleEffect(false);
-          // setChangeButtonFunction(!changeButtonFunction);
-          // callAudio();
-          setLoader(false);
-        };
+      
       });
-  }, []);
+      socket.addEventListener('close', handleClose);
+    }
+
+    return () => {
+      if (socket) {
+        socket.removeEventListener('close', handleClose);
+      }
+    };
+  }, [socket]);
+
+  
+
+  // const callAudio = () => {
+  //   setTimeout(() => {
+  //     setUserRippleEffect(true);
+  //     setListeningLoader(true);
+  //     if (listening) {
+  //     }
+  //     SpeechRecognition.startListening({ language: "en-UK", continuous: true });
+  //     // setChangeButtonFunction(false);
+  //   }, 500);
+  // };
+
+  // useEffect(() => {
+  //   if (helenRippleEffect) {
+  //     getTranscript();
+  //   }
+  // }, [textArray]);
+
+  // useEffect(() => {
+  //   if (playNow) {
+  //     if(remainingFile !== "none") {
+  //       const audio = new Audio(
+  //         `${process.env.REACT_APP_PORT}/file/${remainingFile}`
+  //       );
+  //       audio.play().then(async () => {
+  //         console.log("captions ended here");
+  //         await groupWordsInParagraph(remainingText);
+  //       });
+  //       audio.onended = () => {
+  //         setHelenRippleEffect(false);
+  //         // setLoader(false);
+  //       }
+  //     }
+  //   }
+  // }, [playNow, remainingFile]);
+
+  // useEffect(() => {
+  //   fetch(`${process.env.REACT_APP_PORT}/transcript/${filename}`, {})
+  //   .then((data) => {
+  //       return data.json();
+  //     })
+  //     .then(async (data) => {
+  //       // const aiInfo = await groupWordsInParagraph(aiData);
+  //       // setTextArray(aiInfo);
+  //       setHelenRippleEffect(true);
+  //       const audio = new Audio(
+  //         `${process.env.REACT_APP_PORT}/file/${filename}`
+  //       );
+  //       audio.muted = true;
+  //       audio.play().then(async () => {
+  //         const aiInfo = await groupWordsInParagraph(aiData);
+  //         audio.muted = false;
+  //       });
+  //       // setChangeButtonFunction(!changeButtonFunction);
+  //       setLoader(false);
+  //       audio.onended = () => {
+  //         console.log("ended");
+  //         setHelenRippleEffect(false);
+  //         // setChangeButtonFunction(!changeButtonFunction);
+  //         // callAudio();
+  //         setLoader(false);
+  //       };
+  //     });
+  // }, []);
 
   if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
     return (
@@ -172,77 +245,80 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
   const handleRequest = () => {
     console.log("API Request-", transcript);
     if (transcript && transcript.length >= 2) {
-      sendAPIRequest(transcript);
+      // sendAPIRequest(transcript);
+      socket.send(JSON.stringify({'need': 'openai', 'query': transcript, 'chat': chat }))
+      setChat((prev) => [...prev, { role: "user", content: transcript }]);
+      console.log('sent')
     }
   };
 
 
-  const sendAPIRequest = async (transcript) => {
-    setChat((prev) => [...prev, { role: "user", content: transcript }]);
-    setLoader(true);
-    fetch(`${process.env.REACT_APP_PORT}/streaming?q=Thanks for letting me know.`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        chat: [],
-      }),
-    })
-      .then((data) => {
-        return data.json();
-      })
-      .then((data) => {
-        console.log(data, 'stream response'); // check for progress bar total count
-        fetch(`${process.env.REACT_APP_PORT}/text/2`).then((data) => {
-          return data.json();
-        }).then(async(data) => {
-          console.log(data, 'response from text- stream 2')
-            let aiResponse = data.text
-            setHelenRippleEffect(true);
-            const audio = new Audio(
-              `${process.env.REACT_APP_PORT}/file/${data.filename}`
-            );
-            audio.play().then(async () => {
-              console.log("captions started");
-              await groupWordsInParagraph(data.text);
-              fetch(`${process.env.REACT_APP_PORT}/text/1`).then((data) => {
-                return data.json()
-              }).then((data) => {
-                console.log(data, 'response from text- stream 1')
-                aiResponse += data.text
-                setRemainingText(data.text);
-                setRemainingFile(data.filename);
-              })
-            });
-            audio.onended = () => {
-              console.log("captions ended here");
-              setPlayNow(true)
-            }
-            setChat((prev) => [...prev, { role: "assistant", content: aiResponse }]);
-            // setChangeButtonFunction(!changeButtonFunction);
-        })
-        // console.log(data);
-        // console.log(textArray);
-        // setProgress(data.total_count * 4.5);
-        // const audio = new Audio(
-        //   `${process.env.REACT_APP_PORT}/file/${data.filename}`
-        // );
-        // audio.muted = true;
-        // setHelenRippleEffect(true);
-        // audio.play().then(async () => {
-        //   await groupWordsInParagraph(data.AI);
-        //   audio.muted = false;
-        // });
-        // // setChangeButtonFunction(!changeButtonFunction);
-        // setLoader(false);
-        // audio.onended = () => {
-        //   setHelenRippleEffect(false);
-        //   // setChangeButtonFunction(!changeButtonFunction);
-        //   // callAudio();
-        // };
-      });
-  };
+  // const sendAPIRequest = async (transcript) => {
+  //   setChat((prev) => [...prev, { role: "user", content: transcript }]);
+  //   setLoader(true);
+  //   fetch(`${process.env.REACT_APP_PORT}/streaming?q=Thanks for letting me know.`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       chat: [],
+  //     }),
+  //   })
+  //     .then((data) => {
+  //       return data.json();
+  //     })
+  //     .then((data) => {
+  //       console.log(data, 'stream response'); // check for progress bar total count
+  //       fetch(`${process.env.REACT_APP_PORT}/text/2`).then((data) => {
+  //         return data.json();
+  //       }).then(async(data) => {
+  //         console.log(data, 'response from text- stream 2')
+  //           let aiResponse = data.text
+  //           setHelenRippleEffect(true);
+  //           const audio = new Audio(
+  //             `${process.env.REACT_APP_PORT}/file/${data.filename}`
+  //           );
+  //           audio.play().then(async () => {
+  //             console.log("captions started");
+  //             await groupWordsInParagraph(data.text);
+  //             fetch(`${process.env.REACT_APP_PORT}/text/1`).then((data) => {
+  //               return data.json()
+  //             }).then((data) => {
+  //               console.log(data, 'response from text- stream 1')
+  //               aiResponse += data.text
+  //               setRemainingText(data.text);
+  //               setRemainingFile(data.filename);
+  //             })
+  //           });
+  //           audio.onended = () => {
+  //             console.log("captions ended here");
+  //             setPlayNow(true)
+  //           }
+  //           setChat((prev) => [...prev, { role: "assistant", content: aiResponse }]);
+  //           // setChangeButtonFunction(!changeButtonFunction);
+  //       })
+  //       // console.log(data);
+  //       // console.log(textArray);
+  //       // setProgress(data.total_count * 4.5);
+  //       // const audio = new Audio(
+  //       //   `${process.env.REACT_APP_PORT}/file/${data.filename}`
+  //       // );
+  //       // audio.muted = true;
+  //       // setHelenRippleEffect(true);
+  //       // audio.play().then(async () => {
+  //       //   await groupWordsInParagraph(data.AI);
+  //       //   audio.muted = false;
+  //       // });
+  //       // // setChangeButtonFunction(!changeButtonFunction);
+  //       // setLoader(false);
+  //       // audio.onended = () => {
+  //       //   setHelenRippleEffect(false);
+  //       //   // setChangeButtonFunction(!changeButtonFunction);
+  //       //   // callAudio();
+  //       // };
+  //     });
+  // };
   
   // const sendAPIRequest = async (transcript) => {
   //   setChat((prev) => [...prev, { role: "user", content: transcript }]);
