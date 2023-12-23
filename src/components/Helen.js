@@ -25,34 +25,100 @@ const Helen = ({ topic = "", setProgress }) => {
   const [isActivated, setIsActivated] = useState(false);
 
   const [blobQueue, setBlobQueue] = useState([]);
+  const [finalBlobs, setFinalBlobs] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [playedBlobIds, setPlayedBlobIds] = useState([]);
 
+  function concatenateBlobs(blobs) {
+    return new Promise((resolve, reject) => {
+      const blobParts = [];
+      const reader = new FileReader();
+      let currentIndex = 0;
+  
+      function readNextBlob() {
+        if (currentIndex < blobs.length) {
+          reader.readAsArrayBuffer(blobs[currentIndex]);
+        } else {
+          const concatenatedBlob = new Blob(blobParts, { type: blobs[0].type });
+          resolve(concatenatedBlob);
+        }
+      }
+  
+      reader.onloadend = () => {
+        blobParts.push(reader.result);
+        currentIndex++;
+        readNextBlob();
+      };
+  
+      reader.onerror = (error) => {
+        reject(error);
+      };
+  
+      readNextBlob();
+    });
+  }
+  
   useEffect(() => {
-    if (blobQueue.length > 0 && !isPlaying) {
+    if (blobQueue.length >= 2) {
+      console.log(blobQueue, 'blobs');
+      const blobsToCombine = blobQueue.slice(0, 2); // Taking the first 2 blobs
+  
+      concatenateBlobs(blobsToCombine)
+        .then((resultantBlob) => {
+          setFinalBlobs((prev) => [...prev, resultantBlob]);
+          setBlobQueue((prevQueue) => prevQueue.slice(2)); // Remove the first 2 blobs
+        })
+        .catch((error) => {
+          console.error('Error concatenating blobs:', error);
+        });
+    }
+  }, [blobQueue]);
+  
+  useEffect(() => {
+    if (finalBlobs.length > 0 && !isPlaying) {
       setIsPlaying(true);
       setHelenRippleEffect(true);
-
-      const currentBlob = new Blob([blobQueue[0]], { type: 'audio/mp3' }); // MIME type should be changed ig
-
-      const audioUrl = URL.createObjectURL(currentBlob);
-
-      const audio = new Audio(audioUrl);
-
-      audio.play().catch((err) => {
-        console.log(err);
-        setChat((prev) => [...prev, { role: "assistant", content: caption }]);
-      });
-
-      audio.onended = () => {
-        setBlobQueue((prevQueue) => prevQueue.slice(1));
-        setIsPlaying(false);
-        setHelenRippleEffect(false);
-      };
-    }else if(blobQueue.length === 0){
-      setChat((prev) => [...prev, { role: "assistant", content: caption }]);
-      setCaption('')
+      const currentBlob = finalBlobs[0];
+      const blobId = currentBlob.uniqueId || Date.now(); // Assign a unique identifier if not present
+      if (!playedBlobIds.includes(blobId)) {
+        setPlayedBlobIds((prev) => [...prev, blobId]);
+        
+        const audioUrl = URL.createObjectURL(currentBlob);
+        const audio = new Audio(audioUrl);
+  
+        audio.play()
+          .then(() => {
+            console.log('Playing audio');
+          })
+          .catch((err) => {
+            console.log(err);
+            setChat((prev) => [...prev, { role: "assistant", content: caption }]);
+          });
+  
+        audio.onended = () => {
+          setFinalBlobs((prev) => prev.slice(1));
+          setHelenRippleEffect(false);
+          setIsPlaying(false);
+        };
+  
+      } else {
+        // Skip if the blob has already been played
+        setFinalBlobs((prev) => prev.slice(1));
+      }
     }
-  }, [blobQueue, isPlaying]);
+  
+    if (finalBlobs.length === 0) {
+      if(blobQueue.length > 0){
+        setFinalBlobs((prev) => [...prev, blobQueue[0]]);
+        setBlobQueue((prevQueue) => prevQueue.slice(1));
+      }
+      else{
+        setChat((prev) => [...prev, { role: "assistant", content: caption }]);
+        setCaption('');
+      }
+    }
+  }, [finalBlobs, isPlaying, playedBlobIds]);
+  
 
   let holdTimeout;
   async function groupWordsInParagraph(paragraph) {
@@ -115,26 +181,19 @@ const Helen = ({ topic = "", setProgress }) => {
     };
 
     if (socket) {
-      console.log('socket', socket)
-      
-      // socket.send(JSON.stringify({'need': 'reset'}))
       socket.send(JSON.stringify({'need': 'reset'}))
-
       socket.send(JSON.stringify({'need': 'openai', 'query': '', 'chat': chat }))
-
-      console.log('sent socket a req')
-      // socket.addEventListener('message', onMessage)
       socket.addEventListener('message', (event) => {
         const message = event.data;
         if(typeof(message) === 'string'){
           const res = JSON.parse(message)
-          console.log(res)
           if(res.AI)setCaption((prev) => prev + JSON.parse(message).AI);
           else {
             console.log('state', res)
             setProgress(res.total_count * 4.5)
           }
         }else{
+          console.log('blob', message, typeof(message))
           setBlobQueue((prevQueue) => [...prevQueue, message]);
         }
       

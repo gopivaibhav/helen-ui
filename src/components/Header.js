@@ -8,7 +8,8 @@ const Header = ({ setIsActive, progress }) => {
   const [showModal, setShowModal] = useState(false);
   const navigateToHome = () => {
     setShowModal(false);
-       navigate('/');
+      //  navigate('/');
+      window.location.href = "/";
    };
 
   const handleConfirm = () => {
@@ -80,7 +81,7 @@ const Header = ({ setIsActive, progress }) => {
           onCancel={handleCancel}
         />
       )}
-      <button
+      {/* <button
         style={{
           position: "absolute",
           top: "0",
@@ -99,7 +100,7 @@ const Header = ({ setIsActive, progress }) => {
         }}
       >
         <RefreshIcon sx={{ color: "#FF7777" }} onClick={RefreshHandler} />
-      </button>
+      </button> */}
       <ProgressBar progress={progress} />
       <div
         style={{
