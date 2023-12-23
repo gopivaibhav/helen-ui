@@ -521,11 +521,11 @@ const Helen = ({ topic = "", setProgress }) => {
           wordWrap: "break-word",
         }}
       >
-        {caption !== "" && (
+        {/* {caption !== "" && (
           <div id="caption-container">
             <span id="captiontext">{caption}</span>
           </div>
-        )}
+        )} */}
         <div id="caption-container">
           {/* <span id="captiontext">hello there my name is ramanujan and what is </span> */}
         </div>
