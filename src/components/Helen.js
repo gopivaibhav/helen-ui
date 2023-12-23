@@ -60,7 +60,7 @@ const Helen = ({ topic = "", setProgress }) => {
   
   useEffect(() => {
     if (blobQueue.length >= 2) {
-      console.log(blobQueue, 'blobs');
+      // console.log(blobQueue, 'blobs');
       const blobsToCombine = blobQueue.slice(0, 2); // Taking the first 2 blobs
   
       concatenateBlobs(blobsToCombine)
@@ -114,6 +114,7 @@ const Helen = ({ topic = "", setProgress }) => {
       }
       else{
         setChat((prev) => [...prev, { role: "assistant", content: caption }]);
+        console.log('caption', caption)
         setCaption('');
       }
     }
@@ -193,7 +194,7 @@ const Helen = ({ topic = "", setProgress }) => {
             setProgress(res.total_count * 4.5)
           }
         }else{
-          console.log('blob', message, typeof(message))
+          // console.log('blob', message, typeof(message))
           setBlobQueue((prevQueue) => [...prevQueue, message]);
         }
       
