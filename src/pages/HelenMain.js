@@ -30,6 +30,23 @@ const HelenMain = () => {
       <UserPofile />
       <NewSession userId={userData._id} />
       <PreviousSession sessionDetail={userData.sessions} />
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href={"http://collegeit.org/privacy"}
+        className="text-blue-800 hover:underline"
+      >
+        privacy policy
+      </a>{" "}
+      and{" "}
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href={"http://collegeit.org/tos"}
+        className="text-blue-800 hover:underline"
+      >
+        terms of service
+      </a>
     </div>
   );
 };

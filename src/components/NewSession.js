@@ -3,6 +3,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import "../styles/NewSession.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { mixPanelTracking } from "../utils/mixPanel";
 
 const NewSession = ({ userId }) => {
   const [sessionId, setSessionId] = useState("");
@@ -22,6 +23,7 @@ const NewSession = ({ userId }) => {
   };
   useEffect(() => {
     if (sessionId) {
+      mixPanelTracking(`newSessionCreated > ${sessionId}`);
       navigate("/helen", { state: { sessionId } });
     }
   }, [sessionId, navigate]);
