@@ -4,6 +4,7 @@ import NewSession from "../components/NewSession";
 import PreviousSession from "../components/PreviousSession";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
+import { RingLoader } from "react-spinners";
 const fetchUser = async (email) => {
   try {
     const user = await axios.get(
@@ -15,6 +16,16 @@ const fetchUser = async (email) => {
   }
 };
 const HelenMain = () => {
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    // Simulate data fetching or other async operations
+    const fetchData = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      setLoading(false);
+    };
+
+    fetchData();
+  }, []);
   const [userData, setUserData] = useState({});
   const { user, isAuthenticated, isLoading } = useAuth0();
   useEffect(() => {
@@ -25,7 +36,20 @@ const HelenMain = () => {
     };
     authData();
   }, [user, isAuthenticated, isLoading]);
-  return (
+  return loading ? (
+    // Display the loader when loading is true
+    <div
+      className="loader"
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+      }}
+    >
+      <RingLoader color={"red"} loading={true} size={150} />
+    </div>
+  ) : (
     <div>
       <UserPofile />
       <NewSession userId={userData._id} />

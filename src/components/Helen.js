@@ -124,7 +124,7 @@ const Helen = () => {
       addMessage("user", transcript, state);
       setChat((prev) => [...prev, { role: "user", content: transcript }]);
       setLoader(true);
-      fetch(`https://therapy-iiitl.koyeb.app/checkaudio?q=${transcript}`, {
+      fetch(`https://backend.tryhelen.com/checkaudio?q=${transcript}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -138,9 +138,7 @@ const Helen = () => {
         })
         .then((data) => {
           console.log(data);
-          const audio = new Audio(
-            `https://therapy-iiitl.koyeb.app/file/${data.filename}`
-          );
+          const audio = new Audio(`https://backend.tryhelen.com/file/${data.filename}`);
           audio.muted = false;
 
           audio.play();
