@@ -6,6 +6,19 @@ import MicIcon from "@mui/icons-material/Mic";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
+
+const addMessage = async (sender, content, session) => {
+  const res = await axios.post(
+    `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/session/${session}/messages`,
+    {
+      sender,
+      content,
+    }
+  );
+};
 const Helen = ({ topic = "", filename, setProgress, aiData }) => {
   const { transcript, listening } = useSpeechRecognition();
   const [loader, setLoader] = useState(false);
@@ -24,6 +37,9 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
   const [remainingFile, setRemainingFile] = useState("");
   const [playNow, setPlayNow] = useState(false);
 
+  const location = useLocation();
+  const state = location.state.sessionId;
+  console.log("state>>>>>>>>>>>>> ", state);
   let holdTimeout;
   async function groupWordsInParagraph(paragraph) {
     const words = paragraph.split(/\s+/);
@@ -150,24 +166,7 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
     );
   }
 
-  // const ChangeButtonFunctionHandler = () => {
-  //   if (changeButtonFunction) {
-  //     setListeningLoader(true);
-  //     SpeechRecognition.startListening({
-  //       language: "en-UK",
-  //       continuos: true,
-  //     });
-  //     console.log("listening");
-  //     console.log(listening);
-  //   } else {
-  //     SpeechRecognition.abortListening({
-  //       language: "en-UK",
-  //     });
-  //     console.log("listening abort");
-  //     console.log(listening);
-  //   }
-  //   setChangeButtonFunction(!changeButtonFunction);
-  // };
+
 
   const handleRequest = () => {
     console.log("API Request-", transcript);
@@ -178,6 +177,7 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
 
 
   const sendAPIRequest = async (transcript) => {
+    addMessage("user", transcript, state);
     setChat((prev) => [...prev, { role: "user", content: transcript }]);
     setLoader(true);
     fetch(`${process.env.REACT_APP_PORT}/streaming?q=Thanks for letting me know.`, {
@@ -292,6 +292,8 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
         setCaption(item);
       }, intTime);
     });
+    
+    // to clear the caption
     setTimeout(() => {
       setCaption("");
     }, intTime + 2000);
@@ -405,22 +407,6 @@ const Helen = ({ topic = "", filename, setProgress, aiData }) => {
           </div>
         )} */}
       </div>
-      {/* <div style={{ position: "absolute", right: 10, bottom: "20vh" }}>
-        <div className={userRippleEffect ? "ripple-effect-user" : ""} />
-        <img
-          style={{
-            width: "90px",
-            height: "100px",
-            background: "#FF7777",
-            borderRadius: 5,
-            backdropFilter: "blur(10px)",
-            borderTopLeftRadius: "15px",
-            borderTopRightRadius: "15px",
-          }}
-          src="/user.png"
-          alt="user"
-        />
-      </div> */}
       <div
         style={{
           width: "100%",
