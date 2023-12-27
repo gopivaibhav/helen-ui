@@ -169,7 +169,7 @@ const UserPofile = () => {
                 marginBottom: "2px",
               }}
             >
-              Rishabh Kumar Gaud
+              {user.name}
             </div>
             <div
               style={{
@@ -178,7 +178,7 @@ const UserPofile = () => {
                 marginBottom: "2px",
               }}
             >
-              rishabh78150891@gmail.com
+              {user.email}
             </div>
             <button
               style={{
