@@ -17,9 +17,14 @@ const fetchUser = async (email) => {
 };
 const HelenMain = () => {
   const [loading, setLoading] = useState(true);
+  const [filledUserCount, setFilledUserCount] = useState(100);
   useEffect(() => {
     // Simulate data fetching or other async operations
     const fetchData = async () => {
+      const userCount = await axios.get(
+        `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/profile/total`
+      );
+      setFilledUserCount(userCount.data);
       await new Promise((resolve) => setTimeout(resolve, 2000));
       setLoading(false);
     };
@@ -36,6 +41,8 @@ const HelenMain = () => {
     };
     authData();
   }, [user, isAuthenticated, isLoading]);
+
+  console.log(filledUserCount);
   return loading ? (
     // Display the loader when loading is true
     <div
@@ -52,11 +59,15 @@ const HelenMain = () => {
   ) : (
     <div>
       <UserPofile />
-
       <NewSession userId={userData && userData._id ? userData._id : ""} />
-      <PreviousSession
-        sessionDetail={userData && userData.sessions ? userData.sessions : ""}
-      />
+      {filledUserCount > 100 ? (
+        <div>total number of users: {filledUserCount}</div>
+      ) : (
+        <PreviousSession
+          sessionDetail={userData && userData.sessions ? userData.sessions : ""}
+        />
+      )}
+
       {/* <a
         target="_blank"
         rel="noopener noreferrer"

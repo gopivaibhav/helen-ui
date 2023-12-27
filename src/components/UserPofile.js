@@ -27,6 +27,7 @@ const UserPofile = () => {
       if (isAuthenticated && !isLoading) {
         setProfilePic(user.picture);
         await createUser(user);
+        sessionStorage.setItem("userDetail", JSON.stringify(user, null, 2));
         setIsLogin(true);
       }
       if (!isAuthenticated && !isLoading) {
@@ -143,7 +144,7 @@ const UserPofile = () => {
             fontSize: "13px",
           }}
         >
-          <div style={{ width: "30%" }}>
+          <div style={{ width: "35%" }}>
             <img
               style={{
                 width: "80px",
@@ -160,7 +161,7 @@ const UserPofile = () => {
           <div
             style={{
               margin: "10px",
-              width: "70%",
+              width: "65%",
             }}
           >
             <div
