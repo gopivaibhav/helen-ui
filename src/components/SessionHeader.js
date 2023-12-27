@@ -1,8 +1,37 @@
 import { ArrowBack } from "@mui/icons-material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+function getTimeDifferenceInSecondsAndMinutes(createdAt, updatedAt) {
+  const createdAtDate = new Date(createdAt);
+  const updatedAtDate = new Date(updatedAt);
 
-const SessionHeader = () => {
+  // Calculate the time difference in milliseconds
+  const timeDifference = updatedAtDate - createdAtDate;
+
+  // Calculate the time difference in seconds and minutes
+  const secondsDifference = Math.floor(timeDifference / 1000);
+  const minutesDifference = Math.floor(secondsDifference / 60);
+  console.log(minutesDifference);
+  return {
+    minutes: minutesDifference,
+    seconds: secondsDifference % 60,
+  };
+}
+const formatTime = (dateString) => {
+  const dateObject = new Date(dateString);
+  // Define options for formatting
+  const options = {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  };
+
+  // Format the date
+  const formattedDate = dateObject.toLocaleDateString("en-US", options);
+  return formattedDate;
+};
+const SessionHeader = ({ createdAt, updatedAt }) => {
   const navigate = useNavigate();
   return (
     <div
@@ -70,7 +99,7 @@ const SessionHeader = () => {
             wordWrap: "break-word",
           }}
         >
-          Thursday, 12 October 2023
+          {formatTime(createdAt)}
         </div>
         <div
           style={{
@@ -81,7 +110,12 @@ const SessionHeader = () => {
             wordWrap: "break-word",
           }}
         >
-          Duration: 23 minutes
+          Duration:{" "}
+          {getTimeDifferenceInSecondsAndMinutes(createdAt, updatedAt).minutes
+            ? getTimeDifferenceInSecondsAndMinutes(createdAt, updatedAt)
+                .minutes + " minutes"
+            : getTimeDifferenceInSecondsAndMinutes(createdAt, updatedAt)
+                .seconds + " seconds"}
         </div>
       </div>
     </div>

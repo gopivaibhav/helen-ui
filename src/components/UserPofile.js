@@ -64,7 +64,7 @@ const UserPofile = () => {
           fontFamily: "Nunito Sans",
         }}
       >
-        {user && isLogin ? user.name + "!" : "Hi !"}{" "}
+        {user && isLogin ? user.nickname + "!" : "Hi !"}{" "}
         {<span style={{ fontSize: "24px" }}>👋🏻</span>}
       </div>
       {isLogin ? (
@@ -169,7 +169,7 @@ const UserPofile = () => {
                 marginBottom: "2px",
               }}
             >
-              {user.name}
+              {user.nickname}
             </div>
             <div
               style={{

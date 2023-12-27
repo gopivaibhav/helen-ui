@@ -27,7 +27,7 @@ const Session = () => {
   console.log("data from session >>>> ", data);
   return (
     <>
-      <SessionHeader />
+    <SessionHeader createdAt={data.createdAt} updatedAt={data.updatedAt} />
       <SessionContent />
     </>
   );
