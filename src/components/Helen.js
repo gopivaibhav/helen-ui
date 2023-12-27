@@ -11,10 +11,21 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import { useWebSocket } from '../WebSocketProvider';
+import { useAuth0 } from "@auth0/auth0-react";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
 
-const Helen = ({ topic = "", setProgress }) => {
+const addMessage = async (sender, content, session) => {
+  const res = await axios.post(
+    `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/session/${session}/messages`,
+    {
+      sender,
+      content,
+    }
+  );
+};
+const Helen = ({ topic = "", setProgress}) => {
   const socket = useWebSocket();
-
   const { transcript, listening } = useSpeechRecognition();
   const [loader, setLoader] = useState(false);
   const [listeningLoader, setListeningLoader] = useState(false);
@@ -83,20 +94,10 @@ const Helen = ({ topic = "", setProgress }) => {
   };
   
 
+  const location = useLocation();
+  const state = location.state.sessionId;
+  console.log("state>>>>>>>>>>>>> ", state);
   let holdTimeout;
-  async function groupWordsInParagraph(paragraph) {
-    const words = paragraph.split(/\s+/);
-    const groupedWords = [];
-
-    for (let i = 0; i < words.length; i += 10) {
-      const chunk = words.slice(i, i + 10).join(" ");
-      groupedWords.push(chunk);
-    }
-
-    await setTextArray(groupedWords);
-    return groupedWords;
-  }
-
   const handleMouseDown = () => {
     // Set a timeout to detect the hold
     holdTimeout = setTimeout(() => {
@@ -170,6 +171,7 @@ const Helen = ({ topic = "", setProgress }) => {
       if(textArray[currentBlobIndex.current] === ' ALL DONE '){
         console.log('\nFinal Caption-', textArray.join(' ').slice(0, -11))
         setChat((prev) => [...prev, { role: "assistant", content: textArray.join(' ').slice(0, -11) }]);
+        addMessage("assistant", textArray.join(' ').slice(0, -11), state )
         setTextArray(() => []);
         currentBlobIndex.current = 0;
         setFinalBlobs([]);
@@ -341,6 +343,7 @@ const Helen = ({ topic = "", setProgress }) => {
       // sendAPIRequest(transcript);
       socket.send(JSON.stringify({'need': 'openai', 'query': transcript, 'chat': chat }))
       setChat((prev) => [...prev, { role: "user", content: transcript }]);
+      addMessage("user", transcript, state)
     }else if (transcript === '' && !toolTipOpen) {
       console.log("speak something")
       setToolTipOpen(true);

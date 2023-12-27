@@ -1,6 +1,46 @@
-import React from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import EditNoteIcon from "@mui/icons-material/EditNote";
+const createUser = async (user) => {
+  try {
+    const { name, email, picture } = user;
+    const newUser = await axios.post(
+      "https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/profile/user",
+      { name, email, picture }
+    );
+  } catch (error) {
+    console.log("fetch user error: ", error);
+  }
+};
 
 const UserPofile = () => {
+  const { loginWithRedirect } = useAuth0();
+  const [profilePic, setProfilePic] = useState("./profile.png");
+  const [profileDetail, setProfileDetail] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
+
+  const { user, isAuthenticated, isLoading, logout } = useAuth0();
+  console.log("user information >>>>>> ", user, isLoading, isAuthenticated);
+  useEffect(() => {
+    const authData = async () => {
+      if (isAuthenticated && !isLoading) {
+        setProfilePic(user.picture);
+        await createUser(user);
+        setIsLogin(true);
+      }
+      if (!isAuthenticated && !isLoading) {
+        // loginWithRedirect();
+      }
+    };
+    authData();
+  }, [user, isAuthenticated, isLoading, setProfilePic]);
+  const handleProfile = () => {
+    setProfileDetail(!profileDetail);
+  };
+  const handleLogin = () => {
+    loginWithRedirect();
+  };
   return (
     <div
       style={{
@@ -24,32 +64,152 @@ const UserPofile = () => {
           fontFamily: "Nunito Sans",
         }}
       >
-        Hi John! <span style={{ fontSize: "24px" }}>👋🏻</span>
+        {user && isLogin ? user.name + "!" : "Hi !"}{" "}
+        {<span style={{ fontSize: "24px" }}>👋🏻</span>}
       </div>
+      {isLogin ? (
+        <div
+          style={{
+            position: "absolute",
+            right: "6vw",
+            margin: "1rem",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            paddingRight: "10px",
+            paddingTop: "57px",
+            borderRadius: 7,
+            marginRight: "0.5rem",
+            width: "60px",
+            height: "60px",
+          }}
+        >
+          <img
+            style={{ width: "45px", height: "45px", borderRadius: 7 }}
+            src={profilePic}
+            alt="user-profile"
+            onClick={handleProfile}
+          />
+        </div>
+      ) : (
+        <div
+          style={{
+            position: "absolute",
+            right: "6vw",
+            margin: "1rem",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            paddingRight: "0px",
+            top: "36px",
+            borderRadius: 4,
+            marginRight: "0.5rem",
+            width: "55px",
+            height: "35px",
+            outline: "none",
+            border: "none",
+            color: "white",
+            background: "#3F00FF",
+            fontWeight: 500,
+            textShadow: "0 0 1px #ddd",
+            fontSize: "16px",
+          }}
+          onClick={handleLogin}
+        >
+          Log In
+        </div>
+      )}
 
-      <div
-        style={{
-          position: "absolute",
-          right: "6vw",
-          margin: "1rem",
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          paddingRight: "10px",
-          paddingTop: "57px",
-          borderRadius: 7,
-          marginRight: "0.5rem",
-          width: "60px",
-          height: "60px",
-        }}
-      >
-        <img
-          style={{ width: "45px", height: "45px", borderRadius: 7 }}
-          src="./profile.png"
-          alt="user-profile"
-        />
-      </div>
+      {profileDetail && (
+        <div
+          className="card"
+          style={{
+            width: "280px",
+            height: "150px",
+            background: "white",
+            boxShadow: "0px 1px 30px rgba(0, 0, 0, 0.2)",
+            position: "absolute",
+            right: "7vw",
+            marginTop: "1.3rem",
+            top: "85px",
+            display: "flex",
+            alignItems: "center",
+            paddingRight: "10px",
+            paddingTop: "10px",
+            borderRadius: 7,
+            zIndex: "100",
+            fontSize: "13px",
+          }}
+        >
+          <div style={{ width: "30%" }}>
+            <img
+              style={{
+                width: "80px",
+                height: "80px",
+                borderRadius: "50%",
+                display: "flex",
+                justifyContent: "center",
+                marginLeft: "5px",
+              }}
+              src={profilePic}
+              alt="user-profile"
+            />
+          </div>
+          <div
+            style={{
+              margin: "10px",
+              width: "70%",
+            }}
+          >
+            <div
+              style={{
+                fontWeight: 800,
+                marginBottom: "2px",
+              }}
+            >
+              {user.name}
+            </div>
+            <div
+              style={{
+                fontWeight: 500,
+                wordWrap: "break-word",
+                marginBottom: "2px",
+              }}
+            >
+              {user.email}
+            </div>
+            <button
+              style={{
+                border: "none",
+                outline: "none",
+                color: "white",
+                borderRadius: "4px",
+                background: "grey",
+                padding: "6px 0px",
+                width: "100px",
+                fontSize: "16px",
+                marginTop: "5px",
+                marginBottom: "7px",
+                fontWeight: 500,
+                textShadow: "0 0 1px #ddd",
+                cursor: "pointer",
+              }}
+              onClick={() =>
+                logout({ logoutParams: { returnTo: window.location.origin } })
+              }
+            >
+              Log Out{" "}
+            </button>
+          </div>
+          <div
+            style={{ position: "absolute", right: 0, top: 0, fontSize: "5px" }}
+          >
+            <EditNoteIcon sx={{ color: "blue", cursor: "pointer" }} />
+          </div>
+        </div>
+      )}
       <div
         style={{
           position: "absolute",

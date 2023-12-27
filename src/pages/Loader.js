@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useWebSocket } from '../WebSocketProvider';
+import { useWebSocket } from "../WebSocketProvider";
 
 const Loader = () => {
   const socket = useWebSocket();
   const navigate = useNavigate();
 
+  const location = useLocation();
+  const sessionId = location.state.sessionId;
+  console.log("loader content sessionId >>>>> ", sessionId);
   // useEffect(() => {
   //   if (fileName !== "") {
   //     navigate(`/helen/${fileName}`, { state: { aiData } });
@@ -39,17 +42,17 @@ const Loader = () => {
 
   useEffect(() => {
     // }, [navigate]);
-    
+
     const handleClose = () => {
-      console.log('WebSocket connection ended');
+      console.log("WebSocket connection ended");
     };
-    
+
     setTimeout(() => {
-      navigate(`/helen`);
+      navigate(`/helen`, { state: { sessionId } });
     }, 1500);
 
     if (socket) {
-      console.log('socket')
+      console.log("socket");
       // socket.send(JSON.stringify({'need': 'reset'}))
       // socket.addEventListener('message', (event) => {
       //   console.log('Message from server ', event.data);
@@ -59,13 +62,13 @@ const Loader = () => {
       //     }, 1500);
       //   }
       // })
-      
-      socket.addEventListener('close', handleClose);
+
+      socket.addEventListener("close", handleClose);
     }
 
     return () => {
       if (socket) {
-        socket.removeEventListener('close', handleClose);
+        socket.removeEventListener("close", handleClose);
       }
     };
   }, [socket]);
