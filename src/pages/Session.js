@@ -25,6 +25,7 @@ const Session = () => {
     fetchSession();
   }, [sessionId]);
 
+  
   console.log("data from eapi >>>> ", data);
   return (
     <>
