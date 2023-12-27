@@ -7,6 +7,9 @@ export const WebSocketProvider = ({ children }) => {
 
   useEffect(() => {
     const newSocket = new WebSocket(`${process.env.REACT_APP_SOCKET}/ws`);
+    newSocket.onopen = () => {
+      console.log('WebSocket connected');
+    };
     setSocket(newSocket);
 
     return () => {

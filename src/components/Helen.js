@@ -21,104 +21,47 @@ const Helen = ({ topic = "", setProgress }) => {
   const [isHolding, setIsHolding] = useState(false);
   const [textArray, setTextArray] = useState([]);
   const [caption, setCaption] = useState("");
-  const [sidecaption, setSideCaption] = useState("");
-  const [isActivated, setIsActivated] = useState(false);
+  const [words, setWords] = useState([]);
+  const [totalCaption, setTotalCaption] = useState("");
+  // const [isActivated, setIsActivated] = useState(false);
 
-  const [blobQueue, setBlobQueue] = useState([]);
   const [finalBlobs, setFinalBlobs] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [playedBlobIds, setPlayedBlobIds] = useState([]);
+  const audioRef = useRef(null);
+  const currentBlobIndex = useRef(0);
+  
+  // const playCaptions = () => {
+  //   setCaption('');
+  //   console.log('words- ', words.length, capIndex)
+  //   if ((words.length - capIndex) >= 10) {
+  //     for (let i = 0; i < 10; i++) {
+  //       setCaption((prev) => (prev + words[capIndex + i]));
+  //     }
+  //     setCapIndex((prev) => (prev + 10));
+  //     setTimeout(playCaptions, 3600);
+  //   } else {
+  //     for (let i = capIndex; i < words.length; i++) {
+  //       setCaption((prev) => (prev + words[i]));
+  //     }
+  //     setCapIndex(0);
+  //     setCaption('');
+  //   }
+  // };
 
-  function concatenateBlobs(blobs) {
-    return new Promise((resolve, reject) => {
-      const blobParts = [];
-      const reader = new FileReader();
-      let currentIndex = 0;
-  
-      function readNextBlob() {
-        if (currentIndex < blobs.length) {
-          reader.readAsArrayBuffer(blobs[currentIndex]);
-        } else {
-          const concatenatedBlob = new Blob(blobParts, { type: blobs[0].type });
-          resolve(concatenatedBlob);
-        }
-      }
-  
-      reader.onloadend = () => {
-        blobParts.push(reader.result);
-        currentIndex++;
-        readNextBlob();
-      };
-  
-      reader.onerror = (error) => {
-        reject(error);
-      };
-  
-      readNextBlob();
-    });
-  }
-  
-  useEffect(() => {
-    if (blobQueue.length >= 2) {
-      // console.log(blobQueue, 'blobs');
-      const blobsToCombine = blobQueue.slice(0, 2); // Taking the first 2 blobs
-  
-      concatenateBlobs(blobsToCombine)
-        .then((resultantBlob) => {
-          setFinalBlobs((prev) => [...prev, resultantBlob]);
-          setBlobQueue((prevQueue) => prevQueue.slice(2)); // Remove the first 2 blobs
-        })
-        .catch((error) => {
-          console.error('Error concatenating blobs:', error);
-        });
-    }
-  }, [blobQueue]);
-  
-  useEffect(() => {
-    if (finalBlobs.length > 0 && !isPlaying) {
-      setIsPlaying(true);
-      setHelenRippleEffect(true);
-      const currentBlob = finalBlobs[0];
-      const blobId = currentBlob.uniqueId || Date.now(); // Assign a unique identifier if not present
-      if (!playedBlobIds.includes(blobId)) {
-        setPlayedBlobIds((prev) => [...prev, blobId]);
-        
-        const audioUrl = URL.createObjectURL(currentBlob);
-        const audio = new Audio(audioUrl);
-  
-        audio.play()
-          .then(() => {
-            console.log('Playing audio');
-          })
-          .catch((err) => {
-            console.log(err);
-            setChat((prev) => [...prev, { role: "assistant", content: caption }]);
-          });
-  
-        audio.onended = () => {
-          setFinalBlobs((prev) => prev.slice(1));
-          setHelenRippleEffect(false);
-          setIsPlaying(false);
-        };
-  
-      } else {
-        // Skip if the blob has already been played
-        setFinalBlobs((prev) => prev.slice(1));
+  const displayWords = async () => {
+    // setCapIndex(1);
+    while (words.length > 0) {
+      console.log(words, 'words')
+      const displayChunk = words.splice(0, 10); // Get the next 10 words
+      console.log(displayChunk); // Replace this with your display logic
+      setCaption(displayChunk.join(' '));
+      setWords((prev) => prev.slice(10)); 
+
+      if (words.length > 0) {
+        await new Promise((resolve) => setTimeout(resolve, 3000)); // Wait for 4 seconds
       }
     }
-  
-    if (finalBlobs.length === 0) {
-      if(blobQueue.length > 0){
-        setFinalBlobs((prev) => [...prev, blobQueue[0]]);
-        setBlobQueue((prevQueue) => prevQueue.slice(1));
-      }
-      else{
-        setChat((prev) => [...prev, { role: "assistant", content: caption }]);
-        console.log('caption', caption)
-        setCaption('');
-      }
-    }
-  }, [finalBlobs, isPlaying, playedBlobIds]);
+  };
   
 
   let holdTimeout;
@@ -176,6 +119,58 @@ const Helen = ({ topic = "", setProgress }) => {
     }
   }, [listening]);
 
+
+  const playNextBlob = () => {
+    // console.log('in play next blob', currentBlobIndex, finalBlobs)
+    if (currentBlobIndex.current < finalBlobs.length) {
+      setIsPlaying(true);
+      const blob = finalBlobs[currentBlobIndex.current];
+      const blobUrl = URL.createObjectURL(blob);
+
+
+      const handleCanPlayThrough = () => {
+        // console.log('playing through-', textArray, currentBlobIndex.current)
+        setCaption(textArray[currentBlobIndex.current-1]);
+        audioRef.current.play().then(() => {
+          console.log('playing audio')
+        }).catch((err) => {
+          console.log(err, 'error in playing audio');
+        });
+        audioRef.current.removeEventListener('canplaythrough', handleCanPlayThrough);
+      };
+
+      audioRef.current.src = blobUrl;
+      audioRef.current.addEventListener('canplaythrough', handleCanPlayThrough);
+
+      currentBlobIndex.current += 1;
+    }
+  };
+
+  const checkPlaying = () => {
+    if(currentBlobIndex.current < textArray.length){
+      if(textArray[currentBlobIndex.current] === ' ALL DONE '){
+        console.log('\nFinal Caption-', textArray.join(' ').slice(0, -11))
+        setChat((prev) => [...prev, { role: "assistant", content: textArray.join(' ').slice(0, -11) }]);
+        setTextArray(() => []);
+        currentBlobIndex.current = 0;
+        setFinalBlobs([]);
+      }
+    }
+  }
+
+  const handleAudioEnded = () => {
+    setCaption('')
+    setIsPlaying(() => false)
+    checkPlaying();
+  }
+
+  useEffect(() => {
+    // console.log('in use effect', finalBlobs, isPlaying)
+    if (finalBlobs.length > 0 && !isPlaying) {
+      playNextBlob();
+    }
+  }, [finalBlobs, isPlaying]);
+
   useEffect(() => {
     const handleClose = () => {
       console.log('WebSocket connection ended');
@@ -188,14 +183,20 @@ const Helen = ({ topic = "", setProgress }) => {
         const message = event.data;
         if(typeof(message) === 'string'){
           const res = JSON.parse(message)
-          if(res.AI)setCaption((prev) => prev + JSON.parse(message).AI);
+          if(res.AI){
+            console.log(res.AI)
+            setTextArray((prev) => ([...prev, res.AI]));
+          }
           else {
             console.log('state', res)
-            setProgress(res.total_count * 4.5)
+            if(res.done){
+              setTextArray((prev) => ([...prev, ' ALL DONE ']));
+            }
+            if(res.total_count)setProgress(res.total_count * 4.5)
           }
         }else{
           // console.log('blob', message, typeof(message))
-          setBlobQueue((prevQueue) => [...prevQueue, message]);
+          setFinalBlobs((prev) => [...prev, message]);
         }
       
       });
@@ -308,7 +309,6 @@ const Helen = ({ topic = "", setProgress }) => {
       // sendAPIRequest(transcript);
       socket.send(JSON.stringify({'need': 'openai', 'query': transcript, 'chat': chat }))
       setChat((prev) => [...prev, { role: "user", content: transcript }]);
-      console.log('sent')
     }
   };
 
@@ -420,19 +420,19 @@ const Helen = ({ topic = "", setProgress }) => {
   // };
 
 
-  const getTranscript = () => {
-    let intTime;
-    textArray.map((item, index) => {
-      intTime = 3600 * index;
-      setTimeout(() => {
-        setCaption(item);
-      }, intTime);
-    });
-    setTimeout(() => {
-      setCaption("");
-    }, intTime + 2000);
-    return "data";
-  };
+  // const getTranscript = () => {
+  //   let intTime;
+  //   textArray.map((item, index) => {
+  //     intTime = 3600 * index;
+  //     setTimeout(() => {
+  //       setCaption(item);
+  //     }, intTime);
+  //   });
+  //   setTimeout(() => {
+  //     setCaption("");
+  //   }, intTime + 2000);
+  //   return "data";
+  // };
 
   // const getTranscript = () => {
   //   textArray.map((item, index) => {
@@ -476,7 +476,8 @@ const Helen = ({ topic = "", setProgress }) => {
             outline: "none",
           }}
         >
-          <div className={helenRippleEffect ? "ripple-effect-helen" : ""} />
+          <div className={isPlaying ? "ripple-effect-helen" : ""} />
+          {/* <div className={helenRippleEffect ? "ripple-effect-helen" : ""} /> */}
           <img
             style={{
               width: "200px",
@@ -522,11 +523,14 @@ const Helen = ({ topic = "", setProgress }) => {
           wordWrap: "break-word",
         }}
       >
-        {/* {caption !== "" && (
+        {caption !== "" && (
           <div id="caption-container">
             <span id="captiontext">{caption}</span>
           </div>
-        )} */}
+        )}
+        <audio ref={audioRef} onEnded={handleAudioEnded}>
+          Your browser does not support the audio element.
+        </audio>
         <div id="caption-container">
           {/* <span id="captiontext">hello there my name is ramanujan and what is </span> */}
         </div>
