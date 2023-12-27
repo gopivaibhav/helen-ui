@@ -54,7 +54,7 @@ const HelenMain = () => {
       <UserPofile />
       <NewSession userId={userData._id} />
       <PreviousSession sessionDetail={userData.sessions} />
-      <a
+      {/* <a
         target="_blank"
         rel="noopener noreferrer"
         href={"http://collegeit.org/privacy"}
@@ -70,7 +70,7 @@ const HelenMain = () => {
         className="text-blue-800 hover:underline"
       >
         terms of service
-      </a>
+      </a> */}
     </div>
   );
 };
