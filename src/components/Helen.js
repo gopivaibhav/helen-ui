@@ -1,6 +1,10 @@
 import React from "react";
 import "../styles/Menu.css";
 import "../styles/Mic.css";
+import RippleEffect from "./RippleEffect";
+import Fade from '@mui/material/Fade';
+import { withStyles } from '@mui/styles';
+import Tooltip from "@mui/material/Tooltip";
 import { useEffect, useState, useRef } from "react";
 import MicIcon from "@mui/icons-material/Mic";
 import SpeechRecognition, {
@@ -29,6 +33,7 @@ const Helen = ({ topic = "", setProgress }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
   const currentBlobIndex = useRef(0);
+  const [toolTipOpen, setToolTipOpen] = useState(false);
   
   // const playCaptions = () => {
   //   setCaption('');
@@ -47,6 +52,20 @@ const Helen = ({ topic = "", setProgress }) => {
   //     setCaption('');
   //   }
   // };
+
+  useEffect(() => {
+    const handleContextMenu = (e) => {
+      e.preventDefault();
+    };
+    console.log("context menu")
+    // Attach the event listener when the component mounts
+    document.addEventListener('contextmenu', handleContextMenu);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+    };
+  }, []);
 
   const displayWords = async () => {
     // setCapIndex(1);
@@ -303,12 +322,31 @@ const Helen = ({ topic = "", setProgress }) => {
   //   setChangeButtonFunction(!changeButtonFunction);
   // };
 
+  const CustomToolTip = withStyles({
+    tooltip: {
+      width: "1000px",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      fontSize: "1rem",
+      textAlign: "center",
+      color: "F2F1EB",
+      backgroundColor: "#707070",
+    }
+  })(Tooltip);
+
   const handleRequest = () => {
     console.log("API Request-", transcript);
     if (transcript && transcript.length >= 2) {
       // sendAPIRequest(transcript);
       socket.send(JSON.stringify({'need': 'openai', 'query': transcript, 'chat': chat }))
       setChat((prev) => [...prev, { role: "user", content: transcript }]);
+    }else if (transcript === '' && !toolTipOpen) {
+      console.log("speak something")
+      setToolTipOpen(true);
+      setTimeout(() => {
+        setToolTipOpen(false);
+      }, 2000);
     }
   };
 
@@ -477,8 +515,9 @@ const Helen = ({ topic = "", setProgress }) => {
           }}
         >
           <div className={isPlaying ? "ripple-effect-helen" : ""} />
+          <RippleEffect isPlaying={isPlaying} />
           {/* <div className={helenRippleEffect ? "ripple-effect-helen" : ""} /> */}
-          <img
+          {/* <img
             style={{
               width: "200px",
               height: "200px",
@@ -487,7 +526,7 @@ const Helen = ({ topic = "", setProgress }) => {
             }}
             src="/helen.jpeg"
             alt="helen"
-          />
+          /> */}
         </div>
       </div>
       <div
@@ -576,55 +615,57 @@ const Helen = ({ topic = "", setProgress }) => {
           margin: 0,
         }}
       >
-        <button
-          // onClick={ChangeButtonFunctionHandler}
-          onMouseDown={handleMouseDown}
-          onMouseUp={handleMouseUp}
-          onTouchStart={handleMouseDown}
-          onTouchEnd={handleMouseUp}
-          id="micButton"
-          style={{
-            width: "100px",
-            height: "100px",
-            background: "white",
-            borderRadius: "50%",
-            borderColor: "white",
-            textAlign: "center",
-            color: "#FF7777",
-            fontSize: 40,
-            border: "none",
-            fontFamily: "Nunito Sans",
-            fontWeight: "700",
-            wordWrap: "break-word",
-            position: "absolute",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            top: "-48px",
-          }}
-        >
-          <div
+        <CustomToolTip TransitionComponent={Fade} TransitionProps={{ timeout: 500 }} open={toolTipOpen} sx={{ width: "1000 rem", color: "green" }} placement="top" title="Press and Hold to Speak Something">
+          <button
+            // onClick={ChangeButtonFunctionHandler}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onTouchStart={handleMouseDown}
+            onTouchEnd={handleMouseUp}
+            id="micButton"
             style={{
-              width: "92px",
-              height: "92px",
-              background: "#FF7777",
+              width: "100px",
+              height: "100px",
+              background: "white",
               borderRadius: "50%",
-              textAlign: "center",
-              color: "white",
               borderColor: "white",
-              fontSize: 12,
+              textAlign: "center",
+              color: "#FF7777",
+              fontSize: 40,
+              border: "none",
               fontFamily: "Nunito Sans",
               fontWeight: "700",
               wordWrap: "break-word",
-              border: "none",
+              position: "absolute",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              top: "-48px",
             }}
           >
-            <MicIcon id="MicImage" sx={{ width: "45px", height: "45px" }} />
-          </div>
-        </button>
+            <div
+              style={{
+                width: "92px",
+                height: "92px",
+                background: "#FF7777",
+                borderRadius: "50%",
+                textAlign: "center",
+                color: "white",
+                borderColor: "white",
+                fontSize: 12,
+                fontFamily: "Nunito Sans",
+                fontWeight: "700",
+                wordWrap: "break-word",
+                border: "none",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <MicIcon id="MicImage" sx={{ width: "45px", height: "45px" }} />
+            </div>
+          </button>
+        </CustomToolTip>
       </div>
     </>
   );
