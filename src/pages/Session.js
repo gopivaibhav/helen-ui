@@ -16,7 +16,6 @@ const Session = () => {
         const res = await axios.get(
           `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/session/${sessionId}`
         );
-        console.log("eredsdf", res)
         await setData(res.data);
       } catch (error) {
         console.log("fetch session info error: ", error);
@@ -25,7 +24,7 @@ const Session = () => {
     fetchSession();
   }, [sessionId]);
 
-  console.log("data from eapi >>>> ", data);
+  console.log("data from session >>>> ", data);
   return (
     <>
       <SessionHeader />
