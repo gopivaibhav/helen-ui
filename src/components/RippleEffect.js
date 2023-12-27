@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 
 const RippleEffect = ({ isPlaying }) => {
-  const [circleSize, setCircleSize] = useState(250);
+  // const [isPlaying, setIsPlaying] = useState(false); 
+  const [circleSize, setCircleSize] = useState(220);
   useEffect(() => {
     if (isPlaying) {
-      setCircleSize(() => 270);
+      setCircleSize(() => 260);
+      setTimeout(() => {
+        setCircleSize(() => 240);
+      }, 300);
     } else {
-      setCircleSize(() => 250);
+      setCircleSize(() => 220);
     }
   }, [isPlaying]);
   return (
@@ -25,8 +29,8 @@ const RippleEffect = ({ isPlaying }) => {
         <div
           className="circle2"
           style={{
-            width: circleSize - 25 + "px",
-            height: circleSize - 25 + "px",
+            width: isPlaying?circleSize - 25 + "px": circleSize - 15 + "px",
+            height: isPlaying?circleSize - 25 + "px": circleSize - 15 + "px",
             backgroundColor: "#fabbbb", // Color change
             borderRadius: "50%",
             transition: "all 0.3s ",
@@ -70,6 +74,9 @@ const RippleEffect = ({ isPlaying }) => {
           </div>
         </div>
       </div>
+      {/* <button onClick={()=> setIsPlaying((prev)=> !prev)}>
+        Click me
+      </button> */}
     </div>
   );
 };

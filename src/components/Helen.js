@@ -30,15 +30,11 @@ const Helen = ({ topic = "", setProgress}) => {
   const [loader, setLoader] = useState(false);
   const [listeningLoader, setListeningLoader] = useState(false);
   const [chat, setChat] = useState([]);
-  const [helenRippleEffect, setHelenRippleEffect] = useState(false);
-  const [userRippleEffect, setUserRippleEffect] = useState(false);
   const [changeButtonFunction, setChangeButtonFunction] = useState(true);
   const [isHolding, setIsHolding] = useState(false);
   const [textArray, setTextArray] = useState([]);
   const [caption, setCaption] = useState("");
   const [words, setWords] = useState([]);
-  const [totalCaption, setTotalCaption] = useState("");
-  // const [isActivated, setIsActivated] = useState(false);
 
   const [finalBlobs, setFinalBlobs] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -78,22 +74,6 @@ const Helen = ({ topic = "", setProgress}) => {
     };
   }, []);
 
-  const displayWords = async () => {
-    // setCapIndex(1);
-    while (words.length > 0) {
-      console.log(words, 'words')
-      const displayChunk = words.splice(0, 10); // Get the next 10 words
-      console.log(displayChunk); // Replace this with your display logic
-      setCaption(displayChunk.join(' '));
-      setWords((prev) => prev.slice(10)); 
-
-      if (words.length > 0) {
-        await new Promise((resolve) => setTimeout(resolve, 3000)); // Wait for 4 seconds
-      }
-    }
-  };
-  
-
   const location = useLocation();
   const state = location.state.sessionId;
   console.log("state>>>>>>>>>>>>> ", state);
@@ -132,7 +112,6 @@ const Helen = ({ topic = "", setProgress}) => {
   useEffect(() => {
     console.log(listening);
     if (!listening) {
-      setUserRippleEffect(false);
       setListeningLoader(false);
       handleRequest();
     } else {
@@ -517,9 +496,8 @@ const Helen = ({ topic = "", setProgress}) => {
             outline: "none",
           }}
         >
-          <div className={isPlaying ? "ripple-effect-helen" : ""} />
+          {/* <div className={isPlaying ? "ripple-effect-helen" : ""} /> */}
           <RippleEffect isPlaying={isPlaying} />
-          {/* <div className={helenRippleEffect ? "ripple-effect-helen" : ""} /> */}
           {/* <img
             style={{
               width: "200px",
@@ -573,19 +551,6 @@ const Helen = ({ topic = "", setProgress}) => {
         <audio ref={audioRef} onEnded={handleAudioEnded}>
           Your browser does not support the audio element.
         </audio>
-        <div id="caption-container">
-          {/* <span id="captiontext">hello there my name is ramanujan and what is </span> */}
-        </div>
-        <div id="caption-container">
-          {/* <span id="captiontext">hello</span> */}
-        </div>
-        {/* {sidecaption !== "" && (
-          <div id="caption-container">
-            <span id="captiontext" style={{ opacity: "0.5" }}>
-              {sidecaption}
-            </span>
-          </div>
-        )} */}
       </div>
       {/* <div style={{ position: "absolute", right: 10, bottom: "20vh" }}>
         <div className={userRippleEffect ? "ripple-effect-user" : ""} />
