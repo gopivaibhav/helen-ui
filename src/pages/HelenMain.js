@@ -26,7 +26,7 @@ const HelenMain = () => {
 
     fetchData();
   }, []);
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState({ _id: "", sessions: "" });
   const { user, isAuthenticated, isLoading } = useAuth0();
   useEffect(() => {
     const authData = async () => {
@@ -52,8 +52,11 @@ const HelenMain = () => {
   ) : (
     <div>
       <UserPofile />
-      <NewSession userId={userData._id} />
-      <PreviousSession sessionDetail={userData.sessions} />
+
+      <NewSession userId={userData && userData._id ? userData._id : ""} />
+      <PreviousSession
+        sessionDetail={userData && userData.sessions ? userData.sessions : ""}
+      />
       {/* <a
         target="_blank"
         rel="noopener noreferrer"
