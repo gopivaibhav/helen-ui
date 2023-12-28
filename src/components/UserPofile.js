@@ -28,8 +28,8 @@ const UserPofile = () => {
 
   const { user, isAuthenticated, isLoading, logout } = useAuth0();
   const [patient, setPatient] = useState(
-    sessionStorage.userData && JSON.parse(sessionStorage.userData)
-      ? JSON.parse(sessionStorage.userData)
+    sessionStorage.userDetail && JSON.parse(sessionStorage.userDetail)
+      ? JSON.parse(sessionStorage.userDetail)
       : { nickname: "", email: "" }
   );
   console.log("user information >>>>>> ", user, isLoading, isAuthenticated);
@@ -38,8 +38,8 @@ const UserPofile = () => {
       if (isAuthenticated && !isLoading) {
         setProfilePic(user.picture);
         await createUser(user);
-        setPatient(user)
-        sessionStorage.setItem("userDetail", JSON.stringify(user, null, 2));
+        setPatient(user);
+        sessionStorage.setItem("userDetail", JSON.stringify(user));
         setIsLogin(true);
       }
       if (!isAuthenticated && !isLoading) {
