@@ -4,22 +4,29 @@ import "../styles/NewSession.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { mixPanelTracking } from "../utils/mixPanel";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const NewSession = ({ userId }) => {
   const [sessionId, setSessionId] = useState("");
 
+  const { user, isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
   const navigate = useNavigate();
   const sessionHandler = async () => {
-    const response = await axios.post(
-      `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/session/`,
-      {
-        userId,
-      }
-    );
-    await setSessionId(response.data.sessionId);
-    // if (sessionId) {
-    //   navigate("/helen", { state: { sessionId } });
-    // }
+    // console.log("user form ", userId);
+    if (userId === "") {
+      loginWithRedirect();
+    } else {
+      const response = await axios.post(
+        `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/session/`,
+        {
+          userId,
+        }
+      );
+      await setSessionId(response.data.sessionId);
+      // if (sessionId) {
+      //   navigate("/helen", { state: { sessionId } });
+      // }
+    }
   };
   useEffect(() => {
     if (sessionId) {
@@ -28,7 +35,7 @@ const NewSession = ({ userId }) => {
     }
   }, [sessionId, navigate]);
 
-  console.log("Userid >>>>> ", userId);
+  // console.log("Userid >>>>> ", userId);
   return (
     <div style={{ marginLeft: "9.3vw", marginTop: "15px" }}>
       <div

@@ -10,35 +10,6 @@ const Loader = () => {
   const location = useLocation();
   const sessionId = location.state.sessionId;
   console.log("loader content sessionId >>>>> ", sessionId);
-  // useEffect(() => {
-  //   if (fileName !== "") {
-  //     navigate(`/helen/${fileName}`, { state: { aiData } });
-  //   }
-  // }, [fileName, navigate, aiData]);
-
-  // useEffect(() => {
-  //   fetch(`${process.env.REACT_APP_PORT}/reset`, {
-  //     method: "POST",
-  //   }).then(() => {
-  //     fetch(`${process.env.REACT_APP_PORT}/checkaudio?q=`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         chat: [],
-  //       }),
-  //     })
-  //       .then((data) => {
-  //         return data.json();
-  //       })
-  //       .then((data) => {
-  //         console.log(data);
-  //         setFileName(data.filename);
-  //         setAiData(data.AI);
-  //       });
-  //   });
-  // }, []);
 
   useEffect(() => {
     // }, [navigate]);
@@ -47,21 +18,34 @@ const Loader = () => {
       console.log("WebSocket connection ended");
     };
 
-    setTimeout(() => {
-      navigate(`/helen`, { state: { sessionId } });
-    }, 1500);
+    fetch(`${process.env.REACT_APP_PORT}/register`, {
+        method: "POST",
+        body: JSON.stringify({
+          "email": JSON.parse(sessionStorage.getItem("userDetail")).email,
+        }),
+      }).then(() => {
+        fetch(`${process.env.REACT_APP_PORT}/reset`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            "email": JSON.parse(sessionStorage.getItem("userDetail")).email,
+          }),
+        })
+          .then((data) => {
+            return data.json();
+          })
+          .then((data) => {
+            console.log(data);
+            setTimeout(() => {
+              navigate(`/helen`, { state: { sessionId } });
+            }, 500);
+          });
+      });
 
     if (socket) {
       console.log("socket");
-      // socket.send(JSON.stringify({'need': 'reset'}))
-      // socket.addEventListener('message', (event) => {
-      //   console.log('Message from server ', event.data);
-      //   if(event.data === 'reset done'){
-      //     setTimeout(() => {
-      //       navigate(`/helen`);
-      //     }, 1500);
-      //   }
-      // })
 
       socket.addEventListener("close", handleClose);
     }

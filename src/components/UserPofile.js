@@ -2,31 +2,48 @@ import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import EditNoteIcon from "@mui/icons-material/EditNote";
-const createUser = async (user) => {
+const createUser = async (user, setUserId) => {
   try {
     const { name, email, picture } = user;
     const newUser = await axios.post(
       "https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/profile/user",
       { name, email, picture }
     );
+    if (newUser.data !== "User already exists") {
+      sessionStorage.setItem("userData", JSON.stringify(newUser.data.user));
+      setUserId(newUser.data.user._id);
+    }
   } catch (error) {
     console.log("fetch user error: ", error);
   }
 };
 
-const UserPofile = () => {
+const UserPofile = ({ setUserId }) => {
   const { loginWithRedirect } = useAuth0();
-  const [profilePic, setProfilePic] = useState("./profile.png");
+  const [profilePic, setProfilePic] = useState(
+    sessionStorage.userData && JSON.parse(sessionStorage.userData)
+      ? JSON.parse(sessionStorage.userData).picture
+      : ""
+  );
   const [profileDetail, setProfileDetail] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(
+    sessionStorage.isAuth ? JSON.parse(sessionStorage.isAuth) : false
+  );
 
   const { user, isAuthenticated, isLoading, logout } = useAuth0();
+  const [patient, setPatient] = useState(
+    sessionStorage.userDetail && JSON.parse(sessionStorage.userDetail)
+      ? JSON.parse(sessionStorage.userDetail)
+      : { nickname: "", email: "" }
+  );
   console.log("user information >>>>>> ", user, isLoading, isAuthenticated);
   useEffect(() => {
     const authData = async () => {
       if (isAuthenticated && !isLoading) {
         setProfilePic(user.picture);
-        await createUser(user);
+        await createUser(user, setUserId);
+        setPatient(user);
+        sessionStorage.setItem("userDetail", JSON.stringify(user));
         setIsLogin(true);
       }
       if (!isAuthenticated && !isLoading) {
@@ -64,7 +81,7 @@ const UserPofile = () => {
           fontFamily: "Nunito Sans",
         }}
       >
-        {user && isLogin ? user.name + "!" : "Hi !"}{" "}
+        {isLogin ? patient.nickname + "!" : "Hi !"}{" "}
         {<span style={{ fontSize: "24px" }}>👋🏻</span>}
       </div>
       {isLogin ? (
@@ -143,7 +160,7 @@ const UserPofile = () => {
             fontSize: "13px",
           }}
         >
-          <div style={{ width: "30%" }}>
+          <div style={{ width: "35%" }}>
             <img
               style={{
                 width: "80px",
@@ -160,7 +177,7 @@ const UserPofile = () => {
           <div
             style={{
               margin: "10px",
-              width: "70%",
+              width: "65%",
             }}
           >
             <div
@@ -169,7 +186,7 @@ const UserPofile = () => {
                 marginBottom: "2px",
               }}
             >
-              {user.name}
+              {patient.nickname}
             </div>
             <div
               style={{
@@ -178,7 +195,7 @@ const UserPofile = () => {
                 marginBottom: "2px",
               }}
             >
-              {user.email}
+              {patient.email}
             </div>
             <button
               style={{
@@ -196,9 +213,10 @@ const UserPofile = () => {
                 textShadow: "0 0 1px #ddd",
                 cursor: "pointer",
               }}
-              onClick={() =>
-                logout({ logoutParams: { returnTo: window.location.origin } })
-              }
+              onClick={() => {
+                sessionStorage.clear();
+                logout({ logoutParams: { returnTo: window.location.origin } });
+              }}
             >
               Log Out{" "}
             </button>

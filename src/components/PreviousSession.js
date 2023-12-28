@@ -58,74 +58,78 @@ const PreviousSession = ({ sessionDetail }) => {
         </div>
       </div>
       {sessionDetail &&
-        sessionDetail.map((prev, key) => {
-          return (
-            <div
-              className="FeatureCardWrapper"
-              style={{ margin: "15px 8vw 25px 0px" }}
-              onClick={() => {
-                console.log(prev._id);
-                navigate("/session", { state: { sessionId: prev._id } });
-              }}
-            >
+        sessionDetail
+          .slice()
+          .reverse()
+          .map((prev, key) => {
+            return (
               <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  justifyContent: "space-between",
-                  textAlign: "left",
-                  width: "100%",
+                className="FeatureCardWrapper"
+                style={{ margin: "15px 8vw 25px 0px" }}
+                key={key}
+                onClick={() => {
+                  console.log(prev._id);
+                  navigate("/session", { state: { sessionId: prev._id } });
                 }}
               >
                 <div
                   style={{
-                    width: "85%",
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "space-between",
+                    textAlign: "left",
+                    width: "100%",
                   }}
                 >
-                  <div
-                    style={{
-                      width: "100% ",
-                      color: "black",
-                      fontSize: 18,
-                      fontFamily: "Nunito Sans",
-                      fontWeight: "700",
-                      lineHeight: "40px",
-                    }}
-                  >
-                    Session {key + 1}
-                  </div>
                   <div
                     style={{
                       width: "85%",
-                      color: "#4E4D4D",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "100% ",
+                        color: "black",
+                        fontSize: 18,
+                        fontFamily: "Nunito Sans",
+                        fontWeight: "700",
+                        lineHeight: "40px",
+                      }}
+                    >
+                      Session {sessionDetail.length - (key + 1)}
+                    </div>
+                    <div
+                      style={{
+                        width: "85%",
+                        color: "#4E4D4D",
+                        fontSize: 12,
+                        fontFamily: "Nunito Sans",
+                        fontWeight: "600",
+                        wordWrap: "break-word",
+                      }}
+                    >
+                      {formatTime(prev.createdat)}
+                    </div>{" "}
+                  </div>
+                  <div
+                    style={{
+                      textAlign: "right",
+                      color: "#FF7777",
                       fontSize: 12,
                       fontFamily: "Nunito Sans",
                       fontWeight: "600",
-                      wordWrap: "break-word",
+                      lineHeight: "15px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
                   >
-                    {formatTime(prev.createdat)}
-                  </div>{" "}
-                </div>
-                <div
-                  style={{
-                    textAlign: "right",
-                    color: "#FF7777",
-                    fontSize: 12,
-                    fontFamily: "Nunito Sans",
-                    fontWeight: "600",
-                    lineHeight: "15px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <ArrowForwardIcon />
+                    <ArrowForwardIcon />
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
     </div>
   );
 };
