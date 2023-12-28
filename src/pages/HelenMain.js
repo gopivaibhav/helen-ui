@@ -42,7 +42,6 @@ const HelenMain = () => {
   const [isAuth, setIsAuth] = useState(
     sessionStorage.isAuth ? JSON.parse(sessionStorage.isAuth) : false
   );
-  console.log("email>>>>> ", email);
   useEffect(() => {
     const authData = async () => {
       if (isAuthenticated && !isLoading) {
@@ -54,8 +53,6 @@ const HelenMain = () => {
     };
     authData();
   }, [user, isAuthenticated, isLoading, isAuth]);
-
-  console.log(filledUserCount);
 
   const fetchUser = async (email) => {
     try {
@@ -92,7 +89,7 @@ const HelenMain = () => {
     </div>
   ) : (
     <div>
-      <UserPofile />
+      <UserPofile setUserId={setUserId}/>
       <NewSession userId={userId} />
       {filledUserCount <= 100 && isAuth !== true ? (
         <div style={{ marginLeft: "9.3vw", marginTop: "15px" }}>

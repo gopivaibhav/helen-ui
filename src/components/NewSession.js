@@ -12,7 +12,7 @@ const NewSession = ({ userId }) => {
   const { user, isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
   const navigate = useNavigate();
   const sessionHandler = async () => {
-    console.log("user form ", userId);
+    // console.log("user form ", userId);
     if (userId === "") {
       loginWithRedirect();
     } else {
@@ -35,7 +35,7 @@ const NewSession = ({ userId }) => {
     }
   }, [sessionId, navigate]);
 
-  console.log("Userid >>>>> ", userId);
+  // console.log("Userid >>>>> ", userId);
   return (
     <div style={{ marginLeft: "9.3vw", marginTop: "15px" }}>
       <div

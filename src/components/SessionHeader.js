@@ -11,7 +11,7 @@ function getTimeDifferenceInSecondsAndMinutes(createdAt, updatedAt) {
   // Calculate the time difference in seconds and minutes
   const secondsDifference = Math.floor(timeDifference / 1000);
   const minutesDifference = Math.floor(secondsDifference / 60);
-  console.log(minutesDifference);
+  // console.log(minutesDifference);
   return {
     minutes: minutesDifference,
     seconds: secondsDifference % 60,

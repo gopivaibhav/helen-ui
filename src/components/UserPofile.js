@@ -2,19 +2,23 @@ import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import EditNoteIcon from "@mui/icons-material/EditNote";
-const createUser = async (user) => {
+const createUser = async (user, setUserId) => {
   try {
     const { name, email, picture } = user;
     const newUser = await axios.post(
       "https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/profile/user",
       { name, email, picture }
     );
+    if (newUser.data !== "User already exists") {
+      sessionStorage.setItem("userData", JSON.stringify(newUser.data.user));
+      setUserId(newUser.data.user._id);
+    }
   } catch (error) {
     console.log("fetch user error: ", error);
   }
 };
 
-const UserPofile = () => {
+const UserPofile = ({ setUserId }) => {
   const { loginWithRedirect } = useAuth0();
   const [profilePic, setProfilePic] = useState(
     sessionStorage.userData && JSON.parse(sessionStorage.userData)
@@ -37,7 +41,7 @@ const UserPofile = () => {
     const authData = async () => {
       if (isAuthenticated && !isLoading) {
         setProfilePic(user.picture);
-        await createUser(user);
+        await createUser(user, setUserId);
         setPatient(user);
         sessionStorage.setItem("userDetail", JSON.stringify(user));
         setIsLogin(true);
