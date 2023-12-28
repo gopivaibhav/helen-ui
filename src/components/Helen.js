@@ -178,7 +178,7 @@ const Helen = ({ topic = "", setProgress}) => {
 
     if (socket) {
       socket.send(JSON.stringify({'need': 'reset'}))
-      socket.send(JSON.stringify({'need': 'openai', 'query': '', 'chat': chat }))
+      socket.send(JSON.stringify({'need': 'openai', 'query': '', 'chat': chat, 'email': JSON.parse(sessionStorage.getItem("user")).email }))
       socket.addEventListener('message', (event) => {
         const message = event.data;
         if(typeof(message) === 'string'){
@@ -320,7 +320,7 @@ const Helen = ({ topic = "", setProgress}) => {
     console.log("API Request-", transcript);
     if (transcript && transcript.length >= 2) {
       // sendAPIRequest(transcript);
-      socket.send(JSON.stringify({'need': 'openai', 'query': transcript, 'chat': chat }))
+      socket.send(JSON.stringify({'need': 'openai', 'query': transcript, 'chat': chat, 'email': JSON.parse(sessionStorage.getItem("user")).email }))
       setChat((prev) => [...prev, { role: "user", content: transcript }]);
       addMessage("user", transcript, state)
     }else if (transcript === '' && !toolTipOpen) {

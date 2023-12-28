@@ -34,6 +34,7 @@ const UserPofile = () => {
       }
     };
     authData();
+    sessionStorage.setItem("user", JSON.stringify(user));
   }, [user, isAuthenticated, isLoading, setProfilePic]);
   const handleProfile = () => {
     setProfileDetail(!profileDetail);
