@@ -49,10 +49,13 @@ const HelenMain = () => {
         setUserData(await fetchUser(user.email));
         sessionStorage.setItem("isAuth", true);
         setIsAuth(true);
+      } 
+      else if(email) {
+        setUserData(await fetchUser(email));
       }
     };
     authData();
-  }, [user, isAuthenticated, isLoading, isAuth]);
+  }, [user, isAuthenticated, isLoading, isAuth, email]);
 
   const fetchUser = async (email) => {
     try {
@@ -89,7 +92,7 @@ const HelenMain = () => {
     </div>
   ) : (
     <div>
-      <UserPofile setUserId={setUserId}/>
+      <UserPofile setUserId={setUserId} />
       <NewSession userId={userId} />
       {filledUserCount <= 100 && isAuth !== true ? (
         <div style={{ marginLeft: "9.3vw", marginTop: "15px" }}>
