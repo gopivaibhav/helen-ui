@@ -6,19 +6,11 @@ import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import { RingLoader } from "react-spinners";
 import "../styles/NewSession.css";
-const fetchUser = async (email) => {
-  try {
-    const user = await axios.get(
-      `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/profile/get/${email}`
-    );
-    return user.data;
-  } catch (error) {
-    console.log("fetch user error: ", error);
-  }
-};
+
 const HelenMain = () => {
   const [loading, setLoading] = useState(true);
   const [filledUserCount, setFilledUserCount] = useState(100);
+
   useEffect(() => {
     // Simulate data fetching or other async operations
     const fetchData = async () => {
@@ -34,16 +26,57 @@ const HelenMain = () => {
   }, []);
   const [userData, setUserData] = useState({ _id: "", sessions: "" });
   const { user, isAuthenticated, isLoading } = useAuth0();
+  const [email, setEmail] = useState(
+    sessionStorage.userData && JSON.parse(sessionStorage.userData)
+      ? JSON.parse(sessionStorage.userData).email
+      : ""
+  );
+  const [userId, setUserId] = useState(
+    sessionStorage.userData && JSON.parse(sessionStorage.userData)
+      ? JSON.parse(sessionStorage.userData)._id
+      : ""
+  );
+  const [sessions, setSessions] = useState(
+    sessionStorage.sessions ? JSON.parse(sessionStorage.sessions) : []
+  );
+  const [isAuth, setIsAuth] = useState(
+    sessionStorage.isAuth ? JSON.parse(sessionStorage.isAuth) : false
+  );
+  console.log("email>>>>> ", email);
   useEffect(() => {
     const authData = async () => {
       if (isAuthenticated && !isLoading) {
+        setEmail(user.email);
         setUserData(await fetchUser(user.email));
+        sessionStorage.setItem("isAuth", true);
+        setIsAuth(true);
       }
     };
     authData();
-  }, [user, isAuthenticated, isLoading]);
+  }, [user, isAuthenticated, isLoading, isAuth]);
 
   console.log(filledUserCount);
+
+  const fetchUser = async (email) => {
+    try {
+      const res = await axios.get(
+        `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/profile/get/${email}`
+      );
+      sessionStorage.setItem("userData", JSON.stringify(res.data, null, 0));
+      sessionStorage.setItem("userId", res.data._id);
+      sessionStorage.setItem(
+        "sessions",
+        JSON.stringify(res.data.sessions, null, 0)
+      );
+      setSessions(res.data.sessions);
+      setUserId(res.data._id);
+      sessionStorage.setItem("name", res.data.nickname);
+      sessionStorage.setItem("picture", res.data.picture);
+      return res.data;
+    } catch (error) {
+      console.log("fetch user error: ", error);
+    }
+  };
   return loading ? (
     // Display the loader when loading is true
     <div
@@ -60,15 +93,15 @@ const HelenMain = () => {
   ) : (
     <div>
       <UserPofile />
-      <NewSession userId={userData && userData._id ? userData._id : ""} />
-      {filledUserCount <= 100 && !isAuthenticated ? (
+      <NewSession userId={userId} />
+      {filledUserCount <= 100 && isAuth !== true ? (
         <div style={{ marginLeft: "9.3vw", marginTop: "15px" }}>
           <div
             className="LeftCard"
             style={{
               display: "flex",
               justifyContent: "center",
-              textAlign:"center",
+              textAlign: "center",
               alignItems: "center",
               background: "#FF7777",
               color: "white",
@@ -89,9 +122,7 @@ const HelenMain = () => {
           </div>
         </div>
       ) : (
-        <PreviousSession
-          sessionDetail={userData && userData.sessions ? userData.sessions : ""}
-        />
+        <PreviousSession sessionDetail={sessions} />
       )}
 
       {/* <a

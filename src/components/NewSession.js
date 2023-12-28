@@ -12,7 +12,8 @@ const NewSession = ({ userId }) => {
   const { user, isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
   const navigate = useNavigate();
   const sessionHandler = async () => {
-    if (!isAuthenticated && !isLoading) {
+    console.log("user form ", userId);
+    if (userId === "") {
       loginWithRedirect();
     } else {
       const response = await axios.post(

@@ -16,17 +16,29 @@ const createUser = async (user) => {
 
 const UserPofile = () => {
   const { loginWithRedirect } = useAuth0();
-  const [profilePic, setProfilePic] = useState("./profile.png");
+  const [profilePic, setProfilePic] = useState(
+    sessionStorage.userData && JSON.parse(sessionStorage.userData)
+      ? JSON.parse(sessionStorage.userData).picture
+      : ""
+  );
   const [profileDetail, setProfileDetail] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(
+    sessionStorage.isAuth ? JSON.parse(sessionStorage.isAuth) : false
+  );
 
   const { user, isAuthenticated, isLoading, logout } = useAuth0();
+  const [patient, setPatient] = useState(
+    sessionStorage.userData && JSON.parse(sessionStorage.userData)
+      ? JSON.parse(sessionStorage.userData)
+      : { nickname: "", email: "" }
+  );
   console.log("user information >>>>>> ", user, isLoading, isAuthenticated);
   useEffect(() => {
     const authData = async () => {
       if (isAuthenticated && !isLoading) {
         setProfilePic(user.picture);
         await createUser(user);
+        setPatient(user)
         sessionStorage.setItem("userDetail", JSON.stringify(user, null, 2));
         setIsLogin(true);
       }
@@ -65,7 +77,7 @@ const UserPofile = () => {
           fontFamily: "Nunito Sans",
         }}
       >
-        {user && isLogin ? user.nickname + "!" : "Hi !"}{" "}
+        {isLogin ? patient.nickname + "!" : "Hi !"}{" "}
         {<span style={{ fontSize: "24px" }}>👋🏻</span>}
       </div>
       {isLogin ? (
@@ -170,7 +182,7 @@ const UserPofile = () => {
                 marginBottom: "2px",
               }}
             >
-              {user.nickname}
+              {patient.nickname}
             </div>
             <div
               style={{
@@ -179,7 +191,7 @@ const UserPofile = () => {
                 marginBottom: "2px",
               }}
             >
-              {user.email}
+              {patient.email}
             </div>
             <button
               style={{
@@ -197,9 +209,10 @@ const UserPofile = () => {
                 textShadow: "0 0 1px #ddd",
                 cursor: "pointer",
               }}
-              onClick={() =>
-                logout({ logoutParams: { returnTo: window.location.origin } })
-              }
+              onClick={() => {
+                sessionStorage.clear();
+                logout({ logoutParams: { returnTo: window.location.origin } });
+              }}
             >
               Log Out{" "}
             </button>

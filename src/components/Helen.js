@@ -2,15 +2,15 @@ import React from "react";
 import "../styles/Menu.css";
 import "../styles/Mic.css";
 import RippleEffect from "./RippleEffect";
-import Fade from '@mui/material/Fade';
-import { withStyles } from '@mui/styles';
+import Fade from "@mui/material/Fade";
+import { withStyles } from "@mui/styles";
 import Tooltip from "@mui/material/Tooltip";
 import { useEffect, useState, useRef } from "react";
 import MicIcon from "@mui/icons-material/Mic";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-import { useWebSocket } from '../WebSocketProvider';
+import { useWebSocket } from "../WebSocketProvider";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
@@ -24,7 +24,7 @@ const addMessage = async (sender, content, session) => {
     }
   );
 };
-const Helen = ({ topic = "", setProgress}) => {
+const Helen = ({ topic = "", setProgress }) => {
   const socket = useWebSocket();
   const { transcript, listening } = useSpeechRecognition();
   const [loader, setLoader] = useState(false);
@@ -45,7 +45,7 @@ const Helen = ({ topic = "", setProgress}) => {
   const audioRef = useRef(null);
   const currentBlobIndex = useRef(0);
   const [toolTipOpen, setToolTipOpen] = useState(false);
-  
+
   // const playCaptions = () => {
   //   setCaption('');
   //   console.log('words- ', words.length, capIndex)
@@ -68,31 +68,30 @@ const Helen = ({ topic = "", setProgress}) => {
     const handleContextMenu = (e) => {
       e.preventDefault();
     };
-    console.log("context menu")
+    console.log("context menu");
     // Attach the event listener when the component mounts
-    document.addEventListener('contextmenu', handleContextMenu);
+    document.addEventListener("contextmenu", handleContextMenu);
 
     // Clean up the event listener when the component unmounts
     return () => {
-      document.removeEventListener('contextmenu', handleContextMenu);
+      document.removeEventListener("contextmenu", handleContextMenu);
     };
   }, []);
 
   const displayWords = async () => {
     // setCapIndex(1);
     while (words.length > 0) {
-      console.log(words, 'words')
+      console.log(words, "words");
       const displayChunk = words.splice(0, 10); // Get the next 10 words
       console.log(displayChunk); // Replace this with your display logic
-      setCaption(displayChunk.join(' '));
-      setWords((prev) => prev.slice(10)); 
+      setCaption(displayChunk.join(" "));
+      setWords((prev) => prev.slice(10));
 
       if (words.length > 0) {
         await new Promise((resolve) => setTimeout(resolve, 3000)); // Wait for 4 seconds
       }
     }
   };
-  
 
   const location = useLocation();
   const state = location.state.sessionId;
@@ -139,7 +138,6 @@ const Helen = ({ topic = "", setProgress}) => {
     }
   }, [listening]);
 
-
   const playNextBlob = () => {
     // console.log('in play next blob', currentBlobIndex, finalBlobs)
     if (currentBlobIndex.current < finalBlobs.length) {
@@ -147,43 +145,51 @@ const Helen = ({ topic = "", setProgress}) => {
       const blob = finalBlobs[currentBlobIndex.current];
       const blobUrl = URL.createObjectURL(blob);
 
-
       const handleCanPlayThrough = () => {
         // console.log('playing through-', textArray, currentBlobIndex.current)
-        setCaption(textArray[currentBlobIndex.current-1]);
-        audioRef.current.play().then(() => {
-          console.log('playing audio')
-        }).catch((err) => {
-          console.log(err, 'error in playing audio');
-        });
-        audioRef.current.removeEventListener('canplaythrough', handleCanPlayThrough);
+        setCaption(textArray[currentBlobIndex.current - 1]);
+        audioRef.current
+          .play()
+          .then(() => {
+            console.log("playing audio");
+          })
+          .catch((err) => {
+            console.log(err, "error in playing audio");
+          });
+        audioRef.current.removeEventListener(
+          "canplaythrough",
+          handleCanPlayThrough
+        );
       };
 
       audioRef.current.src = blobUrl;
-      audioRef.current.addEventListener('canplaythrough', handleCanPlayThrough);
+      audioRef.current.addEventListener("canplaythrough", handleCanPlayThrough);
 
       currentBlobIndex.current += 1;
     }
   };
 
   const checkPlaying = () => {
-    if(currentBlobIndex.current < textArray.length){
-      if(textArray[currentBlobIndex.current] === ' ALL DONE '){
-        console.log('\nFinal Caption-', textArray.join(' ').slice(0, -11))
-        setChat((prev) => [...prev, { role: "assistant", content: textArray.join(' ').slice(0, -11) }]);
-        addMessage("assistant", textArray.join(' ').slice(0, -11), state )
+    if (currentBlobIndex.current < textArray.length) {
+      if (textArray[currentBlobIndex.current] === " ALL DONE ") {
+        console.log("\nFinal Caption-", textArray.join(" ").slice(0, -11));
+        setChat((prev) => [
+          ...prev,
+          { role: "assistant", content: textArray.join(" ").slice(0, -11) },
+        ]);
+        addMessage("assistant", textArray.join(" ").slice(0, -11), state);
         setTextArray(() => []);
         currentBlobIndex.current = 0;
         setFinalBlobs([]);
       }
     }
-  }
+  };
 
   const handleAudioEnded = () => {
-    setCaption('')
-    setIsPlaying(() => false)
+    setCaption("");
+    setIsPlaying(() => false);
     checkPlaying();
-  }
+  };
 
   useEffect(() => {
     // console.log('in use effect', finalBlobs, isPlaying)
@@ -194,44 +200,41 @@ const Helen = ({ topic = "", setProgress}) => {
 
   useEffect(() => {
     const handleClose = () => {
-      console.log('WebSocket connection ended');
+      console.log("WebSocket connection ended");
     };
 
     if (socket) {
-      socket.send(JSON.stringify({'need': 'reset'}))
-      socket.send(JSON.stringify({'need': 'openai', 'query': '', 'chat': chat }))
-      socket.addEventListener('message', (event) => {
+      socket.send(JSON.stringify({ need: "reset" }));
+      socket.send(JSON.stringify({ need: "openai", query: "", chat: chat }));
+      socket.addEventListener("message", (event) => {
         const message = event.data;
-        if(typeof(message) === 'string'){
-          const res = JSON.parse(message)
-          if(res.AI){
-            console.log(res.AI)
-            setTextArray((prev) => ([...prev, res.AI]));
-          }
-          else {
-            console.log('state', res)
-            if(res.done){
-              setTextArray((prev) => ([...prev, ' ALL DONE ']));
+        if (typeof message === "string") {
+          console.log(message, "ffsdhfjsdjfsdjkfjjsdjdsjfjdj");
+          const res = JSON.parse(message);
+          if (res.AI) {
+            console.log(res.AI);
+            setTextArray((prev) => [...prev, res.AI]);
+          } else {
+            console.log("state", res);
+            if (res.done) {
+              setTextArray((prev) => [...prev, " ALL DONE "]);
             }
-            if(res.total_count)setProgress(res.total_count * 4.5)
+            if (res.total_count) setProgress(res.total_count * 4.5);
           }
-        }else{
+        } else {
           // console.log('blob', message, typeof(message))
           setFinalBlobs((prev) => [...prev, message]);
         }
-      
       });
-      socket.addEventListener('close', handleClose);
+      socket.addEventListener("close", handleClose);
     }
 
     return () => {
       if (socket) {
-        socket.removeEventListener('close', handleClose);
+        socket.removeEventListener("close", handleClose);
       }
     };
   }, [socket]);
-
-  
 
   // const callAudio = () => {
   //   setTimeout(() => {
@@ -334,25 +337,26 @@ const Helen = ({ topic = "", setProgress}) => {
       textAlign: "center",
       color: "F2F1EB",
       backgroundColor: "#707070",
-    }
+    },
   })(Tooltip);
 
   const handleRequest = () => {
     console.log("API Request-", transcript);
     if (transcript && transcript.length >= 2) {
       // sendAPIRequest(transcript);
-      socket.send(JSON.stringify({'need': 'openai', 'query': transcript, 'chat': chat }))
+      socket.send(
+        JSON.stringify({ need: "openai", query: transcript, chat: chat })
+      );
       setChat((prev) => [...prev, { role: "user", content: transcript }]);
-      addMessage("user", transcript, state)
-    }else if (transcript === '' && !toolTipOpen) {
-      console.log("speak something")
+      addMessage("user", transcript, state);
+    } else if (transcript === "" && !toolTipOpen) {
+      console.log("speak something");
       setToolTipOpen(true);
       setTimeout(() => {
         setToolTipOpen(false);
       }, 2000);
     }
   };
-
 
   // const sendAPIRequest = async (transcript) => {
   //   setChat((prev) => [...prev, { role: "user", content: transcript }]);
@@ -420,7 +424,7 @@ const Helen = ({ topic = "", setProgress}) => {
   //       // };
   //     });
   // };
-  
+
   // const sendAPIRequest = async (transcript) => {
   //   setChat((prev) => [...prev, { role: "user", content: transcript }]);
   //   setLoader(true);
@@ -459,7 +463,6 @@ const Helen = ({ topic = "", setProgress}) => {
   //       setChat((prev) => [...prev, { role: "assistant", content: data.AI }]);
   //     });
   // };
-
 
   // const getTranscript = () => {
   //   let intTime;
@@ -618,7 +621,14 @@ const Helen = ({ topic = "", setProgress}) => {
           margin: 0,
         }}
       >
-        <CustomToolTip TransitionComponent={Fade} TransitionProps={{ timeout: 500 }} open={toolTipOpen} sx={{ width: "1000 rem", color: "green" }} placement="top" title="Press and Hold to Speak Something">
+        <CustomToolTip
+          TransitionComponent={Fade}
+          TransitionProps={{ timeout: 500 }}
+          open={toolTipOpen}
+          sx={{ width: "1000 rem", color: "green" }}
+          placement="top"
+          title="Press and Hold to Speak Something"
+        >
           <button
             // onClick={ChangeButtonFunctionHandler}
             onMouseDown={handleMouseDown}
