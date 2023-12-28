@@ -1,24 +1,25 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { render } from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Auth0Provider } from "@auth0/auth0-react";
-import { WebSocketProvider } from './WebSocketProvider';
+import { WebSocketProvider } from "./WebSocketProvider";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
+const root = document.getElementById("root");
+render(
   <Auth0Provider
-  domain="dev-myip5nhijncloi83.us.auth0.com"
-  clientId="zGaNlOGO5I1oOTle1uT7gmgULO0n2hyi"
-  authorizationParams={{
-    redirect_uri: window.location.origin
-  }}
->
-        <WebSocketProvider>
-          <App />
-        </WebSocketProvider>
+    domain="dev-myip5nhijncloi83.us.auth0.com"
+    clientId="zGaNlOGO5I1oOTle1uT7gmgULO0n2hyi"
+    authorizationParams={{
+      redirect_uri: window.location.origin,
+    }}
+  >
+    <WebSocketProvider>
+      <App />
+    </WebSocketProvider>
   </Auth0Provider>,
+  root
 );
 
 // If you want to start measuring performance in your app, pass a function
