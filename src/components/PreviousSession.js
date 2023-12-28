@@ -66,6 +66,7 @@ const PreviousSession = ({ sessionDetail }) => {
               <div
                 className="FeatureCardWrapper"
                 style={{ margin: "15px 8vw 25px 0px" }}
+                key={key}
                 onClick={() => {
                   console.log(prev._id);
                   navigate("/session", { state: { sessionId: prev._id } });
