@@ -189,7 +189,6 @@ const Helen = ({ topic = "", setProgress }) => {
     };
 
     if (socket) {
-      socket.send(JSON.stringify({ need: "reset" }));
       socket.send(
         JSON.stringify({
           need: "openai",
