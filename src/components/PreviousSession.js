@@ -72,7 +72,7 @@ const PreviousSession = ({ sessionDetail }) => {
                   navigate("/session", {
                     state: {
                       sessionId: prev._id,
-                      key: sessionDetail.length - (key + 1),
+                      key: sessionDetail.length - key,
                     },
                   });
                 }}
@@ -101,7 +101,7 @@ const PreviousSession = ({ sessionDetail }) => {
                         lineHeight: "40px",
                       }}
                     >
-                      Session {sessionDetail.length - (key + 1)}
+                      Session {sessionDetail.length - key}
                     </div>
                     <div
                       style={{
