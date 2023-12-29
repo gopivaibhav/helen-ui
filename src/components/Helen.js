@@ -77,7 +77,6 @@ const Helen = ({ topic = "", setProgress }) => {
 
   const location = useLocation();
   const state = location.state.sessionId;
-  console.log("state>>>>>>>>>>>>> ", state);
   let holdTimeout;
   const handleMouseDown = () => {
     // Set a timeout to detect the hold
@@ -574,10 +573,10 @@ const Helen = ({ topic = "", setProgress }) => {
         >
           <button
             // onClick={ChangeButtonFunctionHandler}
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onTouchStart={handleMouseDown}
-            onTouchEnd={handleMouseUp}
+            onMouseDown={isButtonDisabled && handleMouseDown}
+            onMouseUp={isButtonDisabled && handleMouseUp}
+            onTouchStart={isButtonDisabled && handleMouseDown}
+            onTouchEnd={isButtonDisabled && handleMouseUp}
             disabled={isButtonDisabled}
             id="micButton"
             style={{
