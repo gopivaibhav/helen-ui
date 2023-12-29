@@ -9,6 +9,7 @@ const Session = () => {
   const [data, setData] = useState({});
   const location = useLocation();
   const sessionId = location.state.sessionId;
+  const key = location.state.key;
   console.log("session content main sessionId >>>>> ", sessionId);
   useEffect(() => {
     const fetchSession = async () => {
@@ -27,7 +28,7 @@ const Session = () => {
   console.log("data from session >>>> ", data);
   return (
     <>
-    <SessionHeader createdAt={data.createdAt} updatedAt={data.updatedAt} />
+    <SessionHeader createdAt={data.createdAt} updatedAt={data.updatedAt} key = {key}/>
       <SessionContent />
     </>
   );

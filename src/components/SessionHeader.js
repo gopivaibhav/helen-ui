@@ -31,7 +31,7 @@ const formatTime = (dateString) => {
   const formattedDate = dateObject.toLocaleDateString("en-US", options);
   return formattedDate;
 };
-const SessionHeader = ({ createdAt, updatedAt }) => {
+const SessionHeader = ({ createdAt, updatedAt, key }) => {
   const navigate = useNavigate();
   return (
     <div
@@ -77,7 +77,7 @@ const SessionHeader = ({ createdAt, updatedAt }) => {
           fontFamily: "Nunito Sans",
         }}
       >
-        Session 1
+        Session {key}
       </div>
       <div
         style={{

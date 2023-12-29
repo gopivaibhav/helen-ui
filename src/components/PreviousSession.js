@@ -69,7 +69,12 @@ const PreviousSession = ({ sessionDetail }) => {
                 key={key}
                 onClick={() => {
                   console.log(prev._id);
-                  navigate("/session", { state: { sessionId: prev._id } });
+                  navigate("/session", {
+                    state: {
+                      sessionId: prev._id,
+                      key: sessionDetail.length - (key + 1),
+                    },
+                  });
                 }}
               >
                 <div
