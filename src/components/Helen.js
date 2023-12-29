@@ -26,6 +26,7 @@ const addMessage = async (sender, content, session) => {
 };
 const Helen = ({ topic = "", setProgress }) => {
   const socket = useWebSocket();
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const { transcript, listening } = useSpeechRecognition();
   const [loader, setLoader] = useState(false);
   const [listeningLoader, setListeningLoader] = useState(false);
@@ -122,6 +123,7 @@ const Helen = ({ topic = "", setProgress }) => {
     // console.log('in play next blob', currentBlobIndex, finalBlobs)
     if (currentBlobIndex.current < finalBlobs.length) {
       setIsPlaying(true);
+      setIsButtonDisabled(true)
       const blob = finalBlobs[currentBlobIndex.current];
       const blobUrl = URL.createObjectURL(blob);
 
@@ -171,6 +173,7 @@ const Helen = ({ topic = "", setProgress }) => {
   const handleAudioEnded = () => {
     setCaption("");
     setIsPlaying(() => false);
+    setIsButtonDisabled(false)
     checkPlaying();
   };
 
@@ -576,6 +579,7 @@ const Helen = ({ topic = "", setProgress }) => {
             onMouseUp={handleMouseUp}
             onTouchStart={handleMouseDown}
             onTouchEnd={handleMouseUp}
+            disabled={isButtonDisabled}
             id="micButton"
             style={{
               width: "100px",
