@@ -9,7 +9,6 @@ const Loader = () => {
 
   const location = useLocation();
   const sessionId = location.state.sessionId;
-  console.log("loader content sessionId >>>>> ", sessionId);
 
   useEffect(() => {
     // }, [navigate]);
@@ -37,7 +36,6 @@ const Loader = () => {
             return data.json();
           })
           .then((data) => {
-            console.log(data);
             setTimeout(() => {
               navigate(`/helen`, { state: { sessionId } });
             }, 500);

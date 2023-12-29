@@ -195,7 +195,6 @@ const Helen = ({ topic = "", setProgress }) => {
       socket.addEventListener('message', (event) => {
         const message = event.data;
         if (typeof message === "string") {
-          console.log(message, "ffsdhfjsdjfsdjkfjjsdjdsjfjdj");
           const res = JSON.parse(message);
           if (res.AI) {
             console.log(res.AI);

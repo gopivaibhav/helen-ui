@@ -19,7 +19,6 @@ const formatTime = (dateString) => {
 };
 const PreviousSession = ({ sessionDetail }) => {
   const navigate = useNavigate();
-  console.log("previous session >>>>> ", sessionDetail);
   return (
     <div style={{ marginLeft: "9.3vw" }}>
       <div

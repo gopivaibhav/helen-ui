@@ -15,7 +15,6 @@ const formatTime = (dateString) => {
   return formattedDate;
 };
 const SessionContent = ({ homework_summary, session_overview }) => {
-  console.log(homework_summary);
   return (
     <div style={{ marginLeft: "9.3vw" }}>
       <div

@@ -34,7 +34,6 @@ const formatTime = (dateString) => {
 const SessionHeader = ({ createdAt, updatedAt }) => {
   const location = useLocation();
   const key = location.state.key;
-  console.log("session content main key >>>>> ", key);
   const navigate = useNavigate();
   return (
     <div

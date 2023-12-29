@@ -37,7 +37,6 @@ const UserPofile = ({ setUserId }) => {
       ? JSON.parse(sessionStorage.userDetail)
       : { nickname: "", email: "" }
   );
-  console.log("user information >>>>>> ", user, isLoading, isAuthenticated);
   useEffect(() => {
     const authData = async () => {
       if (isAuthenticated && !isLoading) {
