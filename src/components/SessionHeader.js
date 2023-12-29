@@ -32,6 +32,7 @@ const formatTime = (dateString) => {
   return formattedDate;
 };
 const SessionHeader = ({ createdAt, updatedAt, key }) => {
+  console.log(key);
   const navigate = useNavigate();
   return (
     <div
@@ -77,7 +78,7 @@ const SessionHeader = ({ createdAt, updatedAt, key }) => {
           fontFamily: "Nunito Sans",
         }}
       >
-        Session {key}
+        Session 1{key}
       </div>
       <div
         style={{
