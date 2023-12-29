@@ -1,26 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 const RippleEffect = ({ isPlaying }) => {
   // const [isPlaying, setIsPlaying] = useState(false); 
   const [circleSize, setCircleSize] = useState(220);
-  useEffect(() => {
-    if (isPlaying) {
-      setCircleSize(() => 260);
-      setTimeout(() => {
-        setCircleSize(() => 240);
-      }, 300);
-    } else {
-      setCircleSize(() => 220);
-    }
-  }, [isPlaying]);
+  // useEffect(() => {
+  //   if (isPlaying) {
+  //     setCircleSize(() => 240);
+  //   } else {
+  //     setCircleSize(() => 220);
+  //   }
+  // }, [isPlaying]);
   return (
-    <div className="ripple-container" style={{ zIndex: -1 }}>
+    <div className="ripple-container" style={{ zIndex: -1, marginTop: '-10px' }}>
       <div
         className="circle1"
         style={{
-          width: circleSize + 15 + "px",
-          height: circleSize + 15 + "px",
-          backgroundColor: "#fcd2d2", // Color change 
+          width: isPlaying ? circleSize - 10 + "px": circleSize - 45 + "px",
+          height: isPlaying ? circleSize - 10 + "px": circleSize - 45 + "px",
+          backgroundColor: "#FEE5E4", // Color change 
           borderRadius: "50%",
           position: "relative",
           transition: "all 0.3s ",
@@ -29,9 +26,9 @@ const RippleEffect = ({ isPlaying }) => {
         <div
           className="circle2"
           style={{
-            width: isPlaying?circleSize - 25 + "px": circleSize - 15 + "px",
-            height: isPlaying?circleSize - 25 + "px": circleSize - 15 + "px",
-            backgroundColor: "#fabbbb", // Color change
+            width: isPlaying?circleSize - 35 + "px": circleSize - 45 + "px",
+            height: isPlaying?circleSize - 35 + "px": circleSize - 45 + "px",
+            backgroundColor: "#FEB9B8", // Color change
             borderRadius: "50%",
             transition: "all 0.3s ",
             position: "absolute",
@@ -45,7 +42,7 @@ const RippleEffect = ({ isPlaying }) => {
             style={{
               width: circleSize - 60 + "px",
               height: circleSize - 60 + "px",
-              backgroundColor: "#ff8c8c",
+              backgroundColor: "#FE9899",
               borderRadius: "50%",
               transition: "all 0.3s ",
               position: "absolute",
