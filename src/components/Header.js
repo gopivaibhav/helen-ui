@@ -1,24 +1,30 @@
 import React, { useState } from "react";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CustomConfirmModal from "./CustomConfirmModal";
 import ProgressBar from "./ProgressBar";
+import axios from "axios";
 const Header = ({ setIsActive, progress }) => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const navigateToHome = () => {
     setShowModal(false);
-      //  navigate('/');
-      window.location.href = "/";
-   };
+    //  navigate('/');
+    sessionStorage.clear("ongoingSession");
+    window.location.href = "/";
+  };
 
-  const handleConfirm = () => {
-      setShowModal(false);
-      navigateToHome();
+  const handleConfirm = async () => {
+    setShowModal(false);
+    const data = await axios.get(
+      `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/session/get/${sessionStorage.getItem(
+        "ongoingSession"
+      )}`
+    );
+    navigateToHome();
   };
 
   const handleCancel = () => {
-   
     setShowModal(false);
   };
 
@@ -26,17 +32,15 @@ const Header = ({ setIsActive, progress }) => {
     setShowModal(true);
   };
 
-  const handleBackButton =()=>{
+  const handleBackButton = () => {
     handleClick();
- 
-  }
+  };
   const RefreshHandler = () => {
     fetch(`${process.env.REACT_APP_PORT}/reset`, {
-      method: "POST"
-    })
-    .then((data) => {
+      method: "POST",
+    }).then((data) => {
       window.location.reload();
-    })
+    });
   };
   return (
     <>
@@ -61,18 +65,16 @@ const Header = ({ setIsActive, progress }) => {
           fontWeight: 700,
           fontFamily: "Nunito Sans",
         }}
-        onClick={handleBackButton} 
+        onClick={handleBackButton}
       >
-        
-         <img
-            style={{
-              width: "20px",
-              height: "20px",
-            }}
-            src="/back_button.svg"
-            alt="back button"
-          />
-       
+        <img
+          style={{
+            width: "20px",
+            height: "20px",
+          }}
+          src="/back_button.svg"
+          alt="back button"
+        />
       </button>
       {showModal && (
         <CustomConfirmModal

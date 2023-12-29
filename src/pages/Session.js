@@ -28,11 +28,13 @@ const Session = () => {
   console.log("data from session >>>> ", data);
   return (
     <>
-      <SessionHeader
-        createdAt={data.createdAt}
-        updatedAt={data.updatedAt}
+      <SessionHeader createdAt={data.createdAt} updatedAt={data.updatedAt} />
+      <SessionContent
+        homework_summary={data.homework_summary}
+        session_overview={
+          data && data.session_overview ? data.session_overview : ""
+        }
       />
-      <SessionContent />
     </>
   );
 };

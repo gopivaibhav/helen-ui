@@ -14,7 +14,8 @@ const formatTime = (dateString) => {
   const formattedDate = dateObject.toLocaleDateString("en-US", options);
   return formattedDate;
 };
-const SessionContent = () => {
+const SessionContent = ({ homework_summary, session_overview }) => {
+  console.log(homework_summary);
   return (
     <div style={{ marginLeft: "9.3vw" }}>
       <div
@@ -52,10 +53,7 @@ const SessionContent = () => {
             marginLeft: "1px",
           }}
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat.
+          {session_overview}
         </div>
         <div
           style={{
@@ -85,20 +83,10 @@ const SessionContent = () => {
             marginLeft: "1px",
           }}
         >
-          <ol style={{ marginLeft: "16px" }}>
-            <li style={{ marginBottom: "16px" }}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat.
-            </li>
-            <li style={{ marginBottom: "16px" }}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat.
-            </li>
-          </ol>
+          {homework_summary}
+          {/* <ol style={{ marginLeft: "16px" }}>
+            <li style={{ marginBottom: "16px" }}>{homework_summary}</li>
+          </ol> */}
         </div>
       </div>
     </div>

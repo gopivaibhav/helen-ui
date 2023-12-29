@@ -22,7 +22,7 @@ const NewSession = ({ userId }) => {
           userId,
         }
       );
-      await setSessionId(response.data.sessionId);
+      await setSessionId(response.data._id);
       // if (sessionId) {
       //   navigate("/helen", { state: { sessionId } });
       // }
@@ -31,6 +31,7 @@ const NewSession = ({ userId }) => {
   useEffect(() => {
     if (sessionId) {
       mixPanelTracking(`newSessionCreated > ${sessionId}`);
+      sessionStorage.setItem("ongoingSession", sessionId);
       navigate("/starting", { state: { sessionId } });
     }
   }, [sessionId, navigate]);
