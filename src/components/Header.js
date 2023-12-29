@@ -9,8 +9,6 @@ const Header = ({ setIsActive, progress }) => {
   const [showModal, setShowModal] = useState(false);
   const navigateToHome = () => {
     setShowModal(false);
-    //  navigate('/');
-    sessionStorage.clear("ongoingSession");
     window.location.href = "/";
   };
 
