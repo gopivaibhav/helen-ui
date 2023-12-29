@@ -153,6 +153,9 @@ const Helen = ({ topic = "", setProgress }) => {
     if (currentBlobIndex.current < textArray.length) {
       if (textArray[currentBlobIndex.current] === " ALL DONE ") {
         console.log("\nFinal Caption-", textArray.join(" ").slice(0, -11));
+        if(chat.length == 0) {
+          setToolTipOpen(true);
+        }
         setChat((prev) => [
           ...prev,
           { role: "assistant", content: textArray.join(" ").slice(0, -11) },
@@ -161,7 +164,6 @@ const Helen = ({ topic = "", setProgress }) => {
         setTextArray(() => []);
         currentBlobIndex.current = 0;
         setFinalBlobs([]);
-        setToolTipOpen(true);
       }
     }
   };
@@ -486,34 +488,7 @@ const Helen = ({ topic = "", setProgress }) => {
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <div
-          style={{
-            borderRadius: " 50%",
-            border: "none",
-            outline: "none",
-          }}
-        >
-          {/* <div className={isPlaying ? "ripple-effect-helen" : ""} /> */}
-          <RippleEffect isPlaying={isPlaying} />
-          {/* <img
-            style={{
-              width: "200px",
-              height: "200px",
-              borderRadius: 9999,
-              boxShadow: "0px 1px 30px rgba(0, 0, 0, 0.2)",
-            }}
-            src="/helen.jpeg"
-            alt="helen"
-          /> */}
-        </div>
-      </div>
+      <RippleEffect isPlaying={isPlaying} />
       <div
         style={{
           display: "flex",

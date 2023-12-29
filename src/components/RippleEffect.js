@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const RippleEffect = ({ isPlaying }) => {
-  // const [isPlaying, setIsPlaying] = useState(false); 
+  // const [isPlaying, setIsPlaying] = useState(false);
   const [circleSize, setCircleSize] = useState(220);
   // useEffect(() => {
   //   if (isPlaying) {
@@ -11,13 +11,23 @@ const RippleEffect = ({ isPlaying }) => {
   //   }
   // }, [isPlaying]);
   return (
-    <div className="ripple-container" style={{ zIndex: -1, marginTop: '-10px' }}>
+    <div
+      className="ripple-container"
+      style={{
+        zIndex: -1,
+        marginTop: "-10px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "240px",
+      }}
+    >
       <div
         className="circle1"
         style={{
-          width: isPlaying ? circleSize - 10 + "px": circleSize - 45 + "px",
-          height: isPlaying ? circleSize - 10 + "px": circleSize - 45 + "px",
-          backgroundColor: "#FEE5E4", // Color change 
+          width: isPlaying ? circleSize - 10 + "px" : circleSize - 45 + "px",
+          height: isPlaying ? circleSize - 10 + "px" : circleSize - 45 + "px",
+          backgroundColor: "#FEE5E4", // Color change
           borderRadius: "50%",
           position: "relative",
           transition: "all 0.3s ",
@@ -26,8 +36,8 @@ const RippleEffect = ({ isPlaying }) => {
         <div
           className="circle2"
           style={{
-            width: isPlaying?circleSize - 35 + "px": circleSize - 45 + "px",
-            height: isPlaying?circleSize - 35 + "px": circleSize - 45 + "px",
+            width: isPlaying ? circleSize - 35 + "px" : circleSize - 45 + "px",
+            height: isPlaying ? circleSize - 35 + "px" : circleSize - 45 + "px",
             backgroundColor: "#FEB9B8", // Color change
             borderRadius: "50%",
             transition: "all 0.3s ",

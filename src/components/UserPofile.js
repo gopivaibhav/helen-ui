@@ -1,5 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
+import "../styles/NewSession.css";
 import React, { useEffect, useState } from "react";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 const createUser = async (user, setUserId) => {
@@ -110,7 +111,7 @@ const UserPofile = ({ setUserId }) => {
           />
         </div>
       ) : (
-        <div
+        <div id="login-btn"
           style={{
             position: "absolute",
             right: "6vw",
@@ -127,10 +128,7 @@ const UserPofile = ({ setUserId }) => {
             height: "35px",
             outline: "none",
             border: "none",
-            color: "orange",
-            background: "white",
             fontWeight: 500,
-            textShadow: "0 0 1px #ddd",
             fontSize: "16px",
           }}
           onClick={handleLogin}

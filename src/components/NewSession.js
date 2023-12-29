@@ -80,6 +80,26 @@ const NewSession = ({ userId }) => {
           >
             Start a therapy session
           </div>
+          <div class="center-con arrow-div">
+            <div class="round">
+              <div id="cta">
+                <span class="arrow primera next "></span>
+                <span class="arrow segunda next "></span>
+              </div>
+            </div>
+          </div>
+          <div
+            style={{
+              width: "70%",
+              color: "#4E4D4D",
+              fontSize: 12,
+              fontFamily: "Nunito Sans",
+              fontWeight: "600",
+              wordWrap: "break-word",
+            }}
+          >
+            Feeling overwhelmed? A friendly ear is just a click away.
+          </div>
           <div
             style={{
               width: "20%",
@@ -93,19 +113,7 @@ const NewSession = ({ userId }) => {
           >
             30 mins
           </div>
-          <div
-            style={{
-              width: "70%",
-              color: "#4E4D4D",
-              fontSize: 12,
-              fontFamily: "Nunito Sans",
-              fontWeight: "600",
-              wordWrap: "break-word",
-            }}
-          >
-            Feeling overwhelmed? A friendly ear is just a click away.
-          </div>{" "}
-          <div
+          {/* <div
             style={{
               width: "28%",
               textAlign: "right",
@@ -117,7 +125,7 @@ const NewSession = ({ userId }) => {
             }}
           >
             <ArrowForwardIcon />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
