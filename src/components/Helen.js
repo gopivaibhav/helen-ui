@@ -122,7 +122,7 @@ const Helen = ({ topic = "", setProgress }) => {
     // console.log('in play next blob', currentBlobIndex, finalBlobs)
     if (currentBlobIndex.current < finalBlobs.length) {
       setIsPlaying(true);
-      setIsButtonDisabled(true)
+      setIsButtonDisabled(true);
       const blob = finalBlobs[currentBlobIndex.current];
       const blobUrl = URL.createObjectURL(blob);
 
@@ -154,7 +154,7 @@ const Helen = ({ topic = "", setProgress }) => {
     if (currentBlobIndex.current < textArray.length) {
       if (textArray[currentBlobIndex.current] === " ALL DONE ") {
         console.log("\nFinal Caption-", textArray.join(" ").slice(0, -11));
-        if(chat.length == 0) {
+        if (chat.length == 0) {
           setToolTipOpen(true);
         }
         setChat((prev) => [
@@ -172,7 +172,7 @@ const Helen = ({ topic = "", setProgress }) => {
   const handleAudioEnded = () => {
     setCaption("");
     setIsPlaying(() => false);
-    setIsButtonDisabled(false)
+    setIsButtonDisabled(false);
     checkPlaying();
   };
 
@@ -189,9 +189,16 @@ const Helen = ({ topic = "", setProgress }) => {
     };
 
     if (socket) {
-      socket.send(JSON.stringify({'need': 'reset'}))
-      socket.send(JSON.stringify({'need': 'openai', 'query': '', 'chat': chat, 'email': JSON.parse(sessionStorage.getItem("userDetail")).email }))
-      socket.addEventListener('message', (event) => {
+      socket.send(JSON.stringify({ need: "reset" }));
+      socket.send(
+        JSON.stringify({
+          need: "openai",
+          query: "",
+          chat: chat,
+          email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+        })
+      );
+      socket.addEventListener("message", (event) => {
         const message = event.data;
         if (typeof message === "string") {
           const res = JSON.parse(message);
@@ -328,10 +335,17 @@ const Helen = ({ topic = "", setProgress }) => {
     console.log("API Request-", transcript);
     if (transcript && transcript.length >= 2) {
       // sendAPIRequest(transcript);
-      socket.send(JSON.stringify({'need': 'openai', 'query': transcript, 'chat': chat, 'email': JSON.parse(sessionStorage.getItem("userDetail")).email }))
+      socket.send(
+        JSON.stringify({
+          need: "openai",
+          query: transcript,
+          chat: chat,
+          email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+        })
+      );
       setChat((prev) => [...prev, { role: "user", content: transcript }]);
       addMessage("user", transcript, state);
-    } 
+    }
     // else if (transcript === "" && !toolTipOpen) {
     //   console.log("speak something");
     //   setToolTipOpen(true);
@@ -573,11 +587,10 @@ const Helen = ({ topic = "", setProgress }) => {
         >
           <button
             // onClick={ChangeButtonFunctionHandler}
-            onMouseDown={!isButtonDisabled && handleMouseDown}
-            onMouseUp={!isButtonDisabled && handleMouseUp}
-            onTouchStart={!isButtonDisabled && handleMouseDown}
-            onTouchEnd={!isButtonDisabled && handleMouseUp}
-            disabled={!isButtonDisabled}
+            onMouseDown={ handleMouseDown }
+            onMouseUp={ handleMouseUp }
+            onTouchStart={ handleMouseDown }
+            onTouchEnd={ handleMouseUp }
             id="micButton"
             style={{
               width: "100px",
