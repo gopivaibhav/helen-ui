@@ -80,7 +80,7 @@ const SessionHeader = ({ createdAt, updatedAt }) => {
           fontFamily: "Nunito Sans",
         }}
       >
-        Session 1{key}
+        Session {key}
       </div>
       <div
         style={{
