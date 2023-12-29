@@ -84,7 +84,7 @@ const Helen = ({ topic = "", setProgress }) => {
       setIsHolding(true);
       setChangeButtonFunction(false);
       setListeningLoader(true);
-
+      setToolTipOpen(false);
       SpeechRecognition.startListening({
         language: "en-UK",
       });
@@ -161,6 +161,7 @@ const Helen = ({ topic = "", setProgress }) => {
         setTextArray(() => []);
         currentBlobIndex.current = 0;
         setFinalBlobs([]);
+        setToolTipOpen(true);
       }
     }
   };
@@ -327,13 +328,14 @@ const Helen = ({ topic = "", setProgress }) => {
       socket.send(JSON.stringify({'need': 'openai', 'query': transcript, 'chat': chat, 'email': JSON.parse(sessionStorage.getItem("userDetail")).email }))
       setChat((prev) => [...prev, { role: "user", content: transcript }]);
       addMessage("user", transcript, state);
-    } else if (transcript === "" && !toolTipOpen) {
-      console.log("speak something");
-      setToolTipOpen(true);
-      setTimeout(() => {
-        setToolTipOpen(false);
-      }, 2000);
-    }
+    } 
+    // else if (transcript === "" && !toolTipOpen) {
+    //   console.log("speak something");
+    //   setToolTipOpen(true);
+    //   setTimeout(() => {
+    //     setToolTipOpen(false);
+    //   }, 2000);
+    // }
   };
 
   // const sendAPIRequest = async (transcript) => {
@@ -587,7 +589,7 @@ const Helen = ({ topic = "", setProgress }) => {
       >
         <CustomToolTip
           TransitionComponent={Fade}
-          TransitionProps={{ timeout: 500 }}
+          TransitionProps={{ timeout: 0 }}
           open={toolTipOpen}
           sx={{ width: "1000 rem", color: "green" }}
           placement="top"
