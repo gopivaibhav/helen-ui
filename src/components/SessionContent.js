@@ -86,7 +86,7 @@ const SessionContent = ({ homework_summary, session_overview }) => {
           {homework_summary}
           {/* <ol style={{ marginLeft: "16px" }}>
             <li style={{ marginBottom: "16px" }}>{homework_summary}</li>
-          </ol> */}
+          </ol> */} 
         </div>
       </div>
     </div>
