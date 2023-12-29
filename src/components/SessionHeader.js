@@ -1,6 +1,6 @@
 import { ArrowBack } from "@mui/icons-material";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 function getTimeDifferenceInSecondsAndMinutes(createdAt, updatedAt) {
   const createdAtDate = new Date(createdAt);
   const updatedAtDate = new Date(updatedAt);
@@ -31,8 +31,10 @@ const formatTime = (dateString) => {
   const formattedDate = dateObject.toLocaleDateString("en-US", options);
   return formattedDate;
 };
-const SessionHeader = ({ createdAt, updatedAt, key }) => {
-  console.log(key);
+const SessionHeader = ({ createdAt, updatedAt }) => {
+  const location = useLocation();
+  const key = location.state.key;
+  console.log("session content main key >>>>> ", key);
   const navigate = useNavigate();
   return (
     <div

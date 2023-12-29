@@ -31,7 +31,6 @@ const Session = () => {
       <SessionHeader
         createdAt={data.createdAt}
         updatedAt={data.updatedAt}
-        key={key}
       />
       <SessionContent />
     </>
