@@ -9,6 +9,7 @@ import Layout from "./pages/Layout";
 import Loader from "./pages/Loader";
 import Session from "./pages/Session";
 import { useEffect } from "react";
+import "./App.css";
 import { mixPanelTracking } from "./utils/mixPanel";
 function App() {
   useEffect(() => {
