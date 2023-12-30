@@ -219,8 +219,17 @@ const Helen = ({ topic = "", setProgress }) => {
       socket.addEventListener("close", handleClose);
     }
 
+    const intervalId = setInterval(() => {
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.send(
+          JSON.stringify({ need: "nothing" })
+        );
+      }
+    }, 5000);
+
     return () => {
       if (socket) {
+        clearInterval(intervalId);
         socket.removeEventListener("close", handleClose);
       }
     };
