@@ -13,7 +13,7 @@ const HelenMain = () => {
 
   useEffect(() => {
     // Simulate data fetching or other async operations
-    sessionStorage.clear("ongoingSession");
+    // sessionStorage.clear("ongoingSession");
     const fetchData = async () => {
       const userCount = await axios.get(
         `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/profile/total`
