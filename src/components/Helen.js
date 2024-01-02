@@ -119,7 +119,7 @@ const Helen = ({ topic = "", setProgress }) => {
   }, [listening]);
 
   const playNextBlob = () => {
-    // console.log('in play next blob', currentBlobIndex, finalBlobs)
+    console.log('in play next blob', currentBlobIndex, finalBlobs)
     if (currentBlobIndex.current < finalBlobs.length) {
       setIsPlaying(true);
       setIsButtonDisabled(true);
