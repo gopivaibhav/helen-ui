@@ -127,7 +127,7 @@ const Helen = ({ topic = "", setProgress }) => {
       const blobUrl = URL.createObjectURL(blob);
 
       const handleCanPlayThrough = () => {
-        // console.log('playing through-', textArray, currentBlobIndex.current)
+        console.log('playing through-', textArray, currentBlobIndex.current)
         setCaption(textArray[currentBlobIndex.current - 1]);
         audioRef.current
           .play()
