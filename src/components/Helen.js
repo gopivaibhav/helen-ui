@@ -184,14 +184,14 @@ const Helen = ({ topic = "", setProgress }) => {
     };
 
     if (socket) {
-      socket.send(
-        JSON.stringify({
-          need: "openai",
-          query: "",
-          chat: chat,
-          email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-        })
-      );
+      // socket.send(
+      //   JSON.stringify({
+      //     need: "openai",
+      //     query: "",
+      //     chat: chat,
+      //     email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+      //   })
+      // );
       socket.addEventListener("message", (event) => {
         const message = event.data;
         if (typeof message === "string") {
@@ -580,6 +580,14 @@ const Helen = ({ topic = "", setProgress }) => {
           margin: 0,
         }}
       >
+        <button onClick={() => {socket.send(
+        JSON.stringify({
+          need: "openai",
+          query: "",
+          chat: chat,
+          email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+        })
+      )}} >Click to start</button>
         <CustomToolTip
           TransitionComponent={Fade}
           TransitionProps={{ timeout: 0 }}
