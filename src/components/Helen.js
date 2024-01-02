@@ -119,20 +119,22 @@ const Helen = ({ topic = "", setProgress }) => {
   }, [listening]);
 
   const playNextBlob = () => {
-    console.log('in play next blob', currentBlobIndex.current, finalBlobs.length)
+    // console.log('in play next blob', currentBlobIndex.current, finalBlobs.length)
     if (currentBlobIndex.current < finalBlobs.length) {
-      console.log('successs')
+      // console.log('successs')
       setIsPlaying(true);
       setIsButtonDisabled(true);
       const blob = finalBlobs[currentBlobIndex.current];
       const blobUrl = URL.createObjectURL(blob);
 
       audioRef.current.src = blobUrl;
+      audioRef.current.muted = true;
       audioRef.current
       .play()
       .then(() => {
+        audioRef.current.muted = false;
+        console.log("Unmuted and playing audio");
         setCaption(textArray[currentBlobIndex.current - 1]);
-        console.log("playing audio");
       })
       .catch((err) => {
         console.log(err, "error in playing audio");
