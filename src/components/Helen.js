@@ -127,26 +127,18 @@ const Helen = ({ topic = "", setProgress }) => {
       const blob = finalBlobs[currentBlobIndex.current];
       const blobUrl = URL.createObjectURL(blob);
 
-      const handleCanPlayThrough = () => {
-        console.log('playing through-', textArray, currentBlobIndex.current)
-        setCaption(textArray[currentBlobIndex.current - 1]);
-        audioRef.current
-          .play()
-          .then(() => {
-            console.log("playing audio");
-          })
-          .catch((err) => {
-            console.log(err, "error in playing audio");
-          });
-        audioRef.current.removeEventListener(
-          "canplaythrough",
-          handleCanPlayThrough
-        );
-      };
-
       audioRef.current.src = blobUrl;
-      audioRef.current.addEventListener("canplaythrough", handleCanPlayThrough);
-
+      audioRef.current
+      .play()
+      .then(() => {
+        setCaption(textArray[currentBlobIndex.current - 1]);
+        console.log("playing audio");
+      })
+      .catch((err) => {
+        console.log(err, "error in playing audio");
+      });
+    
+      
       currentBlobIndex.current += 1;
     }
   };
