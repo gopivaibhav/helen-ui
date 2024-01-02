@@ -18,9 +18,18 @@ const Loader = () => {
     };
 
     fetch(`${process.env.REACT_APP_PORT}/register`, {
+      method: "POST",
+      body: JSON.stringify({
+        email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+      }),
+    }).then(() => {
+      fetch(`${process.env.REACT_APP_PORT}/changefirst`, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
-          "email": JSON.parse(sessionStorage.getItem("userDetail")).email,
+          email: JSON.parse(sessionStorage.getItem("userDetail")).email,
         }),
       }).then(() => {
         fetch(`${process.env.REACT_APP_PORT}/reset`, {
@@ -29,7 +38,7 @@ const Loader = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            "email": JSON.parse(sessionStorage.getItem("userDetail")).email,
+            email: JSON.parse(sessionStorage.getItem("userDetail")).email,
           }),
         })
           .then((data) => {
@@ -41,6 +50,7 @@ const Loader = () => {
             }, 500);
           });
       });
+    });
 
     if (socket) {
       console.log("socket");
