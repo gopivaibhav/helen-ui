@@ -60,7 +60,7 @@ const Header = ({ setIsActive, progress }) => {
           borderRadius: "10px",
           marginRight: "0.5rem",
           fontSize: "16px",
-          fontWeight: 700,
+          fontWeight: "700 !important",
           fontFamily: "'Nunito Sans', sans-serif ",
         }}
         onClick={handleBackButton}
@@ -109,7 +109,7 @@ const Header = ({ setIsActive, progress }) => {
           marginTop: "1vh",
           padding: "20px 0",
           fontSize: 50,
-          fontWeight: "700",
+          fontWeight: "700 !important",
           wordWrap: "break-word",
         }}
       >
