@@ -183,14 +183,14 @@ const Helen = ({ topic = "", setProgress }) => {
     };
 
     if (socket) {
-      socket.send(
-        JSON.stringify({
-          need: "openai",
-          query: "",
-          chat: chat,
-          email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-        })
-      );
+      // socket.send(
+      //   JSON.stringify({
+      //     need: "openai",
+      //     query: "",
+      //     chat: chat,
+      //     email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+      //   })
+      // );
       socket.addEventListener("message", (event) => {
         const message = event.data;
         if (typeof message === "string") {
@@ -544,7 +544,21 @@ const Helen = ({ topic = "", setProgress }) => {
             <span id="captiontext">{caption}</span>
           </div>
         )}
-        <audio ref={audioRef} onEnded={handleAudioEnded} >
+        <button
+          onClick={() => {
+            socket.send(
+              JSON.stringify({
+                need: "openai",
+                query: "",
+                chat: chat,
+                email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+              })
+            );
+          }}
+        >
+          Start Therapy
+        </button>
+        <audio ref={audioRef} onEnded={handleAudioEnded}>
           Your browser does not support the audio element.
         </audio>
       </div>
