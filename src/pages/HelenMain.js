@@ -105,7 +105,7 @@ const HelenMain = () => {
               background: "#FF7777",
               color: "white",
               fontSize: 24,
-              fontFamily: "Nunito Sans",
+              fontFamily: "'Nunito Sans', sans-serif ",
               fontWeight: "800",
               lineHeight: "40px",
               wordWrap: "break-word",

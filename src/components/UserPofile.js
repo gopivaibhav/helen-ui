@@ -78,7 +78,7 @@ const UserPofile = ({ setUserId }) => {
           marginTop: "53px",
           fontSize: "18px",
           fontWeight: 800,
-          fontFamily: "Nunito Sans",
+          fontFamily: "'Nunito Sans', sans-serif ",
         }}
       >
         {isLogin ? patient.nickname + "!" : "Hi !"}{" "}
@@ -240,7 +240,7 @@ const UserPofile = ({ setUserId }) => {
           style={{
             color: "white",
             fontSize: "40px",
-            fontFamily: "Nunito Sans",
+            fontFamily: "'Nunito Sans', sans-serif ",
             fontWeight: "800",
             lineHeight: "40px",
             wordWrap: "break-word",

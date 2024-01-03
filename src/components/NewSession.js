@@ -43,7 +43,7 @@ const NewSession = ({ userId }) => {
         style={{
           color: "black",
           fontSize: 18,
-          fontFamily: "Nunito Sans",
+          fontFamily: "'Nunito Sans', sans-serif ",
           fontWeight: "800",
           lineHeight: "40px",
           wordWrap: "break-word",
@@ -73,7 +73,7 @@ const NewSession = ({ userId }) => {
               width: "80% ",
               color: "black",
               fontSize: 18,
-              fontFamily: "Nunito Sans",
+              fontFamily: "'Nunito Sans', sans-serif ",
               fontWeight: "700",
               lineHeight: "40px",
             }}
@@ -93,7 +93,7 @@ const NewSession = ({ userId }) => {
               width: "70%",
               color: "#4E4D4D",
               fontSize: 12,
-              fontFamily: "Nunito Sans",
+              fontFamily: "'Nunito Sans', sans-serif ",
               fontWeight: "600",
               wordWrap: "break-word",
             }}
@@ -106,7 +106,7 @@ const NewSession = ({ userId }) => {
               textAlign: "right",
               color: "#FF7777",
               fontSize: 12,
-              fontFamily: "Nunito Sans",
+              fontFamily: "'Nunito Sans', sans-serif ",
               fontWeight: "600",
               lineHeight: "40px",
             }}
@@ -119,7 +119,7 @@ const NewSession = ({ userId }) => {
               textAlign: "right",
               color: "#FF7777",
               fontSize: 12,
-              fontFamily: "Nunito Sans",
+              fontFamily: "'Nunito Sans', sans-serif ",
               fontWeight: "600",
               lineHeight: "15px",
             }}

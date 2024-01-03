@@ -32,7 +32,7 @@ const PreviousSession = ({ sessionDetail }) => {
           style={{
             color: "black",
             fontSize: 18,
-            fontFamily: "Nunito Sans",
+            fontFamily: "'Nunito Sans', sans-serif ",
             fontWeight: "800",
             lineHeight: "40px",
             wordWrap: "break-word",
@@ -95,7 +95,7 @@ const PreviousSession = ({ sessionDetail }) => {
                         width: "100% ",
                         color: "black",
                         fontSize: 18,
-                        fontFamily: "Nunito Sans",
+                        fontFamily: "'Nunito Sans', sans-serif ",
                         fontWeight: "700",
                         lineHeight: "40px",
                       }}
@@ -107,7 +107,7 @@ const PreviousSession = ({ sessionDetail }) => {
                         width: "85%",
                         color: "#4E4D4D",
                         fontSize: 12,
-                        fontFamily: "Nunito Sans",
+                        fontFamily: "'Nunito Sans', sans-serif ",
                         fontWeight: "600",
                         wordWrap: "break-word",
                       }}
@@ -120,7 +120,7 @@ const PreviousSession = ({ sessionDetail }) => {
                       textAlign: "right",
                       color: "#FF7777",
                       fontSize: 12,
-                      fontFamily: "Nunito Sans",
+                      fontFamily: "'Nunito Sans', sans-serif ",
                       fontWeight: "600",
                       lineHeight: "15px",
                       display: "flex",

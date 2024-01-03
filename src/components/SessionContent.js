@@ -28,7 +28,7 @@ const SessionContent = ({ homework_summary, session_overview }) => {
           style={{
             color: "black",
             fontSize: 16,
-            fontFamily: "Nunito Sans",
+            fontFamily: "'Nunito Sans', sans-serif ",
             fontWeight: "700",
             lineHeight: "40px",
             wordWrap: "break-word",
@@ -44,7 +44,7 @@ const SessionContent = ({ homework_summary, session_overview }) => {
           style={{
             color: "#4E4D4D",
             fontSize: 16,
-            fontFamily: "Nunito Sans",
+            fontFamily: "'Nunito Sans', sans-serif ",
             fontWeight: "400",
             wordWrap: "break-word",
             width: "80%",
@@ -58,7 +58,7 @@ const SessionContent = ({ homework_summary, session_overview }) => {
           style={{
             color: "black",
             fontSize: 16,
-            fontFamily: "Nunito Sans",
+            fontFamily: "'Nunito Sans', sans-serif ",
             fontWeight: "700",
             lineHeight: "40px",
             wordWrap: "break-word",
@@ -74,7 +74,7 @@ const SessionContent = ({ homework_summary, session_overview }) => {
           style={{
             color: "#4E4D4D",
             fontSize: 16,
-            fontFamily: "Nunito Sans",
+            fontFamily: "'Nunito Sans', sans-serif ",
             fontWeight: "400",
             wordWrap: "break-word",
             width: "80%",

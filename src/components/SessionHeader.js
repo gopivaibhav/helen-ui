@@ -76,7 +76,7 @@ const SessionHeader = ({ createdAt, updatedAt }) => {
           marginTop: "88px",
           fontSize: "36px",
           fontWeight: 800,
-          fontFamily: "Nunito Sans",
+          fontFamily: "'Nunito Sans', sans-serif ",
         }}
       >
         Session {key}
@@ -96,7 +96,7 @@ const SessionHeader = ({ createdAt, updatedAt }) => {
           style={{
             color: "white",
             fontSize: "16px",
-            fontFamily: "Nunito Sans",
+            fontFamily: "'Nunito Sans', sans-serif ",
             fontWeight: "600",
             wordWrap: "break-word",
           }}
@@ -107,7 +107,7 @@ const SessionHeader = ({ createdAt, updatedAt }) => {
           style={{
             color: "white",
             fontSize: "16px",
-            fontFamily: "Nunito Sans",
+            fontFamily: "'Nunito Sans', sans-serif ",
             fontWeight: "600",
             wordWrap: "break-word",
           }}

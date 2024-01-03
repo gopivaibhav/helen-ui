@@ -61,7 +61,7 @@ const Header = ({ setIsActive, progress }) => {
           marginRight: "0.5rem",
           fontSize: "16px",
           fontWeight: 700,
-          fontFamily: "Nunito Sans",
+          fontFamily: "'Nunito Sans', sans-serif ",
         }}
         onClick={handleBackButton}
       >
