@@ -151,3 +151,18 @@
   animation-iteration-count:infinite;
   animation-timing-function:linear;
 }
+
+.menu {
+  position: fixed;
+  top: 0;
+  right: -300px; /* Start off-screen */
+  width: 250px;
+  height: 100%;
+  background-color: #333;
+  padding-top: 60px;
+  transition: left 2.3s ease;
+}
+
+.menu.open {
+  right: 0;
+}

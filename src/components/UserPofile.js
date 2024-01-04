@@ -3,6 +3,8 @@ import axios from "axios";
 import "../styles/NewSession.css";
 import React, { useEffect, useState } from "react";
 import EditNoteIcon from "@mui/icons-material/EditNote";
+import MenuIcon from "@mui/icons-material/Menu";
+import { ArrowBack } from "@mui/icons-material";
 const createUser = async (user, setUserId) => {
   try {
     const { name, email, picture } = user;
@@ -58,12 +60,16 @@ const UserPofile = ({ setUserId }) => {
   const handleLogin = () => {
     loginWithRedirect();
   };
+
   return (
     <div
       style={{
-        background: "#FF7777",
+        // background: "#FF7777",
         width: "100%",
         height: "220px",
+        background:
+          "url('./bg.png') center center / cover no-repeat rgba(255, 119, 119, 1)",
+        backgroundPosition: "center bottom",
       }}
     >
       <div
@@ -81,148 +87,187 @@ const UserPofile = ({ setUserId }) => {
           fontFamily: "'Nunito Sans', sans-serif ",
         }}
       >
-        {isLogin ? patient.nickname + "!" : "Hi !"}{" "}
-        {<span style={{ fontSize: "24px" }}>👋🏻</span>}
+        Hi there! {<span style={{ fontSize: "24px" }}> 👋🏻</span>}
       </div>
-      {isLogin ? (
-        <div
-          style={{
-            position: "absolute",
-            right: "6vw",
-            margin: "1rem",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            paddingRight: "10px",
-            paddingTop: "57px",
-            borderRadius: 7,
-            marginRight: "0.5rem",
-            width: "60px",
-            height: "60px",
-          }}
-        >
-          <img
-            style={{ width: "45px", height: "45px", borderRadius: 7 }}
-            src={profilePic}
-            alt="user-profile"
-            onClick={handleProfile}
-          />
-        </div>
-      ) : (
-        <div id="login-btn"
-          style={{
-            position: "absolute",
-            right: "6vw",
-            margin: "1rem",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            paddingRight: "0px",
-            top: "36px",
-            borderRadius: 4,
-            marginRight: "0.5rem",
-            width: "55px",
-            height: "35px",
-            outline: "none",
-            border: "none",
-            fontWeight: 500,
-            fontSize: "16px",
-          }}
-          onClick={handleLogin}
-        >
-          Log In
-        </div>
-      )}
+      <div
+        style={{
+          position: "absolute",
+          right: "6vw",
+          margin: "1rem",
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "right",
+          paddingRight: "10px",
+          paddingTop: "48px",
+          borderRadius: 7,
+          marginRight: "0.1rem",
+          width: "60px",
+          height: "60px",
+        }}
+      >
+        <MenuIcon
+          style={{ width: "30px", height: "30px", color: "white" }}
+          onClick={handleProfile}
+        />
+      </div>
 
       {profileDetail && (
         <div
-          className="card"
+          className={`card menu ${profileDetail ? "open" : ""}`}
           style={{
-            width: "280px",
-            height: "150px",
+            transition: "left 0.3s ease",
+            width: "250px",
+            height: "100vh",
             background: "white",
             boxShadow: "0px 1px 30px rgba(0, 0, 0, 0.2)",
             position: "absolute",
-            right: "7vw",
-            marginTop: "1.3rem",
-            top: "85px",
-            display: "flex",
-            alignItems: "center",
             paddingRight: "10px",
             paddingTop: "10px",
             borderRadius: 7,
             zIndex: "100",
             fontSize: "13px",
-            letterSpacing: "0"
+            letterSpacing: "0",
           }}
         >
-          <div style={{ width: "35%" }}>
-            <img
-              style={{
-                width: "80px",
-                height: "80px",
-                borderRadius: "50%",
-                display: "flex",
-                justifyContent: "center",
-                marginLeft: "5px",
-              }}
-              src={profilePic}
-              alt="user-profile"
-            />
-          </div>
           <div
             style={{
-              margin: "10px",
-              width: "65%",
+              display: "flex",
+              width: "100%",
+              height: "15vh",
+              alignItems: "center",
             }}
           >
-            <div
+            <ArrowBack
               style={{
-                fontWeight: 800,
-                marginBottom: "2px",
+                width: "25%",
+                color: "rgba(78, 77, 77, 0.8)",
+                justifyContent: "left",
               }}
-            >
-              {patient.nickname}
-            </div>
+              onClick={handleProfile}
+            />
             <div
               style={{
-                fontWeight: 500,
+                width: "60%",
+                color: "#4E4D4D",
+                fontSize: 18,
+                fontFamily: "Nunito Sans",
+                fontWeight: "600",
                 wordWrap: "break-word",
-                marginBottom: "2px",
+                display: "flex",
+                justifyContent: "center",
               }}
             >
-              {patient.email}
+              Profile
             </div>
-            <button
+          </div>
+          <div>
+            {isLogin && (
+              <div
+                style={{
+                  wordWrap: "break-word",
+                  marginBottom: "25px",
+                  position: "relative",
+                  left: "25px",
+                  fontSize: "12px",
+                  letterSpacing: 0,
+                }}
+              >
+                <div
+                  style={{
+                    marginBottom: "5px",
+                  }}
+                >
+                  EMAIL
+                </div>
+                <div
+                  style={{
+                    fontWeight: 700,
+                    wordWrap: "break-word",
+                    marginBottom: "15px",
+                    fontSize: "14px",
+                  }}
+                >
+                  {patient.email}
+                </div>
+              </div>
+            )}
+            {/* <div
               style={{
-                border: "none",
-                outline: "none",
-                color: "white",
-                borderRadius: "4px",
-                background: "grey",
-                padding: "6px 0px",
-                width: "100px",
-                fontSize: "16px",
-                marginTop: "5px",
-                marginBottom: "7px",
-                fontWeight: 500,
-                textShadow: "0 0 1px #ddd",
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                sessionStorage.clear();
-                logout({ logoutParams: { returnTo: window.location.origin } });
+                width: "85%",
+                height: "38px",
+                left: "25px",
+                position: "relative",
+                background: "rgba(255, 119, 119, 0.20)",
+                borderRadius: 5,
+                border: "1px #FF7777 solid",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              Log Out{" "}
-            </button>
-          </div>
-          <div
-            style={{ position: "absolute", right: 0, top: 0, fontSize: "5px" }}
-          >
-            <EditNoteIcon sx={{ color: "blue", cursor: "pointer" }} />
+              Login
+            </div> */}
+            {isLogin ? (
+              <button
+                style={{
+                  outline: "none",
+                  padding: "6px 0px",
+                  fontSize: "16px",
+                  marginTop: "5px",
+                  marginBottom: "7px",
+                  fontWeight: 500,
+                  textShadow: "0 0 1px #ddd",
+                  cursor: "pointer",
+                  width: "85%",
+                  height: "38px",
+                  left: "25px",
+                  position: "relative",
+                  background: "rgba(255, 119, 119, 0.20)",
+                  borderRadius: 5,
+                  border: "1px #FF7777 solid",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "rgba(255, 119, 119, 1)",
+                }}
+                onClick={() => {
+                  sessionStorage.clear();
+                  logout({
+                    logoutParams: { returnTo: window.location.origin },
+                  });
+                }}
+              >
+                LOG OUT{" "}
+              </button>
+            ) : (
+              <button
+                style={{
+                  outline: "none",
+                  padding: "6px 0px",
+                  fontSize: "16px",
+                  marginTop: "5px",
+                  marginBottom: "7px",
+                  fontWeight: 500,
+                  textShadow: "0 0 1px #ddd",
+                  cursor: "pointer",
+                  width: "85%",
+                  height: "38px",
+                  left: "25px",
+                  position: "relative",
+                  background: "rgba(255, 119, 119, 0.20)",
+                  borderRadius: 5,
+                  border: "1px #FF7777 solid",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "rgba(255, 119, 119, 1)",
+                }}
+                onClick={handleLogin}
+              >
+                LOG IN{" "}
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -231,7 +276,7 @@ const UserPofile = ({ setUserId }) => {
           position: "absolute",
           left: "0",
           margin: "1rem",
-          top: "75px",
+          top: "80px",
           marginBottom: "45px",
           marginTop: "22px",
           marginLeft: "9.3vw",
@@ -240,7 +285,7 @@ const UserPofile = ({ setUserId }) => {
         <h1
           style={{
             color: "white",
-            fontSize: "40px",
+            fontSize: "35px",
             fontFamily: "'Nunito Sans', sans-serif ",
             fontWeight: "800",
             lineHeight: "40px",
