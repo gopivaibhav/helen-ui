@@ -128,11 +128,11 @@ const Helen = ({ topic = "", setProgress }) => {
       const blobUrl = URL.createObjectURL(blob);
 
       audioRef.current.src = blobUrl;
-      audioRef.current.muted = true;
+      // audioRef.current.muted = false;
       audioRef.current
       .play()
       .then(() => {
-        console.log("muted and playing audio without error");
+        console.log("playing audio without error");
         setCaption(textArray[currentBlobIndex.current - 1]);
       })
       .catch((err) => {
@@ -544,7 +544,21 @@ const Helen = ({ topic = "", setProgress }) => {
             <span id="captiontext">{caption}</span>
           </div>
         )}
-        <audio ref={audioRef} onEnded={handleAudioEnded} >
+        {/* <button
+          onClick={() => {
+            socket.send(
+              JSON.stringify({
+                need: "openai",
+                query: "",
+                chat: chat,
+                email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+              })
+            );
+          }}
+        >
+          Start Therapy
+        </button> */}
+        <audio ref={audioRef} onEnded={handleAudioEnded}>
           Your browser does not support the audio element.
         </audio>
       </div>
