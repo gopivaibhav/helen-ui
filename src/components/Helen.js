@@ -128,11 +128,11 @@ const Helen = ({ topic = "", setProgress }) => {
       const blobUrl = URL.createObjectURL(blob);
 
       audioRef.current.src = blobUrl;
-      audioRef.current.muted = true;
+      // audioRef.current.muted = false;
       audioRef.current
       .play()
       .then(() => {
-        console.log("muted and playing audio without error");
+        console.log("playing audio without error");
         setCaption(textArray[currentBlobIndex.current - 1]);
       })
       .catch((err) => {
@@ -183,14 +183,14 @@ const Helen = ({ topic = "", setProgress }) => {
     };
 
     if (socket) {
-      // socket.send(
-      //   JSON.stringify({
-      //     need: "openai",
-      //     query: "",
-      //     chat: chat,
-      //     email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-      //   })
-      // );
+      socket.send(
+        JSON.stringify({
+          need: "openai",
+          query: "",
+          chat: chat,
+          email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+        })
+      );
       socket.addEventListener("message", (event) => {
         const message = event.data;
         if (typeof message === "string") {
@@ -544,7 +544,7 @@ const Helen = ({ topic = "", setProgress }) => {
             <span id="captiontext">{caption}</span>
           </div>
         )}
-        <button
+        {/* <button
           onClick={() => {
             socket.send(
               JSON.stringify({
@@ -557,7 +557,7 @@ const Helen = ({ topic = "", setProgress }) => {
           }}
         >
           Start Therapy
-        </button>
+        </button> */}
         <audio ref={audioRef} onEnded={handleAudioEnded}>
           Your browser does not support the audio element.
         </audio>
