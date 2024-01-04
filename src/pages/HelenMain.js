@@ -18,7 +18,6 @@ const HelenMain = () => {
         `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/profile/total`
       );
       setFilledUserCount(userCount.data);
-      await new Promise((resolve) => setTimeout(resolve, 800));
       setLoading(false);
     };
 

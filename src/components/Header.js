@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import CustomConfirmModal from "./CustomConfirmModal";
 import ProgressBar from "./ProgressBar";
 import axios from "axios";
-const Header = ({ setIsActive, progress }) => {
+const Header = ({ setIsActive, progress, setLoading }) => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const navigateToHome = () => {
@@ -14,11 +14,13 @@ const Header = ({ setIsActive, progress }) => {
 
   const handleConfirm = async () => {
     setShowModal(false);
+    setLoading(true);
     const data = await axios.get(
       `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/session/get/${sessionStorage.getItem(
         "ongoingSession"
       )}`
     );
+    setLoading(false);
     navigateToHome();
   };
 
