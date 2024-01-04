@@ -96,6 +96,7 @@ const NewSession = ({ userId }) => {
               fontFamily: "'Nunito Sans', sans-serif ",
               fontWeight: "600",
               wordWrap: "break-word",
+              letterSpacing: "0px",
             }}
           >
             Feeling overwhelmed? A friendly ear is just a click away.

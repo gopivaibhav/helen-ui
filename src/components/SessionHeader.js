@@ -90,6 +90,7 @@ const SessionHeader = ({ createdAt, updatedAt }) => {
           marginBottom: "45px",
           marginTop: "80px",
           marginLeft: "9.3vw",
+          letterSpacing: "0"
         }}
       >
         <div

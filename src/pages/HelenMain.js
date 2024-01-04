@@ -114,6 +114,7 @@ const HelenMain = () => {
               marginBottom: "20px",
               marginLeft: "1px",
               margin: "30px 8vw 30px 0px",
+              letterSpacing: "0"
             }}
           >
             Unlock tranquility! Free therapy for the first 100. Hurry, only{" "}

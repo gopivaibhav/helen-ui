@@ -16,7 +16,7 @@ const formatTime = (dateString) => {
 };
 const SessionContent = ({ homework_summary, session_overview }) => {
   return (
-    <div style={{ marginLeft: "9.3vw" }}>
+    <div style={{ marginLeft: "9.3vw", letterSpacing: "0" }}>
       <div
         style={{
           display: "flex",
@@ -45,7 +45,7 @@ const SessionContent = ({ homework_summary, session_overview }) => {
             color: "#4E4D4D",
             fontSize: 16,
             fontFamily: "'Nunito Sans', sans-serif ",
-            fontWeight: "400",
+            fontWeight: "600",
             wordWrap: "break-word",
             width: "80%",
             marginBottom: "20px",
@@ -75,7 +75,7 @@ const SessionContent = ({ homework_summary, session_overview }) => {
             color: "#4E4D4D",
             fontSize: 16,
             fontFamily: "'Nunito Sans', sans-serif ",
-            fontWeight: "400",
+            fontWeight: "600",
             wordWrap: "break-word",
             width: "80%",
             marginBottom: "20px",
@@ -85,7 +85,7 @@ const SessionContent = ({ homework_summary, session_overview }) => {
           {homework_summary}
           {/* <ol style={{ marginLeft: "16px" }}>
             <li style={{ marginBottom: "16px" }}>{homework_summary}</li>
-          </ol> */} 
+          </ol> */}
         </div>
       </div>
     </div>

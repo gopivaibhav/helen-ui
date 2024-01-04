@@ -77,7 +77,7 @@ const UserPofile = ({ setUserId }) => {
           color: "white",
           marginTop: "53px",
           fontSize: "18px",
-          fontWeight: 800,
+          fontWeight: 600,
           fontFamily: "'Nunito Sans', sans-serif ",
         }}
       >
@@ -155,6 +155,7 @@ const UserPofile = ({ setUserId }) => {
             borderRadius: 7,
             zIndex: "100",
             fontSize: "13px",
+            letterSpacing: "0"
           }}
         >
           <div style={{ width: "35%" }}>

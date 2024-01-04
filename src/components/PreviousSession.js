@@ -51,6 +51,7 @@ const PreviousSession = ({ sessionDetail }) => {
             justifyContent: "right",
             alignItems: "center",
             marginRight: "8vw",
+            height: "45px"
           }}
         >
           <ImportExportIcon />
@@ -98,6 +99,7 @@ const PreviousSession = ({ sessionDetail }) => {
                         fontFamily: "'Nunito Sans', sans-serif ",
                         fontWeight: "700",
                         lineHeight: "40px",
+                        // letterSpacing: "0"
                       }}
                     >
                       Session {sessionDetail.length - key}
@@ -110,6 +112,7 @@ const PreviousSession = ({ sessionDetail }) => {
                         fontFamily: "'Nunito Sans', sans-serif ",
                         fontWeight: "600",
                         wordWrap: "break-word",
+                        letterSpacing: "0"
                       }}
                     >
                       {formatTime(prev.createdat)}
