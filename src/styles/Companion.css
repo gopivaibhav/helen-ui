@@ -1,0 +1,23 @@
+#companion-form input{
+    padding: 10px;
+    box-shadow: 0 0 12px #dedede;
+    /* background-color: red; */
+}
+
+#companion-form textarea{
+    padding: 10px;
+    box-shadow: 0 0 12px #dedede;
+}
+
+#companion-form select{
+    padding: 20px;
+    font-size: 1rem;
+    font-weight: normal;
+    background-color: white;
+    box-shadow: 0 0 12px #dedede;
+}
+
+#companion-form option{
+    background-color: white;
+    box-shadow: 0 0 12px #dedede;
+}
