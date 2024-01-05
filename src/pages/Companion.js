@@ -3,12 +3,21 @@ import '../styles/Companion.css'
 
 function Companion() {
   return (
-    <>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+      }}
+      className="form-companion"
+    >
       <div
         style={{
           background: "#FF7777",
           width: "100%",
-          height: "220px",
+          height: "29vh",
+          lineBreak: "auto",
         }}
       >
         <div
@@ -16,32 +25,33 @@ function Companion() {
             position: "absolute",
             left: "0",
             margin: "1rem",
-            top: "75px",
+            top: "60px",
             marginBottom: "45px",
-            marginTop: "22px",
+            marginTop: "0px",
             marginLeft: "9.3vw",
           }}
         >
           <h1
             style={{
               color: "white",
-              fontSize: "40px",
-              fontFamily: "'Nunito Sans', sans-serif ",
-              fontWeight: "800",
-              lineHeight: "40px",
+              fontSize: "2.5rem",
+              lineHeight: "2.5rem",
               wordWrap: "break-word",
+              marginBottom: "1.75rem",
+              width: "100%",
+              letterSpacing:"1px"
             }}
           >
             Create a companion
           </h1>
           <p
             style={{
-              color: "white",
-              fontSize: "20px",
-              fontFamily: "'Nunito Sans', sans-serif ",
+              color: "#ffffff",
+              fontSize: "1.1rem",
               fontWeight: "400",
-              lineHeight: "40px",
               wordWrap: "break-word",
+              width: "80%",
+              lineHeight: "1.75rem",
             }}
           >
             Use it to set good habits, break bad ones, or simply vent after a
@@ -52,16 +62,16 @@ function Companion() {
       <form id="companion-form"
         style={{
           margin: "0 auto",
-          maxWidth: "500px",
+          maxWidth: "650px",
+          width: "100%",
           background: "white",
           padding: "40px",
           paddingLeft: "30px",
           height: "60vh",
-          fontFamily: "'Nunito Sans', sans-serif ",
         }}
       >
         <div style={{ marginBottom: "35px" }}>
-          <label htmlFor="name" style={{ fontWeight: "500" }}>
+          <label htmlFor="name" style={{ fontWeight: "500",letterSpacing:"0.03em",color:"black" }}>
             Your name
           </label>
           <br></br>
@@ -71,9 +81,9 @@ function Companion() {
             placeholder="What should your companion call you?"
             style={{
               fontSize: "0.8rem",
-              width: "85%",
+              width: "87%",
               marginTop: "15px",
-              padding: "8px",
+              padding: "10px",
               borderRadius: "6px",
               border: "0",
               outline: "none"
@@ -81,7 +91,7 @@ function Companion() {
           />
         </div>
         <div style={{ marginBottom: "35px" }}>
-          <label htmlFor="name" style={{ fontWeight: "500" }}>
+          <label htmlFor="name" style={{ fontWeight: "500",letterSpacing:"0.03em",color:"black" }}>
             Companion name
           </label>
           <br></br>
@@ -90,10 +100,10 @@ function Companion() {
             id="name"
             placeholder="What do you want to call your companion?"
             style={{
-              width: "85%",
+              width: "87%",
               fontSize: "0.8rem",
               marginTop: "15px",
-              padding: "8px",
+              padding: "10px",
               borderRadius: "6px",
               border: "none",
               outline: "none"
@@ -101,7 +111,7 @@ function Companion() {
           />
         </div>
         <div style={{ marginBottom: "35px" }}>
-          <label htmlFor="name" style={{ fontWeight: "500" }}>
+          <label htmlFor="name" style={{ fontWeight: "500",letterSpacing:"0.03em",color:"black" }}>
             Define your companion's role
           </label>
           <br></br>
@@ -112,7 +122,7 @@ function Companion() {
               height: "70px",
               resize: "none",
               fontSize: "0.8rem",
-              width: "85%",
+              width: "87%",
               marginTop: "15px",
               padding: "10px",
               borderRadius: "6px",
@@ -122,7 +132,7 @@ function Companion() {
           />
         </div>
         <div style={{ marginBottom: "35px" }}>
-          <label htmlFor="name" style={{ fontWeight: "500" }}>
+          <label htmlFor="name" style={{fontWeight: "500",letterSpacing:"0.03em",color:"black"  }}>
             Companion voice
           </label>
           <br></br>
@@ -130,17 +140,17 @@ function Companion() {
             id="role"
             style={{
               fontWeight: "550",
-              color: "gray",
+              color: "#c1bfbf",
               fontSize: "0.8rem",
-              width: "85%",
+              width: "87%",
               marginTop: "15px",
-              padding: "8px",
+              padding: "10px",
               borderRadius: "6px",
               border: "none",
               outline: "none"
             }}
           >
-            <option value="" disabled selected hidden>
+            <option value="" disabled selected hidden >
               Choose a voice for your companion
             </option>
             <option value="voice_1">Voice 1</option>
@@ -152,6 +162,7 @@ function Companion() {
         <div style={{ textAlign: "center" }}>
           <button
             type="submit"
+            className="companionsubmit"
             style={{
               background: "#FF7777",
               color: "white",
@@ -160,15 +171,14 @@ function Companion() {
               cursor: "pointer",
               width: "80%",
               border: "none",
-              fontWeight: "500",
-              marginTop: "15px",
+              fontWeight: "800",
             }}
           >
             CREATE
           </button>
         </div>
       </form>
-    </>
+    </div>
   );
 }
 
