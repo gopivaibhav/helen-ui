@@ -105,7 +105,7 @@ const NewSession = ({ userId }) => {
             style={{
               width: "20%",
               textAlign: "right",
-              color: "#FF7777",
+              color: "rgba(117, 139, 255, 1)",
               fontSize: 12,
               fontFamily: "'Nunito Sans', sans-serif ",
               fontWeight: "600",
@@ -118,7 +118,7 @@ const NewSession = ({ userId }) => {
             style={{
               width: "28%",
               textAlign: "right",
-              color: "#FF7777",
+              color: "rgba(117, 139, 255, 1)",
               fontSize: 12,
               fontFamily: "'Nunito Sans', sans-serif ",
               fontWeight: "600",

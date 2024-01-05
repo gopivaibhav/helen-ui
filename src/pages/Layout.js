@@ -22,11 +22,15 @@ const Layout = () => {
         height: "100vh",
       }}
     >
-      <RingLoader color={"red"} loading={true} size={150} />
+      <RingLoader color={"purple"} loading={true} size={150} />
     </div>
   ) : (
     <div className="App">
-      <Header setIsActive={setIsActive} progress={progress} setLoading={setLoading} />
+      <Header
+        setIsActive={setIsActive}
+        progress={progress}
+        setLoading={setLoading}
+      />
       <Helen setProgress={setProgress} />
     </div>
   );

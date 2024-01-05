@@ -7,8 +7,8 @@ const CustomConfirmModal = ({ message, onConfirm, onCancel, showModal }) => {
       <div className="modal-content">
         <p>{message}</p>
         <div className="button-container">
-          <button onClick={onConfirm} style={{ backgroundColor: '#ff7777' }}>Yes</button>
-          <button onClick={onCancel} style={{ backgroundColor: '#ff7777' }}>No</button>
+          <button onClick={onConfirm} style={{ backgroundColor: 'rgba(117, 139, 255, 1)' }}>Yes</button>
+          <button onClick={onCancel} style={{ backgroundColor: 'rgba(117, 139, 255, 1)' }}>No</button>
         </div>
       </div>
 
@@ -59,7 +59,7 @@ const CustomConfirmModal = ({ message, onConfirm, onCancel, showModal }) => {
 
         .custom-confirm-modal button {
           padding: 10px;
-          background-color: #ff7777;
+          background-color: rgba(117, 139, 255, 1);
           color: #fff;
           border: none;
           border-radius: 4px;

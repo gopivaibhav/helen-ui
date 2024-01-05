@@ -2,7 +2,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import "../styles/NewSession.css";
 import React, { useEffect, useState } from "react";
-import EditNoteIcon from "@mui/icons-material/EditNote";
 import MenuIcon from "@mui/icons-material/Menu";
 import { ArrowBack } from "@mui/icons-material";
 const createUser = async (user, setUserId) => {
@@ -64,11 +63,11 @@ const UserPofile = ({ setUserId }) => {
   return (
     <div
       style={{
-        // background: "#FF7777",
+        // background: "rgba(117, 139, 255, 1)",
         width: "100%",
         height: "220px",
         background:
-          "url('./bg.png') center center / cover no-repeat rgba(255, 119, 119, 1)",
+          "url('./bg.png') center center / cover no-repeat rgba(117, 139, 255, 1)",
         backgroundPosition: "center bottom",
       }}
     >
@@ -200,7 +199,7 @@ const UserPofile = ({ setUserId }) => {
                 position: "relative",
                 background: "rgba(255, 119, 119, 0.20)",
                 borderRadius: 5,
-                border: "1px #FF7777 solid",
+                border: "1px rgba(117, 139, 255, 1) solid",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -225,7 +224,7 @@ const UserPofile = ({ setUserId }) => {
                   position: "relative",
                   background: "rgba(255, 119, 119, 0.20)",
                   borderRadius: 5,
-                  border: "1px #FF7777 solid",
+                  border: "1px rgba(117, 139, 255, 1) solid",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -257,7 +256,7 @@ const UserPofile = ({ setUserId }) => {
                   position: "relative",
                   background: "rgba(255, 119, 119, 0.20)",
                   borderRadius: 5,
-                  border: "1px #FF7777 solid",
+                  border: "1px rgba(117, 139, 255, 1) solid",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",

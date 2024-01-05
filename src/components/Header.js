@@ -52,12 +52,12 @@ const Header = ({ setIsActive, progress, setLoading }) => {
           margin: "1rem",
           cursor: "pointer",
           outline: "none",
-          border: "2px solid #FF7777", // Added border property with a solid red color
+          border: "2px solid rgba(117, 139, 255, 1)", // Added border property with a solid red color
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: "transparent",
-          color: "#FF7777",
+          color: "rgba(117, 139, 255, 1)",
           padding: "0.2rem 10px",
           borderRadius: "10px",
           marginRight: "0.5rem",
@@ -101,7 +101,7 @@ const Header = ({ setIsActive, progress, setLoading }) => {
           marginRight: "0.5rem",
         }}
       >
-        <RefreshIcon sx={{ color: "#FF7777" }} onClick={RefreshHandler} />
+        <RefreshIcon sx={{ color: "rgba(117, 139, 255, 1)" }} onClick={RefreshHandler} />
       </button> */}
       <ProgressBar progress={progress} />
       <div

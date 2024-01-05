@@ -86,7 +86,7 @@ const HelenMain = () => {
         height: "100vh",
       }}
     >
-      <RingLoader color={"red"} loading={true} size={150} />
+      <RingLoader color={"purple"} loading={true} size={150} />
     </div>
   ) : (
     <div>
@@ -101,7 +101,7 @@ const HelenMain = () => {
               justifyContent: "center",
               textAlign: "center",
               alignItems: "center",
-              background: "#FF7777",
+              background: "rgba(117, 139, 255, 1)",
               color: "white",
               fontSize: 24,
               fontFamily: "'Nunito Sans', sans-serif ",

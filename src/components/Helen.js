@@ -568,7 +568,7 @@ const Helen = ({ topic = "", setProgress }) => {
           style={{
             width: "90px",
             height: "100px",
-            background: "#FF7777",
+            background: "rgba(117, 139, 255, 1)",
             borderRadius: 5,
             backdropFilter: "blur(10px)",
             borderTopLeftRadius: "15px",
@@ -582,7 +582,7 @@ const Helen = ({ topic = "", setProgress }) => {
         style={{
           width: "100%",
           height: "100px",
-          background: "#FF7777",
+          background: "rgba(117, 139, 255, 1)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -616,7 +616,7 @@ const Helen = ({ topic = "", setProgress }) => {
               borderRadius: "50%",
               borderColor: "white",
               textAlign: "center",
-              color: "#FF7777",
+              color: "rgba(117, 139, 255, 1)",
               fontSize: 40,
               border: "none",
               fontFamily: "'Nunito Sans', sans-serif ",
@@ -633,7 +633,7 @@ const Helen = ({ topic = "", setProgress }) => {
               style={{
                 width: "92px",
                 height: "92px",
-                background: "#FF7777",
+                background: "rgba(117, 139, 255, 1)",
                 borderRadius: "50%",
                 textAlign: "center",
                 color: "white",

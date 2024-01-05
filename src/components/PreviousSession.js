@@ -46,12 +46,12 @@ const PreviousSession = ({ sessionDetail }) => {
         <div
           style={{
             width: "10%",
-            color: "#FF7777",
+            color: "rgba(117, 139, 255, 1)",
             display: "flex",
             justifyContent: "right",
             alignItems: "center",
             marginRight: "8vw",
-            height: "45px"
+            height: "45px",
           }}
         >
           <ImportExportIcon />
@@ -112,7 +112,7 @@ const PreviousSession = ({ sessionDetail }) => {
                         fontFamily: "'Nunito Sans', sans-serif ",
                         fontWeight: "600",
                         wordWrap: "break-word",
-                        letterSpacing: "0"
+                        letterSpacing: "0",
                       }}
                     >
                       {formatTime(prev.createdat)}
@@ -121,7 +121,7 @@ const PreviousSession = ({ sessionDetail }) => {
                   <div
                     style={{
                       textAlign: "right",
-                      color: "#FF7777",
+                      color: "rgba(117, 139, 255, 1)",
                       fontSize: 12,
                       fontFamily: "'Nunito Sans', sans-serif ",
                       fontWeight: "600",
@@ -131,7 +131,9 @@ const PreviousSession = ({ sessionDetail }) => {
                       alignItems: "center",
                     }}
                   >
-                    <ArrowForwardIcon />
+                    <ArrowForwardIcon
+                      sx={{ color: "rgba(117, 139, 255, 1) !important" }}
+                    />
                   </div>
                 </div>
               </div>
