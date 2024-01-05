@@ -4,6 +4,7 @@ import "../styles/NewSession.css";
 import React, { useEffect, useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import { ArrowBack } from "@mui/icons-material";
+import "../styles/TransitionComponent.css";
 const createUser = async (user, setUserId) => {
   try {
     const { name, email, picture } = user;
@@ -115,18 +116,22 @@ const UserPofile = ({ setUserId }) => {
         <div
           className={`card menu ${profileDetail ? "open" : ""}`}
           style={{
-            transition: "left 0.3s ease",
             width: "250px",
             height: "100vh",
             background: "white",
             boxShadow: "0px 1px 30px rgba(0, 0, 0, 0.2)",
             position: "absolute",
+            right: profileDetail ? "0%" : "100%",
+            transition: "right 1.3s ease",
             paddingRight: "10px",
             paddingTop: "10px",
             borderRadius: 7,
             zIndex: "100",
             fontSize: "13px",
             letterSpacing: "0",
+            transform: `${
+              profileDetail ? "translateX(0%)" : "translateX(100%)"
+            }`,
           }}
         >
           <div
