@@ -47,7 +47,7 @@ function Companion() {
           <p
             style={{
               color: "#ffffff",
-              fontSize: "1.1rem",
+              fontSize: "1rem",
               fontWeight: "400",
               wordWrap: "break-word",
               width: "80%",
