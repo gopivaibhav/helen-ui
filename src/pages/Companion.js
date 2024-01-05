@@ -9,6 +9,7 @@ function Companion() {
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
+        fontFamily: "'Nunito Sans', sans-serif ",
       }}
       className="form-companion"
     >
