@@ -1,4 +1,5 @@
 import React from "react";
+import '../styles/Companion.css'
 
 function Companion() {
   return (
@@ -48,7 +49,7 @@ function Companion() {
           </p>
         </div>
       </div>
-      <form
+      <form id="companion-form"
         style={{
           margin: "0 auto",
           maxWidth: "500px",
@@ -56,6 +57,7 @@ function Companion() {
           padding: "40px",
           paddingLeft: "30px",
           height: "60vh",
+          fontFamily: "'Nunito Sans', sans-serif ",
         }}
       >
         <div style={{ marginBottom: "35px" }}>
@@ -73,8 +75,6 @@ function Companion() {
               marginTop: "15px",
               padding: "8px",
               borderRadius: "6px",
-            boxShadow: "0 0 12px #dedede",
-
               border: "0",
               outline: "none"
             }}
@@ -95,8 +95,6 @@ function Companion() {
               marginTop: "15px",
               padding: "8px",
               borderRadius: "6px",
-            boxShadow: "0 0 12px #dedede",
-
               border: "none",
               outline: "none"
             }}
@@ -118,8 +116,6 @@ function Companion() {
               marginTop: "15px",
               padding: "10px",
               borderRadius: "6px",
-            boxShadow: "0 0 12px #dedede",
-
               border: "none",
               outline: "none"
             }}
@@ -140,8 +136,6 @@ function Companion() {
               marginTop: "15px",
               padding: "8px",
               borderRadius: "6px",
-            boxShadow: "0 0 12px #dedede",
-
               border: "none",
               outline: "none"
             }}
