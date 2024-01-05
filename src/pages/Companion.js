@@ -6,7 +6,7 @@ function Companion() {
     <>
       <div
         style={{
-          background: "#FF7777",
+          background: "rgba(117, 139, 255, 1)",
           width: "100%",
           height: "220px",
         }}
@@ -153,7 +153,7 @@ function Companion() {
           <button
             type="submit"
             style={{
-              background: "#FF7777",
+              background: "rgba(117, 139, 255, 1)",
               color: "white",
               padding: "10px",
               borderRadius: "6px",
