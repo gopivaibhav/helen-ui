@@ -92,18 +92,17 @@ const UserPofile = ({ setUserId }) => {
       <div
         style={{
           position: "absolute",
-          right: "6vw",
+          right: "6.8vw",
           margin: "1rem",
           cursor: "pointer",
           display: "flex",
           alignItems: "center",
           justifyContent: "right",
-          paddingRight: "10px",
-          paddingTop: "48px",
+          top: "50px",
           borderRadius: 7,
           marginRight: "0.1rem",
-          width: "60px",
-          height: "60px",
+          width: "0px",
+          height: "0px",
         }}
       >
         <MenuIcon
