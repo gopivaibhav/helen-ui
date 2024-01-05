@@ -129,6 +129,83 @@ const NewSession = ({ userId }) => {
           </div> */}
         </div>
       </div>
+      <hr style={{ width: "90%", margin: "40px 8vw 40px 10px", opacity: "0.5" }} />
+      <div
+        className="FeatureCardWrapper"
+        style={{ margin: "30px 8vw 30px 0px", minHeight: "100px" }}
+        // onClick={sessionHandler}
+        onClick={() => {
+          navigate(`/companion`);
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            width: "100%",
+          }}
+        >
+          <div
+            style={{
+              width: "80% ",
+              color: "black",
+              fontSize: 18,
+              fontFamily: "'Nunito Sans', sans-serif ",
+              fontWeight: "700",
+              lineHeight: "40px",
+            }}
+          >
+            Create a friendly companion
+          </div>
+          <div class="center-con arrow-div">
+            <div class="round">
+              <div id="cta">
+                <span class="arrow primera next "></span>
+                <span class="arrow segunda next "></span>
+              </div>
+            </div>
+          </div>
+          <div
+            style={{
+              width: "70%",
+              color: "#4E4D4D",
+              fontSize: 12,
+              fontFamily: "'Nunito Sans', sans-serif ",
+              fontWeight: "600",
+              wordWrap: "break-word",
+            }}
+          >
+            A non-judgmental friend who can help set good habits, break addictions, and vent. 
+          </div>
+          <div
+            style={{
+              width: "20%",
+              textAlign: "right",
+              color: "#FF7777",
+              fontSize: 12,
+              fontFamily: "'Nunito Sans', sans-serif ",
+              fontWeight: "600",
+              lineHeight: "40px",
+            }}
+          >
+            
+          </div>
+          {/* <div
+            style={{
+              width: "28%",
+              textAlign: "right",
+              color: "#FF7777",
+              fontSize: 12,
+              fontFamily: "'Nunito Sans', sans-serif ",
+              fontWeight: "600",
+              lineHeight: "15px",
+            }}
+          >
+            <ArrowForwardIcon />
+          </div> */}
+        </div>
+      </div>
     </div>
   );
 };
