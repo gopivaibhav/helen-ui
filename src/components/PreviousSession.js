@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import "../styles/NewSession.css";
@@ -18,7 +18,15 @@ const formatTime = (dateString) => {
   return formattedDate;
 };
 const PreviousSession = ({ sessionDetail }) => {
+  const [sortSessionDetail, setSortSessionDetail] = useState(
+    sessionDetail.reverse()
+  );
+  const [isSort, setIsSort] = useState(true);
   const navigate = useNavigate();
+  const sortHandler = () => {
+    setSortSessionDetail(sortSessionDetail.reverse());
+    setIsSort(!isSort);
+  };
   return (
     <div style={{ marginLeft: "9.3vw" }}>
       <div
@@ -43,7 +51,7 @@ const PreviousSession = ({ sessionDetail }) => {
         >
           Revisit your previous sessions
         </div>
-        <div
+        <button
           style={{
             width: "10%",
             color: "rgba(117, 139, 255, 1)",
@@ -52,93 +60,93 @@ const PreviousSession = ({ sessionDetail }) => {
             alignItems: "center",
             marginRight: "8vw",
             height: "45px",
+            border: "none",
+            background: "white",
           }}
+          onClick={sortHandler}
         >
-          <ImportExportIcon />
-        </div>
+          <ImportExportIcon  />
+        </button>
       </div>
-      {sessionDetail &&
-        sessionDetail
-          .slice()
-          .reverse()
-          .map((prev, key) => {
-            return (
+      {sortSessionDetail &&
+        sortSessionDetail.map((prev, key) => {
+          return (
+            <div
+              className="FeatureCardWrapper"
+              style={{ margin: "15px 8vw 25px 0px" }}
+              key={key}
+              onClick={() => {
+                console.log(prev._id);
+                navigate("/session", {
+                  state: {
+                    sessionId: prev._id,
+                    key: isSort ? sortSessionDetail.length - key : key + 1,
+                  },
+                });
+              }}
+            >
               <div
-                className="FeatureCardWrapper"
-                style={{ margin: "15px 8vw 25px 0px" }}
-                key={key}
-                onClick={() => {
-                  console.log(prev._id);
-                  navigate("/session", {
-                    state: {
-                      sessionId: prev._id,
-                      key: sessionDetail.length - key,
-                    },
-                  });
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  justifyContent: "space-between",
+                  textAlign: "left",
+                  width: "100%",
                 }}
               >
                 <div
                   style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    justifyContent: "space-between",
-                    textAlign: "left",
-                    width: "100%",
+                    width: "85%",
                   }}
                 >
                   <div
                     style={{
-                      width: "85%",
+                      width: "100% ",
+                      color: "black",
+                      fontSize: 18,
+                      fontFamily: "'Nunito Sans', sans-serif ",
+                      fontWeight: "700",
+                      lineHeight: "40px",
+                      // letterSpacing: "0"
                     }}
                   >
-                    <div
-                      style={{
-                        width: "100% ",
-                        color: "black",
-                        fontSize: 18,
-                        fontFamily: "'Nunito Sans', sans-serif ",
-                        fontWeight: "700",
-                        lineHeight: "40px",
-                        // letterSpacing: "0"
-                      }}
-                    >
-                      Session {sessionDetail.length - key}
-                    </div>
-                    <div
-                      style={{
-                        width: "85%",
-                        color: "#4E4D4D",
-                        fontSize: 12,
-                        fontFamily: "'Nunito Sans', sans-serif ",
-                        fontWeight: "600",
-                        wordWrap: "break-word",
-                        letterSpacing: "0",
-                      }}
-                    >
-                      {formatTime(prev.createdat)}
-                    </div>{" "}
+                    Session {isSort ? sortSessionDetail.length - key : key + 1}
                   </div>
                   <div
                     style={{
-                      textAlign: "right",
-                      color: "rgba(117, 139, 255, 1)",
+                      width: "85%",
+                      color: "#4E4D4D",
                       fontSize: 12,
                       fontFamily: "'Nunito Sans', sans-serif ",
                       fontWeight: "600",
-                      lineHeight: "15px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
+                      wordWrap: "break-word",
+                      letterSpacing: "0",
                     }}
                   >
-                    <ArrowForwardIcon
-                      sx={{ color: "rgba(117, 139, 255, 1) !important" }}
-                    />
-                  </div>
+                    {formatTime(prev.createdat)}
+                  </div>{" "}
+                </div>
+                <div
+                  style={{
+                    textAlign: "right",
+                    color: "rgba(117, 139, 255, 1)",
+                    fontSize: 12,
+                    fontFamily: "'Nunito Sans', sans-serif ",
+                    fontWeight: "600",
+                    lineHeight: "15px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <ArrowForwardIcon
+                    sx={{ color: "rgba(117, 139, 255, 1) !important" }}
+                  />
                 </div>
               </div>
-            );
-          })}
+            </div>
+          );
+        })}
     </div>
   );
 };

@@ -4,6 +4,7 @@ import "../styles/NewSession.css";
 import React, { useEffect, useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import { ArrowBack } from "@mui/icons-material";
+import "../styles/TransitionComponent.css";
 const createUser = async (user, setUserId) => {
   try {
     const { name, email, picture } = user;
@@ -91,18 +92,17 @@ const UserPofile = ({ setUserId }) => {
       <div
         style={{
           position: "absolute",
-          right: "6vw",
+          right: "6.8vw",
           margin: "1rem",
           cursor: "pointer",
           display: "flex",
           alignItems: "center",
           justifyContent: "right",
-          paddingRight: "10px",
-          paddingTop: "48px",
+          top: "50px",
           borderRadius: 7,
           marginRight: "0.1rem",
-          width: "60px",
-          height: "60px",
+          width: "0px",
+          height: "0px",
         }}
       >
         <MenuIcon
@@ -115,18 +115,22 @@ const UserPofile = ({ setUserId }) => {
         <div
           className={`card menu ${profileDetail ? "open" : ""}`}
           style={{
-            transition: "left 0.3s ease",
             width: "250px",
             height: "100vh",
             background: "white",
             boxShadow: "0px 1px 30px rgba(0, 0, 0, 0.2)",
             position: "absolute",
+            right: profileDetail ? "0%" : "100%",
+            transition: "right 1.3s ease",
             paddingRight: "10px",
             paddingTop: "10px",
             borderRadius: 7,
             zIndex: "100",
             fontSize: "13px",
             letterSpacing: "0",
+            transform: `${
+              profileDetail ? "translateX(0%)" : "translateX(100%)"
+            }`,
           }}
         >
           <div
