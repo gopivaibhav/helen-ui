@@ -27,7 +27,7 @@ const RippleEffect = ({ isPlaying }) => {
         style={{
           width: isPlaying ? circleSize - 10 + "px" : circleSize - 45 + "px",
           height: isPlaying ? circleSize - 10 + "px" : circleSize - 45 + "px",
-          backgroundColor: "#FEE5E4", // Color change
+          backgroundColor: "rgb(117, 139, 255, 0.3)", // Color change
           borderRadius: "50%",
           position: "relative",
           transition: "all 0.3s ",
@@ -38,7 +38,7 @@ const RippleEffect = ({ isPlaying }) => {
           style={{
             width: isPlaying ? circleSize - 35 + "px" : circleSize - 45 + "px",
             height: isPlaying ? circleSize - 35 + "px" : circleSize - 45 + "px",
-            backgroundColor: "#FEB9B8", // Color change
+            backgroundColor: "rgb(117, 139, 255, 0.5)", // Color change
             borderRadius: "50%",
             transition: "all 0.3s ",
             position: "absolute",
@@ -52,7 +52,7 @@ const RippleEffect = ({ isPlaying }) => {
             style={{
               width: circleSize - 60 + "px",
               height: circleSize - 60 + "px",
-              backgroundColor: "#FE9899",
+              backgroundColor: "rgb(117, 139, 255, 0.8)",
               borderRadius: "50%",
               transition: "all 0.3s ",
               position: "absolute",

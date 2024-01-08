@@ -1,7 +1,12 @@
 import React from "react";
-import '../styles/Companion.css'
+import "../styles/Companion.css";
 
 function Companion() {
+  const handleSubmit = () => {
+    sessionStorage.setItem("companion_role", "guitar tutor");
+    sessionStorage.setItem("companion", "Kapil");
+    sessionStorage.setItem("voice_artist", "alloy");
+  };
   return (
     <div
       style={{
@@ -40,7 +45,7 @@ function Companion() {
               wordWrap: "break-word",
               marginBottom: "1.75rem",
               width: "100%",
-              letterSpacing:"1px"
+              letterSpacing: "1px",
             }}
           >
             Create a companion
@@ -60,7 +65,8 @@ function Companion() {
           </p>
         </div>
       </div>
-      <form id="companion-form"
+      <form
+        id="companion-form"
         style={{
           margin: "0 auto",
           maxWidth: "650px",
@@ -72,7 +78,14 @@ function Companion() {
         }}
       >
         <div style={{ marginBottom: "35px" }}>
-          <label htmlFor="name" style={{ fontWeight: "500",letterSpacing:"0.03em",color:"black" }}>
+          <label
+            htmlFor="name"
+            style={{
+              fontWeight: "500",
+              letterSpacing: "0.03em",
+              color: "black",
+            }}
+          >
             Your name
           </label>
           <br></br>
@@ -87,12 +100,19 @@ function Companion() {
               padding: "10px",
               borderRadius: "6px",
               border: "0",
-              outline: "none"
+              outline: "none",
             }}
           />
         </div>
         <div style={{ marginBottom: "35px" }}>
-          <label htmlFor="name" style={{ fontWeight: "500",letterSpacing:"0.03em",color:"black" }}>
+          <label
+            htmlFor="name"
+            style={{
+              fontWeight: "500",
+              letterSpacing: "0.03em",
+              color: "black",
+            }}
+          >
             Companion name
           </label>
           <br></br>
@@ -107,12 +127,19 @@ function Companion() {
               padding: "10px",
               borderRadius: "6px",
               border: "none",
-              outline: "none"
+              outline: "none",
             }}
           />
         </div>
         <div style={{ marginBottom: "35px" }}>
-          <label htmlFor="name" style={{ fontWeight: "500",letterSpacing:"0.03em",color:"black" }}>
+          <label
+            htmlFor="name"
+            style={{
+              fontWeight: "500",
+              letterSpacing: "0.03em",
+              color: "black",
+            }}
+          >
             Define your companion's role
           </label>
           <br></br>
@@ -128,12 +155,19 @@ function Companion() {
               padding: "10px",
               borderRadius: "6px",
               border: "none",
-              outline: "none"
+              outline: "none",
             }}
           />
         </div>
         <div style={{ marginBottom: "35px" }}>
-          <label htmlFor="name" style={{fontWeight: "500",letterSpacing:"0.03em",color:"black"  }}>
+          <label
+            htmlFor="name"
+            style={{
+              fontWeight: "500",
+              letterSpacing: "0.03em",
+              color: "black",
+            }}
+          >
             Companion voice
           </label>
           <br></br>
@@ -147,13 +181,13 @@ function Companion() {
               padding: "10px",
               borderRadius: "6px",
               border: "none",
-              outline: "none"
+              outline: "none",
             }}
           >
-            <option value="" disabled selected hidden >
+            <option value="" disabled selected hidden>
               Choose a voice for your companion
             </option>
-            <option value="voice_1">Voice 1</option>
+            <option value="Alloy">Voice 1</option>
             <option value="voice_2">Voice 2</option>
             <option value="voice_3">Voice 3</option>
           </select>
@@ -173,6 +207,7 @@ function Companion() {
               border: "none",
               fontWeight: "800",
             }}
+            onClick={handleSubmit}
           >
             CREATE
           </button>
