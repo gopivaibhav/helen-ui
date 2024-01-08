@@ -110,92 +110,88 @@ const UserPofile = ({ setUserId }) => {
           onClick={handleProfile}
         />
       </div>
-
-      {profileDetail && (
+      <nav
+        className={`card menu ${profileDetail ? "active" : ""}`}
+        style={{
+          width: "250px",
+          height: "100vh",
+          background: "white",
+          boxShadow: "0px 1px 30px rgba(0, 0, 0, 0.2)",
+          position: "fixed",
+          right: profileDetail ? "0%" : "-250px",
+          // display: profileDetail ? "block" : "none",
+          transition: "0.8s",
+          paddingRight: "10px",
+          paddingTop: "10px",
+          borderRadius: 7,
+          zIndex: "100",
+          fontSize: "13px",
+          letterSpacing: "0",
+        }}
+      >
         <div
-          className={`card menu ${profileDetail ? "open" : ""}`}
           style={{
-            width: "250px",
-            height: "100vh",
-            background: "white",
-            boxShadow: "0px 1px 30px rgba(0, 0, 0, 0.2)",
-            position: "absolute",
-            right: profileDetail ? "0%" : "100%",
-            transition: "right 1.3s ease",
-            paddingRight: "10px",
-            paddingTop: "10px",
-            borderRadius: 7,
-            zIndex: "100",
-            fontSize: "13px",
-            letterSpacing: "0",
-            transform: `${
-              profileDetail ? "translateX(0%)" : "translateX(100%)"
-            }`,
+            display: "flex",
+            width: "100%",
+            height: "15vh",
+            alignItems: "center",
           }}
         >
+          <ArrowBack
+            style={{
+              width: "25%",
+              color: "rgba(78, 77, 77, 0.8)",
+              justifyContent: "left",
+            }}
+            onClick={handleProfile}
+          />
           <div
             style={{
+              width: "60%",
+              color: "#4E4D4D",
+              fontSize: 18,
+              fontFamily: "Nunito Sans",
+              fontWeight: "600",
+              wordWrap: "break-word",
               display: "flex",
-              width: "100%",
-              height: "15vh",
-              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            <ArrowBack
-              style={{
-                width: "25%",
-                color: "rgba(78, 77, 77, 0.8)",
-                justifyContent: "left",
-              }}
-              onClick={handleProfile}
-            />
+            Profile
+          </div>
+        </div>
+        <div>
+          {isLogin && (
             <div
               style={{
-                width: "60%",
-                color: "#4E4D4D",
-                fontSize: 18,
-                fontFamily: "Nunito Sans",
-                fontWeight: "600",
                 wordWrap: "break-word",
-                display: "flex",
-                justifyContent: "center",
+                marginBottom: "25px",
+                position: "relative",
+                left: "25px",
+                fontSize: "12px",
+                letterSpacing: 0,
               }}
             >
-              Profile
-            </div>
-          </div>
-          <div>
-            {isLogin && (
               <div
                 style={{
-                  wordWrap: "break-word",
-                  marginBottom: "25px",
-                  position: "relative",
-                  left: "25px",
-                  fontSize: "12px",
-                  letterSpacing: 0,
+                  marginBottom: "5px",
                 }}
               >
-                <div
-                  style={{
-                    marginBottom: "5px",
-                  }}
-                >
-                  EMAIL
-                </div>
-                <div
-                  style={{
-                    fontWeight: 700,
-                    wordWrap: "break-word",
-                    marginBottom: "15px",
-                    fontSize: "14px",
-                  }}
-                >
-                  {patient.email}
-                </div>
+                EMAIL
               </div>
-            )}
-            {/* <div
+              <div
+                style={{
+                  fontWeight: 700,
+                  wordWrap: "break-word",
+                  marginBottom: "15px",
+                  fontSize: "14px",
+                }}
+              >
+                {patient.email}
+              </div>
+            </div>
+          )}
+          {/* <div
               style={{
                 width: "85%",
                 height: "38px",
@@ -211,69 +207,68 @@ const UserPofile = ({ setUserId }) => {
             >
               Login
             </div> */}
-            {isLogin ? (
-              <button
-                style={{
-                  outline: "none",
-                  padding: "6px 0px",
-                  fontSize: "16px",
-                  marginTop: "5px",
-                  marginBottom: "7px",
-                  fontWeight: 500,
-                  textShadow: "0 0 1px #ddd",
-                  cursor: "pointer",
-                  width: "85%",
-                  height: "38px",
-                  left: "25px",
-                  position: "relative",
-                  background: "rgba(255, 119, 119, 0.20)",
-                  borderRadius: 5,
-                  border: "1px rgba(117, 139, 255, 1) solid",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "rgba(255, 119, 119, 1)",
-                }}
-                onClick={() => {
-                  sessionStorage.clear();
-                  logout({
-                    logoutParams: { returnTo: window.location.origin },
-                  });
-                }}
-              >
-                LOG OUT{" "}
-              </button>
-            ) : (
-              <button
-                style={{
-                  outline: "none",
-                  padding: "6px 0px",
-                  fontSize: "16px",
-                  marginTop: "5px",
-                  marginBottom: "7px",
-                  fontWeight: 500,
-                  textShadow: "0 0 1px #ddd",
-                  cursor: "pointer",
-                  width: "85%",
-                  height: "38px",
-                  left: "25px",
-                  position: "relative",
-                  background: "rgba(255, 119, 119, 0.20)",
-                  borderRadius: 5,
-                  border: "1px rgba(117, 139, 255, 1) solid",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "rgba(255, 119, 119, 1)",
-                }}
-                onClick={handleLogin}
-              >
-                LOG IN{" "}
-              </button>
-            )}
-          </div>
+          {isLogin ? (
+            <button
+              style={{
+                outline: "none",
+                padding: "6px 0px",
+                fontSize: "16px",
+                marginTop: "5px",
+                marginBottom: "7px",
+                fontWeight: 500,
+                textShadow: "0 0 1px #ddd",
+                cursor: "pointer",
+                width: "85%",
+                height: "38px",
+                left: "25px",
+                position: "relative",
+                background: "rgba(255, 119, 119, 0.20)",
+                borderRadius: 5,
+                border: "1px rgba(117, 139, 255, 1) solid",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "rgba(255, 119, 119, 1)",
+              }}
+              onClick={() => {
+                sessionStorage.clear();
+                logout({
+                  logoutParams: { returnTo: window.location.origin },
+                });
+              }}
+            >
+              LOG OUT{" "}
+            </button>
+          ) : (
+            <button
+              style={{
+                outline: "none",
+                padding: "6px 0px",
+                fontSize: "16px",
+                marginTop: "5px",
+                marginBottom: "7px",
+                fontWeight: 500,
+                textShadow: "0 0 1px #ddd",
+                cursor: "pointer",
+                width: "85%",
+                height: "38px",
+                left: "25px",
+                position: "relative",
+                background: "rgba(255, 119, 119, 0.20)",
+                borderRadius: 5,
+                border: "1px rgba(117, 139, 255, 1) solid",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "rgba(255, 119, 119, 1)",
+              }}
+              onClick={handleLogin}
+            >
+              LOG IN{" "}
+            </button>
+          )}
         </div>
-      )}
+      </nav>
       <div
         style={{
           position: "absolute",
