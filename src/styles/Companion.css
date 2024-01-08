@@ -24,13 +24,12 @@
 }
 
 .form-companion{
-    font-family: 'Inter', sans-serif;
+    font-family: 'Nunito Sans', sans-serif;
 }
 ::placeholder{
-    font-family: 'Inter', sans-serif;
+    font-family: 'Nunito Sans', sans-serif;
     font-weight: 500;
-    color: #c1bfbf;
 }
 .companionsubmit{
-    font-family:'Inter', sans-serif ;
+    font-family: 'Nunito Sans', sans-serif;
 }

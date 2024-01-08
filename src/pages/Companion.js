@@ -140,8 +140,7 @@ function Companion() {
           <select
             id="role"
             style={{
-              fontWeight: "550",
-              color: "#c1bfbf",
+              fontWeight: "400",
               fontSize: "0.8rem",
               width: "87%",
               marginTop: "15px",
