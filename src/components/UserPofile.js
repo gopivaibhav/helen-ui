@@ -63,13 +63,11 @@ const UserPofile = ({ setUserId }) => {
 
   return (
     <div
+      className="background-image"
       style={{
         // background: "rgba(117, 139, 255, 1)",
         width: "100%",
         height: "220px",
-        background:
-          "url('./bg.png') center center / cover no-repeat rgba(117, 139, 255, 1)",
-        backgroundPosition: "center bottom",
       }}
     >
       <div

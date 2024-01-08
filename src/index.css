@@ -11,3 +11,24 @@ body {
   padding: 0px;
   box-sizing: border-box;
 }
+
+@media (max-width: 650px) {
+  .background-image {
+    background-image: url("../public/bg.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: rgba(117, 139, 255, 1);
+    background-position: left 90%;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 650px) {
+  .background-image {
+    background-image: url("../public/bg-desktop.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: rgba(117, 139, 255, 1);
+    background-position: left 70%;
+  }
+}
