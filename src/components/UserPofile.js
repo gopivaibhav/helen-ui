@@ -120,7 +120,7 @@ const UserPofile = ({ setUserId }) => {
           position: "fixed",
           right: profileDetail ? "0%" : "-250px",
           // display: profileDetail ? "block" : "none",
-          transition: "0.8s",
+          transition: "0.4s",
           paddingRight: "10px",
           paddingTop: "10px",
           borderRadius: 7,
