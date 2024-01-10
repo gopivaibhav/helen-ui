@@ -15,11 +15,12 @@ const Header = ({ setIsActive, progress, setLoading }) => {
   const handleConfirm = async () => {
     setShowModal(false);
     setLoading(true);
-    const data = await axios.get(
-      `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/session/get/${sessionStorage.getItem(
-        "ongoingSession"
-      )}`
-    );
+    console.log(progress, typeof progress);
+    // const data = await axios.get(
+    //   `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/session/get/${sessionStorage.getItem(
+    //     "ongoingSession"
+    //   )}`
+    // );
     setLoading(false);
     navigateToHome();
   };

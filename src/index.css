@@ -25,10 +25,10 @@ body {
 /* Desktop styles */
 @media (min-width: 650px) {
   .background-image {
-    background-image: url("../public/bg-desktop.png");
+    background-image: url("../public/bg-d.png");
     background-size: cover;
     background-repeat: no-repeat;
-    background-color: rgba(117, 139, 255, 1);
-    background-position: left 70%;
+    background-color: rgba(117, 139, 255, 0.9);
+    background-position: left 15%;
   }
 }

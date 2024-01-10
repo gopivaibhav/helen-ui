@@ -19,6 +19,16 @@ const HelenMain = () => {
       );
       setFilledUserCount(userCount.data);
       setLoading(false);
+      console.log("fetchuser called", sessionStorage.getItem("ongoingSession"));
+      if (sessionStorage.getItem("ongoingSession")) {
+        const datat = await axios.get(
+          `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/session/get/${sessionStorage.getItem(
+            "ongoingSession"
+          )}`
+        );
+        sessionStorage.clear("ongoingSession");
+        console.log("delated....");
+      }
     };
 
     fetchData();
@@ -91,7 +101,7 @@ const HelenMain = () => {
   ) : (
     <div>
       <UserPofile setUserId={setUserId} />
-      <NewSession userId={userId} />
+      <NewSession userId={userId} userData={userData} />
       {filledUserCount <= 100 && isAuth !== true ? (
         <div style={{ marginLeft: "9.3vw", marginTop: "15px" }}>
           <div
@@ -113,7 +123,7 @@ const HelenMain = () => {
               marginBottom: "20px",
               marginLeft: "1px",
               margin: "30px 8vw 30px 0px",
-              letterSpacing: "0"
+              letterSpacing: "0",
             }}
           >
             Unlock tranquility! Free therapy for the first 100. Hurry, only{" "}

@@ -37,8 +37,8 @@ const SessionHeader = ({ createdAt, updatedAt }) => {
   const navigate = useNavigate();
   return (
     <div
+    className="background-image"
       style={{
-        background: "rgba(117, 139, 255, 1)",
         width: "100%",
         height: "220px",
       }}

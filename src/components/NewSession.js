@@ -6,7 +6,7 @@ import axios from "axios";
 import { mixPanelTracking } from "../utils/mixPanel";
 import { useAuth0 } from "@auth0/auth0-react";
 
-const NewSession = ({ userId }) => {
+const NewSession = ({ userId, userData }) => {
   const [sessionId, setSessionId] = useState("");
 
   const { user, isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
@@ -23,6 +23,16 @@ const NewSession = ({ userId }) => {
         }
       );
       await setSessionId(response.data._id);
+      // if (sessionId) {
+      //   navigate("/helen", { state: { sessionId } });
+      // }
+    }
+  };
+  const companionHandler = async () => {
+    // console.log("user form ", userId);
+    if (userId === "") {
+      loginWithRedirect();
+    } else {
       // if (sessionId) {
       //   navigate("/helen", { state: { sessionId } });
       // }
@@ -129,12 +139,17 @@ const NewSession = ({ userId }) => {
           </div> */}
         </div>
       </div>
-      <hr style={{ width: "90%", margin: "40px 8vw 40px 10px", opacity: "0.5" }} />
+      <hr
+        style={{ width: "90%", margin: "40px 8vw 40px 10px", opacity: "0.5" }}
+      />
       <div
         className="FeatureCardWrapper"
         style={{ margin: "30px 8vw 30px 0px", minHeight: "100px" }}
         // onClick={sessionHandler}
         onClick={() => {
+          if (userId === "") {
+            loginWithRedirect();
+          }
           navigate(`/companion`);
         }}
       >
@@ -156,7 +171,9 @@ const NewSession = ({ userId }) => {
               lineHeight: "40px",
             }}
           >
-            Create a friendly companion
+            {userData && userData.companion
+              ? `Talk to  ${userData.companion.companionName}`
+              : "Create a friendly companion"}
           </div>
           <div class="center-con arrow-div">
             <div class="round">
@@ -176,7 +193,8 @@ const NewSession = ({ userId }) => {
               wordWrap: "break-word",
             }}
           >
-            A non-judgmental friend who can help set good habits, break addictions, and vent. 
+            A non-judgmental friend who can help set good habits, break
+            addictions, and vent.
           </div>
           <div
             style={{
@@ -188,9 +206,7 @@ const NewSession = ({ userId }) => {
               fontWeight: "600",
               lineHeight: "40px",
             }}
-          >
-            
-          </div>
+          ></div>
           {/* <div
             style={{
               width: "28%",
