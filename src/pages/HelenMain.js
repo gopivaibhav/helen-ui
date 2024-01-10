@@ -26,7 +26,7 @@ const HelenMain = () => {
             "ongoingSession"
           )}`
         );
-        sessionStorage.clear("ongoingSession");
+        sessionStorage.removeItem("ongoingSession");
         console.log("delated....");
       }
     };
