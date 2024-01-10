@@ -11,8 +11,6 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import { useWebSocket } from "../WebSocketProvider";
-import SimplePeer from 'simple-peer';
-import { useAuth0 } from "@auth0/auth0-react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 
@@ -43,25 +41,6 @@ const Helen = ({ topic = "", setProgress }) => {
   const audioRef = useRef(null);
   const currentBlobIndex = useRef(0);
   const [toolTipOpen, setToolTipOpen] = useState(false);
-  const [peer, setPeer] = useState(null);
-
-  // const playCaptions = () => {
-  //   setCaption('');
-  //   console.log('words- ', words.length, capIndex)
-  //   if ((words.length - capIndex) >= 10) {
-  //     for (let i = 0; i < 10; i++) {
-  //       setCaption((prev) => (prev + words[capIndex + i]));
-  //     }
-  //     setCapIndex((prev) => (prev + 10));
-  //     setTimeout(playCaptions, 3600);
-  //   } else {
-  //     for (let i = capIndex; i < words.length; i++) {
-  //       setCaption((prev) => (prev + words[i]));
-  //     }
-  //     setCapIndex(0);
-  //     setCaption('');
-  //   }
-  // };
 
   useEffect(() => {
     const handleContextMenu = (e) => {
@@ -89,9 +68,8 @@ const Helen = ({ topic = "", setProgress }) => {
       setToolTipOpen(false);
       SpeechRecognition.startListening({
         language: "en-UK",
+        continuous: true,
       });
-      console.log("listening");
-      console.log(listening);
     }, 100); // Adjust the duration as needed
   };
 
@@ -99,12 +77,10 @@ const Helen = ({ topic = "", setProgress }) => {
     // Clear the timeout when the mouse is released
     clearTimeout(holdTimeout);
     setTimeout(() => {
-      // SpeechRecognition.abortListening({
-      //   language: "en-UK",
-      // });
-      console.log("listening abort");
-      console.log(listening);
-    }, 100);
+      SpeechRecognition.abortListening({
+        language: "en-UK",
+      });
+    }, 1000);
 
     setChangeButtonFunction(true);
     // Reset the holding state
@@ -112,11 +88,10 @@ const Helen = ({ topic = "", setProgress }) => {
   };
 
   useEffect(() => {
-    console.log(listening);
+    console.log('listening changed to-', listening);
     if (!listening) {
       setListeningLoader(false);
       handleRequest();
-    } else {
     }
   }, [listening]);
 
@@ -312,40 +287,10 @@ const Helen = ({ topic = "", setProgress }) => {
             <span id="captiontext">{caption}</span>
           </div>
         )}
-        {/* <button
-          onClick={() => {
-            socket.send(
-              JSON.stringify({
-                need: "openai",
-                query: "",
-                chat: chat,
-                email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-              })
-            );
-          }}
-        >
-          Start Therapy
-        </button> */}
         <audio ref={audioRef} onEnded={handleAudioEnded}>
           Your browser does not support the audio element.
         </audio>
       </div>
-      {/* <div style={{ position: "absolute", right: 10, bottom: "20vh" }}>
-        <div className={userRippleEffect ? "ripple-effect-user" : ""} />
-        <img
-          style={{
-            width: "90px",
-            height: "100px",
-            background: "rgba(117, 139, 255, 1)",
-            borderRadius: 5,
-            backdropFilter: "blur(10px)",
-            borderTopLeftRadius: "15px",
-            borderTopRightRadius: "15px",
-          }}
-          src="/user.png"
-          alt="user"
-        />
-      </div> */}
       <div
         style={{
           width: "100%",
