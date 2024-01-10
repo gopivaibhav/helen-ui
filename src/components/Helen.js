@@ -325,10 +325,10 @@ const Helen = ({ topic = "", setProgress }) => {
         >
           <button
             // onClick={ChangeButtonFunctionHandler}
-            onMouseDown={!isButtonDisabled ? handleMouseDown : () => {}}
-            onMouseUp={!isButtonDisabled ? handleMouseUp : () => {}}
-            onTouchStart={!isButtonDisabled ? handleMouseDown : () => {}}
-            onTouchEnd={!isButtonDisabled ? handleMouseUp : () => {}}
+            onPointerDown={!isButtonDisabled ? handleMouseDown : () => {}}
+            onPointerUp={!isButtonDisabled ? handleMouseUp : () => {}}
+            // onTouchStart={!isButtonDisabled ? handleMouseDown : () => {}}
+            // onTouchEnd={!isButtonDisabled ? handleMouseUp : () => {}}
             disabled={isButtonDisabled}
             id="micButton"
             style={{
