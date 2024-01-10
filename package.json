@@ -22,6 +22,7 @@
     "react-scripts": "5.0.1",
     "react-speech-recognition": "^3.10.0",
     "react-spinners": "^0.13.8",
+    "simple-peer": "^9.11.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
