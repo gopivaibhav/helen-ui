@@ -52,7 +52,8 @@ const Header = ({ setIsActive, progress, setLoading }) => {
           margin: "1rem",
           cursor: "pointer",
           outline: "none",
-          border: "2px solid rgba(117, 139, 255, 1)", // Added border property with a solid red color
+          border: "none",
+          // border: "2px solid rgba(117, 139, 255, 1)", // Added border property with a solid red color
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -61,20 +62,22 @@ const Header = ({ setIsActive, progress, setLoading }) => {
           padding: "0.2rem 10px",
           borderRadius: "10px",
           marginRight: "0.5rem",
+          marginLeft: "0.5rem",
           fontSize: "16px",
           fontWeight: "700 !important",
           fontFamily: "'Nunito Sans', sans-serif ",
         }}
         onClick={handleBackButton}
       >
-        <img
+        {/* <img
           style={{
             width: "20px",
             height: "20px",
           }}
           src="/back_button.svg"
           alt="back button"
-        />
+        /> */}
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAABEUlEQVR4nO2XPwrCMBSHP/QOvYJeQp11UvAqegAXBz2BTupN2jrp5qSjXcVNilOlkEKI6V+jRe0PMjzykveRvDzyoJI5TYEb4ABjoMmHdQcCZZyAGdAG6q8G6AGeJogr5iN7CKyAi+IX2mugXxTG0wQPh60ARAqDtMQJHJU1yyIAgRIg73wDGAkfvwyAvH5PqgCCv7kCC9iLiibLkZ7c2wAs4CAcdhk2MwpgScEPwi4KsJUqZGaAfUylSxpuzMZJp2EUwDYJYBm8AleTxKkApSehDLHTPLmkxPqtQhSnCiCoroCSv2ReSjnO8yldFAHoAmcNQFTxsnzLN8AAqPEG+TGNyRzomGhM0jQBrmW2ZnylHv7/6ByT+tNxAAAAAElFTkSuQmCC" />
       </button>
       {showModal && (
         <CustomConfirmModal
