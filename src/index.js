@@ -4,7 +4,6 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Auth0Provider } from "@auth0/auth0-react";
-import { WebSocketProvider } from "./WebSocketProvider";
 
 const root = document.getElementById("root");
 render(
@@ -15,9 +14,7 @@ render(
       redirect_uri: window.location.origin,
     }}
   >
-    <WebSocketProvider>
-      <App />
-    </WebSocketProvider>
+    <App />
   </Auth0Provider>,
   root
 );
