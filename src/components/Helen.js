@@ -59,8 +59,6 @@ const Helen = ({ topic = "", setProgress }) => {
   const state = location.state.sessionId;
   let holdTimeout;
   const handleMouseDown = () => {
-    // Set a timeout to detect the hold
-    holdTimeout = setTimeout(() => {
       setIsHolding(true);
       setChangeButtonFunction(false);
       setListeningLoader(true);
@@ -69,12 +67,9 @@ const Helen = ({ topic = "", setProgress }) => {
         language: "en-UK",
         continuous: true,
       });
-    }, 100); // Adjust the duration as needed
   };
 
   const handleMouseUp = () => {
-    // Clear the timeout when the mouse is released
-    clearTimeout(holdTimeout);
     setTimeout(() => {
       SpeechRecognition.abortListening({
         language: "en-UK",
@@ -82,7 +77,6 @@ const Helen = ({ topic = "", setProgress }) => {
     }, 1000);
 
     setChangeButtonFunction(true);
-    // Reset the holding state
     setIsHolding(false);
   };
 
@@ -173,6 +167,15 @@ const Helen = ({ topic = "", setProgress }) => {
           email: JSON.parse(sessionStorage.getItem("userDetail")).email,
         })
       );
+      SpeechRecognition.startListening({
+        language: "en-UK",
+        continuous: true,
+      });
+      setTimeout(() => {
+        SpeechRecognition.abortListening({
+          language: "en-UK",
+        });
+      }, 0);
       socket.addEventListener("message", (event) => {
         const message = event.data;
         if (typeof message === "string") {
