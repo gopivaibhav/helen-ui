@@ -46,7 +46,6 @@ const Helen = ({ topic = "", setProgress }) => {
     const handleContextMenu = (e) => {
       e.preventDefault();
     };
-    console.log("context menu");
     // Attach the event listener when the component mounts
     document.addEventListener("contextmenu", handleContextMenu);
 
@@ -68,7 +67,7 @@ const Helen = ({ topic = "", setProgress }) => {
       setToolTipOpen(false);
       SpeechRecognition.startListening({
         language: "en-UK",
-        continuous: true,
+        // continuous: true,
       });
     }, 100); // Adjust the duration as needed
   };
@@ -77,10 +76,10 @@ const Helen = ({ topic = "", setProgress }) => {
     // Clear the timeout when the mouse is released
     clearTimeout(holdTimeout);
     setTimeout(() => {
-      SpeechRecognition.abortListening({
-        language: "en-UK",
-      });
-    }, 1000);
+      // SpeechRecognition.abortListening({
+      //   language: "en-UK",
+      // });
+    }, 100);
 
     setChangeButtonFunction(true);
     // Reset the holding state
