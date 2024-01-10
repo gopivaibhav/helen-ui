@@ -26,7 +26,7 @@ const addMessage = async (sender, content, session) => {
 const Helen = ({ topic = "", setProgress }) => {
   const socket = useWebSocket();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const { transcript, listening } = useSpeechRecognition();
+  const { transcript, listening, resetTranscript } = useSpeechRecognition();
   const [loader, setLoader] = useState(false);
   const [listeningLoader, setListeningLoader] = useState(false);
   const [chat, setChat] = useState([]);
@@ -67,7 +67,7 @@ const Helen = ({ topic = "", setProgress }) => {
       setToolTipOpen(false);
       SpeechRecognition.startListening({
         language: "en-UK",
-        // continuous: true,
+        continuous: true,
       });
     }, 100); // Adjust the duration as needed
   };
@@ -76,10 +76,10 @@ const Helen = ({ topic = "", setProgress }) => {
     // Clear the timeout when the mouse is released
     clearTimeout(holdTimeout);
     setTimeout(() => {
-      // SpeechRecognition.abortListening({
-      //   language: "en-UK",
-      // });
-    }, 100);
+      SpeechRecognition.abortListening({
+        language: "en-UK",
+      });
+    }, 1000);
 
     setChangeButtonFunction(true);
     // Reset the holding state
@@ -161,12 +161,6 @@ const Helen = ({ topic = "", setProgress }) => {
     if (socket) {
       socket.send(
         JSON.stringify({
-          need: "reset",
-          email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-        })
-      );
-      socket.send(
-        JSON.stringify({
           need: "openai",
           query: "",
           chat: chat,
@@ -243,6 +237,7 @@ const Helen = ({ topic = "", setProgress }) => {
   const handleRequest = () => {
     console.log("API Request-", transcript);
     if (transcript && transcript.length >= 2) {
+      resetTranscript();
       // sendAPIRequest(transcript);
       socket.send(
         JSON.stringify({
