@@ -28,15 +28,23 @@ const formatTime = (dateString) => {
   return formattedDateTime;
 };
 const PreviousSession = ({ sessionDetail }) => {
-  const [sortSessionDetail, setSortSessionDetail] = useState(sessionDetail);
+  const [sortSessionDetail, setSortSessionDetail] = useState(
+    sessionStorage.sessions
+      ? JSON.parse(sessionStorage.sessions)
+      : sessionDetail
+  );
   const [isSort, setIsSort] = useState(true);
   useEffect(() => {
+    if (sessionStorage.sessions ) {
+      setSortSessionDetail(JSON.parse(sessionStorage.sessions));
+    }
+    console.log("useffect")
     if (isSort) {
       setSortSessionDetail(sessionDetail.reverse());
     } else {
       setSortSessionDetail(sessionDetail);
     }
-  }, []);
+  }, [isSort,sessionDetail]);
   const navigate = useNavigate();
   const sortHandler = () => {
     setSortSessionDetail(sortSessionDetail.reverse());
