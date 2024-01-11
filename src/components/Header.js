@@ -14,6 +14,7 @@ const Header = ({ setIsActive, progress }) => {
 
   const handleConfirm = async () => {
     setShowModal(false);
+    sessionStorage.setItem("progress", progress);
     console.log(progress, typeof progress);
     // const data = await axios.get(
     //   `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/session/get/${sessionStorage.getItem(

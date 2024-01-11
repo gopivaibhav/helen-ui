@@ -10,7 +10,11 @@ import "../styles/NewSession.css";
 const HelenMain = () => {
   const [loading, setLoading] = useState(true);
   const [filledUserCount, setFilledUserCount] = useState(100);
-
+  const [email, setEmail] = useState(
+    sessionStorage.userData && JSON.parse(sessionStorage.userData)
+      ? JSON.parse(sessionStorage.userData).email
+      : ""
+  );
   useEffect(() => {
     // Simulate data fetching or other async operations
     const fetchData = async () => {
@@ -20,13 +24,20 @@ const HelenMain = () => {
       setFilledUserCount(userCount.data);
       setLoading(false);
       console.log("fetchuser called", sessionStorage.getItem("ongoingSession"));
-      if (sessionStorage.getItem("ongoingSession")) {
-        const datat = await axios.get(
+      if (
+        sessionStorage.getItem("ongoingSession") &&
+        sessionStorage.getItem("progress") > 4.5
+      ) {
+        await axios.get(
           `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/session/get/${sessionStorage.getItem(
             "ongoingSession"
           )}`
         );
+        if (sessionStorage.userData) {
+          setUserData(await fetchUser(email));
+        }
         sessionStorage.removeItem("ongoingSession");
+        sessionStorage.removeItem("progress");
         console.log("delated....");
       }
     };
@@ -35,11 +46,7 @@ const HelenMain = () => {
   }, []);
   const [userData, setUserData] = useState({ _id: "", sessions: "" });
   const { user, isAuthenticated, isLoading } = useAuth0();
-  const [email, setEmail] = useState(
-    sessionStorage.userData && JSON.parse(sessionStorage.userData)
-      ? JSON.parse(sessionStorage.userData).email
-      : ""
-  );
+
   const [userId, setUserId] = useState(
     sessionStorage.userData && JSON.parse(sessionStorage.userData)
       ? JSON.parse(sessionStorage.userData)._id
@@ -51,6 +58,11 @@ const HelenMain = () => {
   const [isAuth, setIsAuth] = useState(
     sessionStorage.isAuth ? JSON.parse(sessionStorage.isAuth) : false
   );
+  // useEffect(() => {
+  //   if (sessionStorage.getItem("sessions")) {
+  //     setSessions(sessionStorage.getItem("sessions"));
+  //   }
+  // }, []);
   useEffect(() => {
     const authData = async () => {
       if (isAuthenticated && !isLoading) {
@@ -63,7 +75,7 @@ const HelenMain = () => {
       }
     };
     authData();
-  }, [user, isAuthenticated, isLoading, isAuth, email]);
+  }, [email, isAuthenticated, isLoading, user]);
 
   const fetchUser = async (email) => {
     try {
