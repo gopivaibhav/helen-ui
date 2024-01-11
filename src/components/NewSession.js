@@ -41,7 +41,7 @@ const NewSession = ({ userId, userData }) => {
   useEffect(() => {
     if (sessionId) {
       mixPanelTracking(`newSessionCreated > ${sessionId}`);
-      sessionStorage.setItem("ongoingSession", sessionId);
+      sessionStorage.setItem("ongoingSession", sessionId);-
       navigate("/starting", { state: { sessionId } });
     }
   }, [sessionId, navigate]);
