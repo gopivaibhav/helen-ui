@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import "../styles/NewSession.css";
@@ -12,16 +12,31 @@ const formatTime = (dateString) => {
     month: "long",
     year: "numeric",
   };
+  const timeOptions = {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  };
 
-  // Format the date
+  // Format the date and time
   const formattedDate = dateObject.toLocaleDateString("en-US", options);
-  return formattedDate;
+  const formattedTime = dateObject.toLocaleTimeString("en-US", timeOptions);
+
+  // Combine date and time
+  const formattedDateTime = `${formattedDate} at ${formattedTime}`;
+
+  return formattedDateTime;
 };
 const PreviousSession = ({ sessionDetail }) => {
-  const [sortSessionDetail, setSortSessionDetail] = useState(
-    sessionDetail.reverse()
-  );
+  const [sortSessionDetail, setSortSessionDetail] = useState(sessionDetail);
   const [isSort, setIsSort] = useState(true);
+  useEffect(() => {
+    if (isSort) {
+      setSortSessionDetail(sessionDetail.reverse());
+    } else {
+      setSortSessionDetail(sessionDetail);
+    }
+  }, []);
   const navigate = useNavigate();
   const sortHandler = () => {
     setSortSessionDetail(sortSessionDetail.reverse());
@@ -65,7 +80,7 @@ const PreviousSession = ({ sessionDetail }) => {
           }}
           onClick={sortHandler}
         >
-          <ImportExportIcon  />
+          <ImportExportIcon />
         </button>
       </div>
       {sortSessionDetail &&

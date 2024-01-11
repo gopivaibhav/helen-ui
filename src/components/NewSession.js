@@ -42,6 +42,7 @@ const NewSession = ({ userId, userData }) => {
     if (sessionId) {
       mixPanelTracking(`newSessionCreated > ${sessionId}`);
       sessionStorage.setItem("ongoingSession", sessionId);
+      sessionStorage.setItem("progress", 0);
       navigate("/helen-therapy", { state: { sessionId } });
     }
   }, [sessionId, navigate]);
