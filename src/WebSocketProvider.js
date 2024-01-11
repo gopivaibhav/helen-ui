@@ -6,7 +6,7 @@ export const WebSocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const newSocket = new WebSocket(`${process.env.REACT_APP_SOCKET}/ws`);
+    const newSocket = new WebSocket(`${process.env.REACT_APP_SOCKET}/ws/${JSON.parse(sessionStorage.getItem('userDetail')).email}`);
     newSocket.onopen = () => {
       console.log('WebSocket connected');
     };
