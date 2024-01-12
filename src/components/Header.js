@@ -9,7 +9,7 @@ const Header = ({ setIsActive, progress }) => {
   const [showModal, setShowModal] = useState(false);
   const navigateToHome = () => {
     setShowModal(false);
-    window.location.href = "/";
+    navigate("/rating")
   };
 
   const handleConfirm = async () => {
