@@ -35,16 +35,18 @@ const PreviousSession = ({ sessionDetail }) => {
   );
   const [isSort, setIsSort] = useState(true);
   useEffect(() => {
-    if (sessionStorage.sessions ) {
-      setSortSessionDetail(JSON.parse(sessionStorage.sessions));
-    }
-    console.log("useffect")
+    console.log("useffect");
     if (isSort) {
-      setSortSessionDetail(sessionDetail.reverse());
+      if (sessionStorage.sessions) {
+        console.log("session storage");
+        setSortSessionDetail(JSON.parse(sessionStorage.sessions).reverse());
+      } else setSortSessionDetail(sortSessionDetail.reverse());
     } else {
-      setSortSessionDetail(sessionDetail);
+      if (sessionStorage.sessions) {
+        setSortSessionDetail(JSON.parse(sessionStorage.sessions));
+      } else setSortSessionDetail(sortSessionDetail.reverse());
     }
-  }, [isSort,sessionDetail]);
+  }, []);
   const navigate = useNavigate();
   const sortHandler = () => {
     setSortSessionDetail(sortSessionDetail.reverse());
