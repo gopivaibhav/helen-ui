@@ -23,7 +23,7 @@ const addMessage = async (sender, content, session) => {
     }
   );
 };
-const Helen = ({ topic = "", setProgress }) => {
+const Helen = ({ topic = "", setProgress, showRatingModal }) => {
   const socket = useWebSocket();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const { transcript, listening, resetTranscript } = useSpeechRecognition();
@@ -59,14 +59,14 @@ const Helen = ({ topic = "", setProgress }) => {
   const state = location.state.sessionId;
   let holdTimeout;
   const handleMouseDown = () => {
-      setIsHolding(true);
-      setChangeButtonFunction(false);
-      setListeningLoader(true);
-      setToolTipOpen(false);
-      SpeechRecognition.startListening({
-        language: "en-UK",
-        continuous: true,
-      });
+    setIsHolding(true);
+    setChangeButtonFunction(false);
+    setListeningLoader(true);
+    setToolTipOpen(false);
+    SpeechRecognition.startListening({
+      language: "en-UK",
+      continuous: true,
+    });
   };
 
   const handleMouseUp = () => {
@@ -81,7 +81,7 @@ const Helen = ({ topic = "", setProgress }) => {
   };
 
   useEffect(() => {
-    console.log('listening changed to-', listening);
+    console.log("listening changed to-", listening);
     if (!listening) {
       setListeningLoader(false);
       handleRequest();
@@ -100,16 +100,15 @@ const Helen = ({ topic = "", setProgress }) => {
       audioRef.current.src = blobUrl;
       // audioRef.current.muted = false;
       audioRef.current
-      .play()
-      .then(() => {
-        console.log("playing audio without error");
-        setCaption(textArray[currentBlobIndex.current - 1]);
-      })
-      .catch((err) => {
-        console.log(err, "ERROR in playing audio");
-      });
-    
-      
+        .play()
+        .then(() => {
+          console.log("playing audio without error");
+          setCaption(textArray[currentBlobIndex.current - 1]);
+        })
+        .catch((err) => {
+          console.log(err, "ERROR in playing audio");
+        });
+
       currentBlobIndex.current += 1;
     }
   };
@@ -214,8 +213,6 @@ const Helen = ({ topic = "", setProgress }) => {
     };
   }, [socket]);
 
-
-
   if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
     return (
       <div className="mircophone-container">
@@ -257,7 +254,7 @@ const Helen = ({ topic = "", setProgress }) => {
 
   return (
     <>
-      <RippleEffect isPlaying={isPlaying} />
+      {!showRatingModal && <RippleEffect isPlaying={isPlaying} />}
       <div
         style={{
           display: "flex",
@@ -300,81 +297,83 @@ const Helen = ({ topic = "", setProgress }) => {
           Your browser does not support the audio element.
         </audio>
       </div>
-      <div
-        style={{
-          width: "100%",
-          height: "100px",
-          background: "rgba(117, 139, 255, 1)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          padding: 0,
-          margin: 0,
-        }}
-      >
-        <CustomToolTip
-          TransitionComponent={Fade}
-          TransitionProps={{ timeout: 0 }}
-          open={toolTipOpen}
-          sx={{ width: "1000 rem", color: "green" }}
-          placement="top"
-          title="Press and Hold to Speak Something"
+      {!showRatingModal && (
+        <div
+          style={{
+            width: "100%",
+            height: "100px",
+            background: "rgba(117, 139, 255, 1)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            padding: 0,
+            margin: 0,
+          }}
         >
-          <button
-            // onClick={ChangeButtonFunctionHandler}
-            onPointerDown={!isButtonDisabled ? handleMouseDown : () => {}}
-            onPointerUp={!isButtonDisabled ? handleMouseUp : () => {}}
-            // onTouchStart={!isButtonDisabled ? handleMouseDown : () => {}}
-            // onTouchEnd={!isButtonDisabled ? handleMouseUp : () => {}}
-            disabled={isButtonDisabled}
-            id="micButton"
-            style={{
-              width: "100px",
-              height: "100px",
-              background: "white",
-              borderRadius: "50%",
-              borderColor: "white",
-              textAlign: "center",
-              color: "rgba(117, 139, 255, 1)",
-              fontSize: 40,
-              border: "none",
-              fontFamily: "'Nunito Sans', sans-serif ",
-              fontWeight: "700",
-              wordWrap: "break-word",
-              position: "absolute",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              top: "-48px",
-            }}
+          <CustomToolTip
+            TransitionComponent={Fade}
+            TransitionProps={{ timeout: 0 }}
+            open={toolTipOpen}
+            sx={{ width: "1000 rem", color: "green" }}
+            placement="top"
+            title="Press and Hold to Speak Something"
           >
-            <div
+            <button
+              // onClick={ChangeButtonFunctionHandler}
+              onPointerDown={!isButtonDisabled ? handleMouseDown : () => {}}
+              onPointerUp={!isButtonDisabled ? handleMouseUp : () => {}}
+              // onTouchStart={!isButtonDisabled ? handleMouseDown : () => {}}
+              // onTouchEnd={!isButtonDisabled ? handleMouseUp : () => {}}
+              disabled={isButtonDisabled}
+              id="micButton"
               style={{
-                width: "92px",
-                height: "92px",
-                background: "rgba(117, 139, 255, 1)",
+                width: "100px",
+                height: "100px",
+                background: "white",
                 borderRadius: "50%",
-                textAlign: "center",
-                color: "white",
                 borderColor: "white",
-                fontSize: 12,
+                textAlign: "center",
+                color: "rgba(117, 139, 255, 1)",
+                fontSize: 40,
+                border: "none",
                 fontFamily: "'Nunito Sans', sans-serif ",
                 fontWeight: "700",
                 wordWrap: "break-word",
-                border: "none",
+                position: "absolute",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+                top: "-48px",
               }}
             >
-              <MicIcon id="MicImage" sx={{ width: "45px", height: "45px" }} />
-            </div>
-          </button>
-        </CustomToolTip>
-      </div>
+              <div
+                style={{
+                  width: "92px",
+                  height: "92px",
+                  background: "rgba(117, 139, 255, 1)",
+                  borderRadius: "50%",
+                  textAlign: "center",
+                  color: "white",
+                  borderColor: "white",
+                  fontSize: 12,
+                  fontFamily: "'Nunito Sans', sans-serif ",
+                  fontWeight: "700",
+                  wordWrap: "break-word",
+                  border: "none",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <MicIcon id="MicImage" sx={{ width: "45px", height: "45px" }} />
+              </div>
+            </button>
+          </CustomToolTip>
+        </div>
+      )}
     </>
   );
 };
