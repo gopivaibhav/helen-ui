@@ -7,6 +7,7 @@ import HelenMain from "./pages/HelenMain";
 import Session from "./pages/Session";
 import Companion from "./pages/Companion";
 import SocketHelen from "./components/SocketHelen";
+import SessionRating from "./pages/SessionRating";
 import { useEffect } from "react";
 import "./App.css";
 import { mixPanelTracking } from "./utils/mixPanel";
@@ -21,6 +22,7 @@ function App() {
         <Route path="/helen-therapy" element={<SocketHelen />} />
         <Route path="/companion" element={<Companion />} />
         <Route path="/session" element={<Session />} />
+        <Route path="/rating" element={<SessionRating />} />
       </Routes>
     </Router>
   );
