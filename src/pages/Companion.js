@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../styles/Companion.css";
 import CustomConfirmModal from "../components/CustomConfirmModal";
 import axios from "axios";
+import DisclaimerModal from "../components/DisclaimerModal";
 
 function Companion() {
   const [showModal, setShowModal] = useState(false);
