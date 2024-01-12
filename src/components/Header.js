@@ -3,8 +3,6 @@ import { Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import CustomConfirmModal from "./CustomConfirmModal";
 import ProgressBar from "./ProgressBar";
-import axios from "axios";
-import SessionRating from "../pages/SessionRating";
 const Header = ({ setIsActive, progress }) => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
@@ -17,11 +15,6 @@ const Header = ({ setIsActive, progress }) => {
     setShowModal(false);
     sessionStorage.setItem("progress", progress);
     console.log(progress, typeof progress);
-    // const data = await axios.get(
-    //   `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/session/get/${sessionStorage.getItem(
-    //     "ongoingSession"
-    //   )}`
-    // );
     navigateToHome();
   };
 
