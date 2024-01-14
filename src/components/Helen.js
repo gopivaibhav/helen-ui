@@ -100,15 +100,15 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
       audioRef.current.src = blobUrl;
       // audioRef.current.muted = false;
       audioRef.current
-        .play()
-        .then(() => {
-          console.log("playing audio without error");
-          setCaption(textArray[currentBlobIndex.current - 1]);
-        })
-        .catch((err) => {
-          console.log(err, "ERROR in playing audio");
-        });
-
+      .play()
+      .then(() => {
+        setCaption(textArray[currentBlobIndex.current - 1]);
+      })
+      .catch((err) => {
+        console.log(err, "ERROR in playing audio");
+      });
+    
+      
       currentBlobIndex.current += 1;
     }
   };
@@ -152,20 +152,29 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
     };
 
     if (socket) {
-      socket.send(
-        JSON.stringify({
-          need: "openai",
-          query: "",
-          chat: chat,
-          email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-        })
-      );
-      socket.send(
-        JSON.stringify({
-          need: "changefirst",
-          email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-        })
-      );
+      const sendMsg = () => {
+        if (socket.readyState === WebSocket.OPEN) {
+          socket.send(
+            JSON.stringify({
+              need: "openai",
+              query: "",
+              chat: chat,
+              email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+            })
+          );
+          socket.send(
+            JSON.stringify({
+              need: "changefirst",
+              email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+            })
+          );
+        } 
+        else {
+          console.log('socket not open')
+          setTimeout(sendMsg, 1);
+        }
+      };
+      sendMsg();
       SpeechRecognition.startListening({
         language: "en-UK",
         continuous: true,
@@ -180,14 +189,14 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
         if (typeof message === "string") {
           const res = JSON.parse(message);
           if (res.AI) {
-            console.log(res.AI);
+            // console.log(res.AI);
             setTextArray((prev) => [...prev, res.AI]);
           } else {
             console.log("state", res);
             if (res.done) {
               setTextArray((prev) => [...prev, " ALL DONE "]);
             }
-            if (res.total_count) setProgress(res.total_count * 4.5);
+            if (res.percentage) setProgress(res.percentage);
           }
         } else {
           // console.log('blob', message, typeof(message))
