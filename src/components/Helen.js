@@ -6,6 +6,7 @@ import Fade from "@mui/material/Fade";
 import { withStyles } from "@mui/styles";
 import Tooltip from "@mui/material/Tooltip";
 import { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import MicIcon from "@mui/icons-material/Mic";
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -34,7 +35,8 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
   const [isHolding, setIsHolding] = useState(false);
   const [textArray, setTextArray] = useState([]);
   const [caption, setCaption] = useState("");
-  const [words, setWords] = useState([]);
+  const [updatedState, setUpdatedState] = useState('');
+  const navigate = useNavigate();
 
   const [finalBlobs, setFinalBlobs] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -128,6 +130,11 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
         setTextArray(() => []);
         currentBlobIndex.current = 0;
         setFinalBlobs([]);
+        if (updatedState === "Conclusion") {
+          setTimeout(() => {
+            navigate("/rating");
+          }, 2000);
+        }
       }
     }
   };
@@ -197,6 +204,7 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
               setTextArray((prev) => [...prev, " ALL DONE "]);
             }
             if (res.percentage) setProgress(res.percentage);
+            if(res.updated_state) setUpdatedState(res.updated_state);
           }
         } else {
           // console.log('blob', message, typeof(message))
