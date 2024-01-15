@@ -204,17 +204,21 @@ const NewSession = ({ userId, userData }) => {
               A non-judgmental friend who can help set good habits, break
               addictions, and vent.
             </div>
-            <div className="comming-soon"
+            <div
+              className="comming-soon"
               style={{
                 display: "flex",
                 flexDirection: "row",
-                alignItems: "center",
                 position: "absolute",
-                right: "15px",
-                top: "-25px",
+                right: "10px",
+                top: "-50px",
               }}
             >
-              <img alt="coming soon" src="./coming-soon.png" />
+              <img
+                style={{ width: "100px" }}
+                alt="coming soon"
+                src="./coming-soon.png"
+              />
             </div>
             <div
               style={{
