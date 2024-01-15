@@ -20,6 +20,11 @@ body {
     background-color: rgba(117, 139, 255, 1);
     background-position: left 90%;
   }
+  .qcomming-soon{
+    position: absolute;
+    right: 50px;
+    top: -20px;
+  }
 }
 
 /* Desktop styles */

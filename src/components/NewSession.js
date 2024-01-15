@@ -151,15 +151,15 @@ const NewSession = ({ userId, userData }) => {
           style={{ width: "90%", margin: "40px 8vw 40px 10px", opacity: "0.5" }}
         />
         <div
-          className="FeatureCardWrapper"
+          className="FeatureCardWrapperDisabled"
           style={{ margin: "30px 8vw 30px 0px", minHeight: "100px" }}
           // onClick={sessionHandler}
-          onClick={() => {
-            if (userId === "") {
-              loginWithRedirect();
-            }
-            navigate(`/companion`);
-          }}
+          // onClick={() => {
+          //   if (userId === "") {
+          //     loginWithRedirect();
+          //   }
+          //   navigate(`/companion`);
+          // }}
         >
           <div
             style={{
@@ -183,11 +183,11 @@ const NewSession = ({ userId, userData }) => {
                 ? `Talk to  ${userData.companion.companionName}`
                 : "Create a friendly companion"}
             </div>
-            <div class="center-con arrow-div">
-              <div class="round">
+            <div className="center-con arrow-div">
+              <div className="round-disabled">
                 <div id="cta">
-                  <span class="arrow primera next "></span>
-                  <span class="arrow segunda next "></span>
+                  <span className="arrow primera next "></span>
+                  <span className="arrow segunda next "></span>
                 </div>
               </div>
             </div>
@@ -203,6 +203,18 @@ const NewSession = ({ userId, userData }) => {
             >
               A non-judgmental friend who can help set good habits, break
               addictions, and vent.
+            </div>
+            <div className="comming-soon"
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                position: "absolute",
+                right: "15px",
+                top: "-25px",
+              }}
+            >
+              <img alt="coming soon" src="./coming-soon.png" />
             </div>
             <div
               style={{
