@@ -6,6 +6,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { ArrowBack } from "@mui/icons-material";
 import "../styles/TransitionComponent.css";
 import DisclaimerModal from "./DisclaimerModal";
+
+import IconButton from "@mui/material/IconButton";
 const createUser = async (user, setUserId) => {
   try {
     const { name, email, picture } = user;
@@ -142,14 +144,23 @@ const UserPofile = ({ setUserId }) => {
               alignItems: "center",
             }}
           >
-            <ArrowBack
+            <button
               style={{
                 width: "25%",
-                color: "rgba(78, 77, 77, 0.8)",
                 justifyContent: "left",
+                background: "white",
+                border: "none",
+                cursor: "pointer",
               }}
-              onClick={handleProfile}
-            />
+            >
+              <ArrowBack
+                style={{
+                  width: "100%",
+                  color: "rgba(78, 77, 77, 0.8)",
+                }}
+                onClick={handleProfile}
+              />
+            </button>
             <div
               style={{
                 width: "60%",
