@@ -12,6 +12,15 @@ export const WebSocketProvider = ({ children }) => {
     };
     setSocket(newSocket);
 
+    newSocket.onclose = (event) => {
+      console.log('WebSocket closed:', event);
+
+      setTimeout(() => {
+        const reopenedSocket = new WebSocket(`${process.env.REACT_APP_SOCKET}/ws/${JSON.parse(sessionStorage.getItem('userDetail')).email}`);
+        setSocket(reopenedSocket);
+      }, 100);
+    };
+
     return () => {
       newSocket.close();
     };

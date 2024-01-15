@@ -6,6 +6,7 @@ import Fade from "@mui/material/Fade";
 import { withStyles } from "@mui/styles";
 import Tooltip from "@mui/material/Tooltip";
 import { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import MicIcon from "@mui/icons-material/Mic";
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -34,7 +35,8 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
   const [isHolding, setIsHolding] = useState(false);
   const [textArray, setTextArray] = useState([]);
   const [caption, setCaption] = useState("");
-  const [words, setWords] = useState([]);
+  const [updatedState, setUpdatedState] = useState('');
+  const navigate = useNavigate();
 
   const [finalBlobs, setFinalBlobs] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -100,15 +102,15 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
       audioRef.current.src = blobUrl;
       // audioRef.current.muted = false;
       audioRef.current
-        .play()
-        .then(() => {
-          console.log("playing audio without error");
-          setCaption(textArray[currentBlobIndex.current - 1]);
-        })
-        .catch((err) => {
-          console.log(err, "ERROR in playing audio");
-        });
-
+      .play()
+      .then(() => {
+        setCaption(textArray[currentBlobIndex.current - 1]);
+      })
+      .catch((err) => {
+        console.log(err, "ERROR in playing audio");
+      });
+    
+      
       currentBlobIndex.current += 1;
     }
   };
@@ -128,6 +130,11 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
         setTextArray(() => []);
         currentBlobIndex.current = 0;
         setFinalBlobs([]);
+        if (updatedState === "Conclusion") {
+          setTimeout(() => {
+            navigate("/rating");
+          }, 2000);
+        }
       }
     }
   };
@@ -152,20 +159,29 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
     };
 
     if (socket) {
-      socket.send(
-        JSON.stringify({
-          need: "openai",
-          query: "",
-          chat: chat,
-          email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-        })
-      );
-      socket.send(
-        JSON.stringify({
-          need: "changefirst",
-          email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-        })
-      );
+      const sendMsg = () => {
+        if (socket.readyState === WebSocket.OPEN) {
+          socket.send(
+            JSON.stringify({
+              need: "openai",
+              query: "",
+              chat: chat,
+              email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+            })
+          );
+          socket.send(
+            JSON.stringify({
+              need: "changefirst",
+              email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+            })
+          );
+        } 
+        else {
+          console.log('socket not open')
+          setTimeout(sendMsg, 1);
+        }
+      };
+      sendMsg();
       SpeechRecognition.startListening({
         language: "en-UK",
         continuous: true,
@@ -180,14 +196,15 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
         if (typeof message === "string") {
           const res = JSON.parse(message);
           if (res.AI) {
-            console.log(res.AI);
+            // console.log(res.AI);
             setTextArray((prev) => [...prev, res.AI]);
           } else {
             console.log("state", res);
             if (res.done) {
               setTextArray((prev) => [...prev, " ALL DONE "]);
             }
-            if (res.total_count) setProgress(res.total_count * 4.5);
+            if (res.percentage) setProgress(res.percentage);
+            if(res.updated_state) setUpdatedState(res.updated_state);
           }
         } else {
           // console.log('blob', message, typeof(message))
