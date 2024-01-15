@@ -23,7 +23,7 @@ const addMessage = async (sender, content, session) => {
     }
   );
 };
-const Helen = ({ topic = "", setProgress, showRatingModal }) => {
+const CompanianAi = ({ topic = "", setProgress, showRatingModal }) => {
   const socket = useWebSocket();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const { transcript, listening, resetTranscript } = useSpeechRecognition();
@@ -156,14 +156,14 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
         JSON.stringify({
           need: "companion",
           query: "",
-          voice_artist: sessionStorage.getItem("voice_artist"),
-          companion_role: sessionStorage.getItem("companion_role"),
-          companion: sessionStorage.getItem("companion"),
+          voice_artist: "nova",
+          companion_role: "You are guitar tutor and guide the user ",
+          companion: "Hero",
           chat: chat,
           email: JSON.parse(sessionStorage.getItem("userDetail")).email,
         })
       );
-     
+
       // socket.send(
       //   JSON.stringify({
       //     need: "changefirst",
@@ -247,9 +247,9 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
         JSON.stringify({
           need: "companion",
           query: transcript,
-          voice_artist: sessionStorage.getItem("voice_artist"),
-          companion_role: sessionStorage.getItem("companion_role"),
-          companion: sessionStorage.getItem("companion"),
+          voice_artist: "nova",
+          companion_role: "You are guitar tutor and guide the user ",
+          companion: "Hero",
           chat: chat,
           email: JSON.parse(sessionStorage.getItem("userDetail")).email,
         })
@@ -385,4 +385,4 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
   );
 };
 
-export default Helen;
+export default CompanianAi;
