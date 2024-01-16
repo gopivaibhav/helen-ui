@@ -207,15 +207,13 @@ const NewSession = ({ userId, userData }) => {
             <div
               className="comming-soon"
               style={{
-                display: "flex",
-                flexDirection: "row",
                 position: "absolute",
                 right: "10px",
-                top: "-50px",
+                top: "-45px",
               }}
             >
               <img
-                style={{ width: "100px" }}
+                style={{ width: "100px", objectFit: "contain" }}
                 alt="coming soon"
                 src="./coming-soon.png"
               />
