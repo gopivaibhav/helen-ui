@@ -310,7 +310,13 @@ const UserPofile = ({ setUserId }) => {
           </h1>
         </div>
       </div>
-      {showModal && <DisclaimerModal onConfirm={onConfirmHandler} />}
+      {showModal && (
+        <DisclaimerModal
+          onConfirm={onConfirmHandler}
+          showModal={showModal}
+          setShowModal={setShowModal}
+        />
+      )}
     </>
   );
 };

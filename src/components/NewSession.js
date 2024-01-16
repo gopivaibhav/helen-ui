@@ -245,7 +245,13 @@ const NewSession = ({ userId, userData }) => {
           </div>
         </div>
       </div>
-      {showModal && <DisclaimerModal onConfirm={handleLogin} />}
+      {showModal && (
+        <DisclaimerModal
+          onConfirm={handleLogin}
+          showModal={showModal}
+          setShowModal={setShowModal}
+        />
+      )}
     </>
   );
 };

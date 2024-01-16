@@ -1,10 +1,28 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-const DisclaimerModal = ({ onConfirm, onCancel, showModal }) => {
+const DisclaimerModal = ({ onConfirm, onCancel, showModal, setShowModal }) => {
+  const popupRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popupRef.current && !popupRef.current.contains(event.target)) {
+        setShowModal(false);
+      }
+    };
+
+    if (showModal) {
+      document.addEventListener("click", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [showModal, setShowModal]);
   return (
     <div className={`custom-confirm-modal ${showModal ? "show" : ""}`}>
       <div className="modal-overlay" />
       <div
+        ref={popupRef}
         className="modal-content"
         style={{
           display: "flex",
