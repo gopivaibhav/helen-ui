@@ -169,12 +169,6 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
               email: JSON.parse(sessionStorage.getItem("userDetail")).email,
             })
           );
-          socket.send(
-            JSON.stringify({
-              need: "changefirst",
-              email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-            })
-          );
         } 
         else {
           console.log('socket not open')

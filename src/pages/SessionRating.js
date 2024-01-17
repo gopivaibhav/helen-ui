@@ -14,6 +14,7 @@ const SessionRating = ({ setShowRatingModal }) => {
     const Payload = {
       rating,
     };
+    await axios.post(`${process.env.REACT_APP_PORT}/sessionupdate/${JSON.parse(sessionStorage.getItem("userDetail")).email}`)
     await axios.patch(
       `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/session/patch/${sessionId}`,
       Payload
