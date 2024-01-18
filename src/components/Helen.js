@@ -14,6 +14,7 @@ import SpeechRecognition, {
 import { useWebSocket } from "../WebSocketProvider";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import SimplePeer from 'simple-peer';
 
 const addMessage = async (sender, content, session) => {
   const res = await axios.post(
@@ -36,6 +37,7 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
   const [textArray, setTextArray] = useState([]);
   const [caption, setCaption] = useState("");
   const [updatedState, setUpdatedState] = useState('');
+  const [peer, setPeer] = useState(null);
   const navigate = useNavigate();
 
   const [finalBlobs, setFinalBlobs] = useState([]);
@@ -157,11 +159,13 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
     const handleClose = () => {
       console.log("WebSocket connection ended");
     };
-
-    if (socket) {
-      const sendMsg = () => {
-        if (socket.readyState === WebSocket.OPEN) {
-          socket.send(
+    const initializePeer = () => {
+      const peerConnection = new SimplePeer({
+        initiator: true,
+        trickle: false,
+      });
+      peerConnection.on('signal', (data) => {
+        socket.send(
             JSON.stringify({
               need: "openai",
               query: "",
@@ -169,19 +173,12 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
               email: JSON.parse(sessionStorage.getItem("userDetail")).email,
             })
           );
-          socket.send(
-            JSON.stringify({
-              need: "changefirst",
-              email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-            })
-          );
-        } 
-        else {
-          console.log('socket not open')
-          setTimeout(sendMsg, 1);
-        }
-      };
-      sendMsg();
+      });
+
+      setPeer(peerConnection);
+    };
+    if (socket) {
+      initializePeer();
       SpeechRecognition.startListening({
         language: "en-UK",
         continuous: true,
@@ -214,18 +211,12 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
       socket.addEventListener("close", handleClose);
     }
 
-    // const intervalId = setInterval(() => {
-    //   if (socket.readyState === WebSocket.OPEN) {
-    //     socket.send(
-    //       JSON.stringify({ need: "nothing" })
-    //     );
-    //   }
-    // }, 5000);
-
     return () => {
       if (socket) {
-        // clearInterval(intervalId);
         socket.removeEventListener("close", handleClose);
+      }
+      if (peer) {
+        peer.destroy();
       }
     };
   }, [socket]);
@@ -255,7 +246,6 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
     console.log("API Request-", transcript);
     if (transcript && transcript.length >= 2) {
       resetTranscript();
-      // sendAPIRequest(transcript);
       socket.send(
         JSON.stringify({
           need: "openai",

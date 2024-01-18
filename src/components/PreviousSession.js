@@ -141,7 +141,7 @@ const PreviousSession = ({ sessionDetail }) => {
                       // letterSpacing: "0"
                     }}
                   >
-                    Session {isSort ? sortSessionDetail.length - key : key + 1} {prev._id}
+                    Session {isSort ? sortSessionDetail.length - key : key + 1}
                   </div>
                   <div
                     style={{
