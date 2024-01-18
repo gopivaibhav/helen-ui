@@ -33,9 +33,14 @@ const PreviousSession = ({ sessionDetail }) => {
       ? JSON.parse(sessionStorage.sessions)
       : sessionDetail
   );
+
   const [isSort, setIsSort] = useState(true);
+
   useEffect(() => {
     console.log("useffect");
+    if(sessionDetail.length !== sortSessionDetail.length){
+      setSortSessionDetail(sessionDetail.reverse());
+    }
     if (isSort) {
       if (sessionStorage.sessions) {
         console.log("session storage");
@@ -46,12 +51,13 @@ const PreviousSession = ({ sessionDetail }) => {
         setSortSessionDetail(JSON.parse(sessionStorage.sessions));
       } else setSortSessionDetail(sortSessionDetail.reverse());
     }
-  }, []);
+  }, [sessionDetail]);
   const navigate = useNavigate();
   const sortHandler = () => {
     setSortSessionDetail(sortSessionDetail.reverse());
     setIsSort(!isSort);
   };
+  // console.log(sessionDetail, sortSessionDetail)
   return (
     <div style={{ marginLeft: "9.3vw" }}>
       <div
@@ -135,7 +141,7 @@ const PreviousSession = ({ sessionDetail }) => {
                       // letterSpacing: "0"
                     }}
                   >
-                    Session {isSort ? sortSessionDetail.length - key : key + 1}
+                    Session {isSort ? sortSessionDetail.length - key : key + 1} {prev._id}
                   </div>
                   <div
                     style={{

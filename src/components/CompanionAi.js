@@ -14,14 +14,15 @@ import { useWebSocket } from "../WebSocketProvider";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 
-const addMessage = async (sender, content, session) => {
+const addMessage = async (sender, content, userId) => {
   const res = await axios.post(
-    `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/session/${session}/messages`,
+    `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/companion/${userId}/messages`,
     {
       sender,
       content,
     }
   );
+  console.log(res);
 };
 const CompanianAi = ({ topic = "", setProgress, showRatingModal }) => {
   const socket = useWebSocket();
@@ -35,7 +36,7 @@ const CompanianAi = ({ topic = "", setProgress, showRatingModal }) => {
   const [textArray, setTextArray] = useState([]);
   const [caption, setCaption] = useState("");
   const [words, setWords] = useState([]);
-
+  const [userId, setUserId] = useState(sessionStorage.getItem("userId") || "");
   const [finalBlobs, setFinalBlobs] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
@@ -124,7 +125,7 @@ const CompanianAi = ({ topic = "", setProgress, showRatingModal }) => {
           ...prev,
           { role: "assistant", content: textArray.join(" ").slice(0, -11) },
         ]);
-        // addMessage("assistant", textArray.join(" ").slice(0, -11), state);
+        addMessage("assistant", textArray.join(" ").slice(0, -11), userId);
         setTextArray(() => []);
         currentBlobIndex.current = 0;
         setFinalBlobs([]);
@@ -156,11 +157,15 @@ const CompanianAi = ({ topic = "", setProgress, showRatingModal }) => {
         JSON.stringify({
           need: "companion",
           query: "",
-          voice_artist: "nova",
-          companion_role: "You are guitar tutor and guide the user ",
-          companion: "Hero",
+          voice_artist: JSON.parse(sessionStorage.getItem("userData"))
+            .companion["companionVoice"],
+          companion_role: JSON.parse(sessionStorage.getItem("userData"))
+            .companion["companionRole"],
+          companion: JSON.parse(sessionStorage.getItem("userData")).companion[
+            "companionName"
+          ],
           chat: chat,
-          email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+          email: JSON.parse(sessionStorage.getItem("userData")).email,
         })
       );
 
@@ -247,15 +252,19 @@ const CompanianAi = ({ topic = "", setProgress, showRatingModal }) => {
         JSON.stringify({
           need: "companion",
           query: transcript,
-          voice_artist: "nova",
-          companion_role: "You are guitar tutor and guide the user ",
-          companion: "Hero",
+          voice_artist: JSON.parse(sessionStorage.getItem("userData"))
+            .companion["companionVoice"],
+          companion_role: JSON.parse(sessionStorage.getItem("userData"))
+            .companion["companionRole"],
+          companion: JSON.parse(sessionStorage.getItem("userData")).companion[
+            "companionName"
+          ],
           chat: chat,
           email: JSON.parse(sessionStorage.getItem("userDetail")).email,
         })
       );
       setChat((prev) => [...prev, { role: "user", content: transcript }]);
-      // addMessage("user", transcript, state);
+      addMessage("user", transcript, userId);
     }
   };
 

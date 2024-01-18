@@ -11,6 +11,7 @@ import SessionRating from "./pages/SessionRating";
 import { useEffect } from "react";
 import "./App.css";
 import { mixPanelTracking } from "./utils/mixPanel";
+import SocketCompanion from "./components/SocketCompanion";
 function App() {
   useEffect(() => {
     mixPanelTracking("page_view");
@@ -20,6 +21,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HelenMain />} />
         <Route path="/helen-therapy" element={<SocketHelen />} />
+        <Route path="/companion-bot" element={<SocketCompanion />} />
         <Route path="/companion" element={<Companion />} />
         <Route path="/session" element={<Session />} />
         <Route path="/rating" element={<SessionRating />} />

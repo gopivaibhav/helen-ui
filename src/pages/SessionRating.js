@@ -14,10 +14,12 @@ const SessionRating = ({ setShowRatingModal }) => {
     const Payload = {
       rating,
     };
-    await axios.patch(
-      `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/session/patch/${sessionId}`,
-      Payload
-    );
+    if (sessionId) {
+      await axios.patch(
+        `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/session/patch/${sessionId}`,
+        Payload
+      );
+    }
     navigate("/");
   };
   const handleClick = () => {

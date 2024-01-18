@@ -8,10 +8,8 @@ import NewLoader from "./NewLoader";
 import SessionRating from "./SessionRating";
 import CompanianAi from "../components/CompanionAi";
 
-const NewLayout = () => {
+const CompanionBot = () => {
   const [isActive, setIsActive] = useState(false);
-  // const [showRatingModal, setshowRatingModal] = useState(true);
-  const [topic, setTopic] = useState("");
   const [progress, setProgress] = useState(4.5);
   const params = useParams();
   const location = useLocation();
@@ -28,11 +26,12 @@ const NewLayout = () => {
             // showRatingModal={showRatingModal}
             // setshowRatingModal={setshowRatingModal}
           />
-          <Helen
+          {/* <Helen
             setProgress={setProgress}
             // showRatingModal={showRatingModal}
             // setshowRatingModal={setshowRatingModal}
-          />
+          /> */}
+          <CompanianAi setProgress={setProgress} />
         </div>
       )}
       {/* <SessionRating /> */}
@@ -40,4 +39,4 @@ const NewLayout = () => {
   );
 };
 
-export default NewLayout;
+export default CompanionBot;

@@ -157,8 +157,13 @@ const NewSession = ({ userId, userData }) => {
           // onClick={() => {
           //   if (userId === "") {
           //     loginWithRedirect();
-          //   }
-          //   navigate(`/companion`);
+          //   } else if (
+          //     sessionStorage.getItem("userData") &&
+          //     JSON.parse(sessionStorage.getItem("userData")).companion
+          //   ) {
+              
+          //     navigate("/companion-bot", { state: { sessionId } });
+          //   } else navigate(`/companion`);
           // }}
         >
           <div
