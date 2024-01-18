@@ -7,6 +7,7 @@ import { RingLoader } from "react-spinners";
 import NewLoader from "./NewLoader";
 import SessionRating from "./SessionRating";
 import CompanianAi from "../components/CompanionAi";
+import CompanionHeader from "../components/CompanionHeader";
 
 const CompanionBot = () => {
   const [isActive, setIsActive] = useState(false);
@@ -20,7 +21,7 @@ const CompanionBot = () => {
         <NewLoader setLoader={setLoader} />
       ) : (
         <div className="App">
-          <Header
+          <CompanionHeader
             setIsActive={setIsActive}
             progress={progress}
             // showRatingModal={showRatingModal}
