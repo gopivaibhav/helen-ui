@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import CustomConfirmModal from "./CustomConfirmModal";
 import ProgressBar from "./ProgressBar";
 const CompanionHeader = ({ setIsActive, progress }) => {
   const navigate = useNavigate();
-  const [companionName, setCompanionName] = useState(sessionStorage.getItem("companion"));
+  const [companionName, setCompanionName] = useState("");
+
   const [showModal, setShowModal] = useState(false);
   const navigateToHome = () => {
     setShowModal(false);
@@ -37,6 +38,15 @@ const CompanionHeader = ({ setIsActive, progress }) => {
       window.location.reload();
     });
   };
+  useEffect(() => {
+    if (sessionStorage.getItem("userData")) {
+      setCompanionName(
+        JSON.parse(sessionStorage.getItem("userData")).companion[
+          "companionName"
+        ]
+      );
+    }
+  }, []);
   return (
     <>
       {/* {!showRatingModal && ( */}
@@ -103,6 +113,7 @@ const CompanionHeader = ({ setIsActive, progress }) => {
             fontSize: 50,
             fontWeight: "700 !important",
             wordWrap: "break-word",
+            textTransform:"capitalize"
           }}
         >
           {companionName}
