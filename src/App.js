@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import "./App.css";
 import { mixPanelTracking } from "./utils/mixPanel";
 import SocketCompanion from "./components/SocketCompanion";
+import Marketplace from "./pages/Marketplace";
 function App() {
   useEffect(() => {
     mixPanelTracking("page_view");
@@ -25,6 +26,7 @@ function App() {
         <Route path="/companion" element={<Companion />} />
         <Route path="/session" element={<Session />} />
         <Route path="/rating" element={<SessionRating />} />
+        <Route path="/marketplace" element={<Marketplace />} />
       </Routes>
     </Router>
   );
