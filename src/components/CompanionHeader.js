@@ -103,7 +103,7 @@ const CompanionHeader = ({ setIsActive, progress }) => {
       >
         <RefreshIcon sx={{ color: "rgba(117, 139, 255, 1)" }} onClick={RefreshHandler} />
       </button> */}
-        <ProgressBar progress={progress} />
+        {/* <ProgressBar progress={progress} /> */}
         <div
           style={{
             textAlign: "center",
