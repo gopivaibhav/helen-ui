@@ -1,6 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+
 
 const DoctorList = () => {
+  const navigate = useNavigate();
+  const handleClick = ()=>{
+    navigate("./:id")
+  }
   return (
     <>
       <div
@@ -214,6 +220,7 @@ const DoctorList = () => {
                   lineHeight: "16px",
                   wordWrap: "break-word",
                 }}
+                onClick={handleClick}
               >
                 Book
               </div>
