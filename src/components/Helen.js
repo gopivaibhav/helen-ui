@@ -14,7 +14,6 @@ import SpeechRecognition, {
 import { useWebSocket } from "../WebSocketProvider";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import SimplePeer from 'simple-peer';
 
 const addMessage = async (sender, content, session) => {
   const res = await axios.post(
@@ -25,19 +24,15 @@ const addMessage = async (sender, content, session) => {
     }
   );
 };
-const Helen = ({ topic = "", setProgress, showRatingModal }) => {
+const Helen = ({ setProgress, showRatingModal }) => {
   const socket = useWebSocket();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const { transcript, listening, resetTranscript } = useSpeechRecognition();
-  const [loader, setLoader] = useState(false);
   const [listeningLoader, setListeningLoader] = useState(false);
   const [chat, setChat] = useState([]);
-  const [changeButtonFunction, setChangeButtonFunction] = useState(true);
-  const [isHolding, setIsHolding] = useState(false);
   const [textArray, setTextArray] = useState([]);
   const [caption, setCaption] = useState("");
   const [updatedState, setUpdatedState] = useState('');
-  const [peer, setPeer] = useState(null);
   const navigate = useNavigate();
 
   const [finalBlobs, setFinalBlobs] = useState([]);
@@ -61,10 +56,7 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
 
   const location = useLocation();
   const state = location.state.sessionId;
-  let holdTimeout;
   const handleMouseDown = () => {
-    setIsHolding(true);
-    setChangeButtonFunction(false);
     setListeningLoader(true);
     setToolTipOpen(false);
     SpeechRecognition.startListening({
@@ -80,8 +72,6 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
       });
     }, 1000);
 
-    setChangeButtonFunction(true);
-    setIsHolding(false);
   };
 
   useEffect(() => {
@@ -92,17 +82,44 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
     }
   }, [listening]);
 
-  const playNextBlob = () => {
-    // console.log('in play next blob', currentBlobIndex.current, finalBlobs.length)
+  const apiCallForAudio = (chunk) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await fetch("https://api.openai.com/v1/audio/speech", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${process.env.REACT_APP_OPENAI_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "tts-1-1106",
+            input: chunk,
+            voice: "nova",
+            response_format: "mp3",
+            stream: true,
+          }),
+        });
+  
+        if (response.ok) {
+          const audioBlob = await response.blob();
+          const audioUrl = URL.createObjectURL(audioBlob);
+          resolve(audioUrl);
+        } else {
+          reject(new Error(`Error generating speech: ${response.status} ${response.statusText}`));
+        }
+      } catch (error) {
+        reject(new Error(`Error generating speech: ${error}`));
+      }
+    })
+  }
+
+  const playNextBlob = async () => {
     if (currentBlobIndex.current < finalBlobs.length) {
-      // console.log('successs')
       setIsPlaying(true);
       setIsButtonDisabled(true);
-      const blob = finalBlobs[currentBlobIndex.current];
-      const blobUrl = URL.createObjectURL(blob);
-
-      audioRef.current.src = blobUrl;
-      // audioRef.current.muted = false;
+      console.log(currentBlobIndex.current, textArray[currentBlobIndex.current - 1])
+      const openaiUrl = finalBlobs[currentBlobIndex.current];
+      audioRef.current.src = openaiUrl;
       audioRef.current
       .play()
       .then(() => {
@@ -112,7 +129,7 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
         console.log(err, "ERROR in playing audio");
       });
       audioRef.current.addEventListener('ended', () => {
-        URL.revokeObjectURL(blobUrl);
+        URL.revokeObjectURL(openaiUrl);
       });
       currentBlobIndex.current += 1;
     }
@@ -186,7 +203,7 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
           language: "en-UK",
         });
       }, 0);
-      socket.addEventListener("message", (event) => {
+      socket.addEventListener("message", async(event) => {
         const message = event.data;
         if(message instanceof Blob){
           console.log(message, 'blob server')
@@ -196,7 +213,10 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
           const res = JSON.parse(message);
           if (res.AI) {
             // console.log(res.AI);
+            const openaiUrl = await apiCallForAudio(res.AI);
+            setFinalBlobs((prev) => [...prev, openaiUrl]);
             setTextArray((prev) => [...prev, res.AI]);
+            // setLoader(()=> false)
           } else {
             console.log("state", res);
             if (res.done) {
@@ -215,9 +235,6 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
     return () => {
       if (socket) {
         socket.removeEventListener("close", handleClose);
-      }
-      if (peer) {
-        peer.destroy();
       }
     };
   }, [socket]);
@@ -259,7 +276,7 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
       addMessage("user", transcript, state);
     }
   };
-
+  // if(loader)return <></>;
   return (
     <>
       {!showRatingModal && <RippleEffect isPlaying={isPlaying} />}
@@ -271,13 +288,6 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
           height: "10vh",
         }}
       >
-        {loader && (
-          <img
-            style={{ width: "60px", height: "60px" }}
-            src="/loader.gif"
-            alt="loader"
-          />
-        )}
         {listeningLoader && (
           <span className="fade-in-text" style={{ fontSize: "24px" }}>
             Listening...
