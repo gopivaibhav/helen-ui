@@ -111,8 +111,9 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
       .catch((err) => {
         console.log(err, "ERROR in playing audio");
       });
-    
-      
+      audioRef.current.addEventListener('ended', () => {
+        URL.revokeObjectURL(blobUrl);
+      });
       currentBlobIndex.current += 1;
     }
   };
@@ -159,26 +160,23 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
     const handleClose = () => {
       console.log("WebSocket connection ended");
     };
-    const initializePeer = () => {
-      const peerConnection = new SimplePeer({
-        initiator: true,
-        trickle: false,
-      });
-      peerConnection.on('signal', (data) => {
-        socket.send(
-            JSON.stringify({
-              need: "openai",
-              query: "",
-              chat: chat,
-              email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-            })
-          );
-      });
-
-      setPeer(peerConnection);
-    };
     if (socket) {
-      initializePeer();
+      const sendMsg = () => {
+        socket.send(
+          JSON.stringify({
+            need: "openai",
+            query: "",
+            chat: chat,
+            email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+          })
+        );
+      }
+      if(socket.readyState === 1){
+        sendMsg();
+      }else{
+        console.log('not opened', socket)
+        socket.addEventListener("open", sendMsg);
+      }
       SpeechRecognition.startListening({
         language: "en-UK",
         continuous: true,
@@ -190,7 +188,11 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
       }, 0);
       socket.addEventListener("message", (event) => {
         const message = event.data;
-        if (typeof message === "string") {
+        if(message instanceof Blob){
+          console.log(message, 'blob server')
+          setFinalBlobs((prev) => [...prev, message]);
+        }
+        else if (typeof message === "string") {
           const res = JSON.parse(message);
           if (res.AI) {
             // console.log(res.AI);
@@ -203,9 +205,8 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
             if (res.percentage) setProgress(res.percentage);
             if(res.updated_state) setUpdatedState(res.updated_state);
           }
-        } else {
-          // console.log('blob', message, typeof(message))
-          setFinalBlobs((prev) => [...prev, message]);
+        }else{
+          console.log("message", typeof(message));
         }
       });
       socket.addEventListener("close", handleClose);
