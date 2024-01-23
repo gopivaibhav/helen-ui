@@ -36,7 +36,9 @@ const Helen = ({ setProgress, showRatingModal }) => {
   const navigate = useNavigate();
 
   const [finalBlobs, setFinalBlobs] = useState([]);
+  // const [queue, setQueue] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [lastResponse, setLastResponse] = useState("");
   const audioRef = useRef(null);
   const currentBlobIndex = useRef(0);
   const [toolTipOpen, setToolTipOpen] = useState(false);
@@ -92,7 +94,7 @@ const Helen = ({ setProgress, showRatingModal }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            model: "tts-1-1106",
+            model: "tts-1",
             input: chunk,
             voice: "nova",
             response_format: "mp3",
@@ -103,7 +105,7 @@ const Helen = ({ setProgress, showRatingModal }) => {
         if (response.ok) {
           const audioBlob = await response.blob();
           const audioUrl = URL.createObjectURL(audioBlob);
-          resolve(audioUrl);
+          resolve({text: chunk, blob: audioUrl });
         } else {
           reject(new Error(`Error generating speech: ${response.status} ${response.statusText}`));
         }
@@ -117,39 +119,38 @@ const Helen = ({ setProgress, showRatingModal }) => {
     if (currentBlobIndex.current < finalBlobs.length) {
       setIsPlaying(true);
       setIsButtonDisabled(true);
-      console.log(currentBlobIndex.current, textArray[currentBlobIndex.current - 1])
+      // console.log(currentBlobIndex.current, textArray[currentBlobIndex.current - 1])
       const openaiUrl = finalBlobs[currentBlobIndex.current];
       audioRef.current.src = openaiUrl;
       audioRef.current
       .play()
       .then(() => {
-        setCaption(textArray[currentBlobIndex.current - 1]);
+        console.log('played- ', new Date().toLocaleTimeString())
+        setCaption(textArray[currentBlobIndex.current]);
+        currentBlobIndex.current += 1;
       })
       .catch((err) => {
         console.log(err, "ERROR in playing audio");
       });
-      audioRef.current.addEventListener('ended', () => {
-        URL.revokeObjectURL(openaiUrl);
-      });
-      currentBlobIndex.current += 1;
     }
   };
 
   const checkPlaying = () => {
     if (currentBlobIndex.current < textArray.length) {
       if (textArray[currentBlobIndex.current] === " ALL DONE ") {
-        console.log("\nFinal Caption-", textArray.join(" ").slice(0, -11));
+        console.log("\nFinal Caption-", textArray.join("").slice(0, -10));
         if (chat.length == 0) {
           setToolTipOpen(true);
         }
         setChat((prev) => [
           ...prev,
-          { role: "assistant", content: textArray.join(" ").slice(0, -11) },
+          { role: "assistant", content: textArray.join("").slice(0, -10) },
         ]);
-        addMessage("assistant", textArray.join(" ").slice(0, -11), state);
+        addMessage("assistant", textArray.join(" ").slice(0, -10), state);
         setTextArray(() => []);
         currentBlobIndex.current = 0;
         setFinalBlobs([]);
+        setCaption("");
         if (updatedState === "Conclusion") {
           setTimeout(() => {
             navigate("/rating");
@@ -160,11 +161,23 @@ const Helen = ({ setProgress, showRatingModal }) => {
   };
 
   const handleAudioEnded = () => {
-    setCaption("");
     setIsPlaying(() => false);
     setIsButtonDisabled(false);
     checkPlaying();
   };
+
+  // useEffect(() => {
+  //   if (queue.length > 0) {
+  //     const processQueue = async () => {
+  //       setQueue((prev) => prev.slice(1));
+  //       const current = queue[0];
+  //       const { text, blob } = await apiCallForAudio(current);
+  //       setFinalBlobs((prev) => [...prev, { text, blob }]);
+  //     };
+
+  //     processQueue();
+  //   }
+  // }, [queue]);
 
   useEffect(() => {
     // console.log('in use effect', finalBlobs, isPlaying)
@@ -212,15 +225,21 @@ const Helen = ({ setProgress, showRatingModal }) => {
         else if (typeof message === "string") {
           const res = JSON.parse(message);
           if (res.AI) {
-            // console.log(res.AI);
-            const openaiUrl = await apiCallForAudio(res.AI);
-            setFinalBlobs((prev) => [...prev, openaiUrl]);
-            setTextArray((prev) => [...prev, res.AI]);
+            console.log(res.AI)
+            // setLastResponse(()=> res.AI)
+            console.log('received-', new Date().toLocaleTimeString())
+            const { text, blob } = await apiCallForAudio(res.AI);
+            setFinalBlobs((prev) => [...prev, blob]);
+            setTextArray((prev) => [...prev, text]);
+            // setQueue((prev) => [...prev, res.AI]);
             // setLoader(()=> false)
           } else {
             console.log("state", res);
             if (res.done) {
-              setTextArray((prev) => [...prev, " ALL DONE "]);
+              // setTextArray((prev) => [...prev, " ALL DONE "]);
+              setTimeout(() => {
+                setTextArray((prev) => [...prev, " ALL DONE "]);
+              }, 2000)
             }
             if (res.percentage) setProgress(res.percentage);
             if(res.updated_state) setUpdatedState(res.updated_state);
