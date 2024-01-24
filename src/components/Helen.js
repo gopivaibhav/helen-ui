@@ -14,6 +14,7 @@ import SpeechRecognition, {
 import { useWebSocket } from "../WebSocketProvider";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import MistralClient from '@mistralai/mistralai';
 
 const addMessage = async (sender, content, session) => {
   const res = await axios.post(
@@ -38,7 +39,6 @@ const Helen = ({ setProgress, showRatingModal }) => {
   const [finalBlobs, setFinalBlobs] = useState([]);
   // const [queue, setQueue] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [lastResponse, setLastResponse] = useState("");
   const audioRef = useRef(null);
   const currentBlobIndex = useRef(0);
   const [toolTipOpen, setToolTipOpen] = useState(false);
@@ -84,6 +84,29 @@ const Helen = ({ setProgress, showRatingModal }) => {
     }
   }, [listening]);
 
+  const mistralAPI = async (query) => {
+    const client = new MistralClient(process.env.REACT_APP_MISTRAL_KEY);
+    let prompt = [
+      {
+        role: "user",
+        content:
+          "You have to give me the filler response in less than 10 words because I am getting another main response." + query,
+      }
+    ]
+    // prompt = prompt.concat(chat)
+    // prompt = prompt.concat({ role: "user", content: query })
+    // prompt = prompt.filter((item) => item.role !== "assistant");
+    const chatResponse = await client.chat({
+      model: "mistral-small",
+      messages: prompt
+    });
+    console.log(new Date().toLocaleTimeString(), 'received res from mistral')
+    console.log("Chat from Mistral:", chatResponse.choices[0].message.content);
+    const { text, blob } = await apiCallForAudio(chatResponse.choices[0].message.content);
+    setFinalBlobs((prev) => [...prev, blob]);
+    setTextArray((prev) => [...prev, text]);
+  };
+
   const apiCallForAudio = (chunk) => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -95,7 +118,7 @@ const Helen = ({ setProgress, showRatingModal }) => {
           },
           body: JSON.stringify({
             model: "tts-1",
-            input: chunk,
+            input: chunk.replace('\n', ' '),
             voice: "nova",
             response_format: "mp3",
             stream: true,
@@ -117,23 +140,26 @@ const Helen = ({ setProgress, showRatingModal }) => {
 
   const playNextBlob = async () => {
     if (currentBlobIndex.current < finalBlobs.length) {
-      setIsPlaying(true);
+      setIsPlaying(() => true);
       setIsButtonDisabled(true);
       // console.log(currentBlobIndex.current, textArray[currentBlobIndex.current - 1])
       const openaiUrl = finalBlobs[currentBlobIndex.current];
       audioRef.current.src = openaiUrl;
-      audioRef.current
+    }
+  };
+
+  const handleLoaded = () => {
+    console.log('played- ', new Date().toLocaleTimeString())
+    audioRef.current
       .play()
       .then(() => {
-        console.log('played- ', new Date().toLocaleTimeString())
         setCaption(textArray[currentBlobIndex.current]);
         currentBlobIndex.current += 1;
       })
       .catch((err) => {
         console.log(err, "ERROR in playing audio");
       });
-    }
-  };
+  }
 
   const checkPlaying = () => {
     if (currentBlobIndex.current < textArray.length) {
@@ -200,6 +226,7 @@ const Helen = ({ setProgress, showRatingModal }) => {
             email: JSON.parse(sessionStorage.getItem("userDetail")).email,
           })
         );
+        console.log(new Date().toLocaleTimeString(), 'sending req')
       }
       if(socket.readyState === 1){
         sendMsg();
@@ -227,12 +254,9 @@ const Helen = ({ setProgress, showRatingModal }) => {
           if (res.AI) {
             console.log(res.AI)
             // setLastResponse(()=> res.AI)
-            console.log('received-', new Date().toLocaleTimeString())
             const { text, blob } = await apiCallForAudio(res.AI);
             setFinalBlobs((prev) => [...prev, blob]);
             setTextArray((prev) => [...prev, text]);
-            // setQueue((prev) => [...prev, res.AI]);
-            // setLoader(()=> false)
           } else {
             console.log("state", res);
             if (res.done) {
@@ -283,6 +307,7 @@ const Helen = ({ setProgress, showRatingModal }) => {
     console.log("API Request-", transcript);
     if (transcript && transcript.length >= 2) {
       resetTranscript();
+      mistralAPI(transcript);
       socket.send(
         JSON.stringify({
           need: "openai",
@@ -330,7 +355,7 @@ const Helen = ({ setProgress, showRatingModal }) => {
             <span id="captiontext">{caption}</span>
           </div>
         )}
-        <audio ref={audioRef} onEnded={handleAudioEnded}>
+        <audio ref={audioRef} onEnded={handleAudioEnded} onLoadedData={handleLoaded}>
           Your browser does not support the audio element.
         </audio>
       </div>
