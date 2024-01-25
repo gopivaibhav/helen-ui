@@ -14,7 +14,7 @@ import SpeechRecognition, {
 import { useWebSocket } from "../WebSocketProvider";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import MistralClient from '@mistralai/mistralai';
+// import MistralClient from '@mistralai/mistralai';
 
 const addMessage = async (sender, content, session) => {
   const res = await axios.post(
@@ -31,7 +31,6 @@ const Helen = ({ setProgress, showRatingModal }) => {
   const { transcript, listening, resetTranscript } = useSpeechRecognition();
   const [listeningLoader, setListeningLoader] = useState(false);
   const [chat, setChat] = useState([]);
-  const [textArray, setTextArray] = useState([]);
   const [caption, setCaption] = useState("");
   const [updatedState, setUpdatedState] = useState('');
   const navigate = useNavigate();
@@ -84,28 +83,27 @@ const Helen = ({ setProgress, showRatingModal }) => {
     }
   }, [listening]);
 
-  const mistralAPI = async (query) => {
-    const client = new MistralClient(process.env.REACT_APP_MISTRAL_KEY);
-    let prompt = [
-      {
-        role: "user",
-        content:
-          "You have to give me the filler response in less than 10 words because I am getting another main response." + query,
-      }
-    ]
-    // prompt = prompt.concat(chat)
-    // prompt = prompt.concat({ role: "user", content: query })
-    // prompt = prompt.filter((item) => item.role !== "assistant");
-    const chatResponse = await client.chat({
-      model: "mistral-small",
-      messages: prompt
-    });
-    console.log(new Date().toLocaleTimeString(), 'received res from mistral')
-    console.log("Chat from Mistral:", chatResponse.choices[0].message.content);
-    const { text, blob } = await apiCallForAudio(chatResponse.choices[0].message.content);
-    setFinalBlobs((prev) => [...prev, blob]);
-    setTextArray((prev) => [...prev, text]);
-  };
+  // const mistralAPI = async (query) => {
+  //   const client = new MistralClient(process.env.REACT_APP_MISTRAL_KEY);
+  //   let prompt = [
+  //     {
+  //       role: "user",
+  //       content:
+  //         "You have to give me the filler response in less than 10 words because I am getting another main response." + query,
+  //     }
+  //   ]
+  //   // prompt = prompt.concat(chat)
+  //   // prompt = prompt.concat({ role: "user", content: query })
+  //   // prompt = prompt.filter((item) => item.role !== "assistant");
+  //   const chatResponse = await client.chat({
+  //     model: "mistral-small",
+  //     messages: prompt
+  //   });
+  //   console.log(new Date().toLocaleTimeString(), 'received res from mistral')
+  //   console.log("Chat from Mistral:", chatResponse.choices[0].message.content);
+  //   const { text, blob } = await apiCallForAudio(chatResponse.choices[0].message.content);
+  //   setFinalBlobs((prev) => [...prev, blob]);
+  // };
 
   const apiCallForAudio = (chunk) => {
     return new Promise(async (resolve, reject) => {
@@ -140,48 +138,57 @@ const Helen = ({ setProgress, showRatingModal }) => {
 
   const playNextBlob = async () => {
     if (currentBlobIndex.current < finalBlobs.length) {
-      setIsPlaying(() => true);
       setIsButtonDisabled(true);
-      // console.log(currentBlobIndex.current, textArray[currentBlobIndex.current - 1])
-      const openaiUrl = finalBlobs[currentBlobIndex.current];
-      audioRef.current.src = openaiUrl;
+      const foundObj = finalBlobs.filter(item =>{
+        return item.counter === currentBlobIndex.current
+      })
+      if(foundObj.length > 0 && foundObj[0].blob !== ""){
+        setIsPlaying(() => true);
+        setCaption(() => foundObj[0].text);
+        const openaiUrl = foundObj[0].blob;
+        audioRef.current.src = openaiUrl;
+        currentBlobIndex.current += 1
+      }
     }
   };
 
   const handleLoaded = () => {
-    console.log('played- ', new Date().toLocaleTimeString())
     audioRef.current
-      .play()
-      .then(() => {
-        setCaption(textArray[currentBlobIndex.current]);
-        currentBlobIndex.current += 1;
-      })
+    .play()
+    .then(() => console.log("  Playing"))
       .catch((err) => {
         console.log(err, "ERROR in playing audio");
       });
   }
 
   const checkPlaying = () => {
-    if (currentBlobIndex.current < textArray.length) {
-      if (textArray[currentBlobIndex.current] === " ALL DONE ") {
-        console.log("\nFinal Caption-", textArray.join("").slice(0, -10));
-        if (chat.length == 0) {
-          setToolTipOpen(true);
-        }
-        setChat((prev) => [
-          ...prev,
-          { role: "assistant", content: textArray.join("").slice(0, -10) },
-        ]);
-        addMessage("assistant", textArray.join(" ").slice(0, -10), state);
-        setTextArray(() => []);
-        currentBlobIndex.current = 0;
-        setFinalBlobs([]);
+    if (finalBlobs.length == currentBlobIndex.current + 1) {
+      const foundObj = finalBlobs.filter(item =>{
+        return item.counter === currentBlobIndex.current
+      })
+      if (foundObj.length > 0 && foundObj[0].text === "ALL DONE") {
+        finalBlobs.sort((a, b) => a.counter - b.counter);
         setCaption("");
-        if (updatedState === "Conclusion") {
-          setTimeout(() => {
-            navigate("/rating");
-          }, 2000);
-        }
+        let finalCaption = finalBlobs.reduce((accumulator, currentValue) => {
+          return accumulator + currentValue.text;
+        }, "");
+        finalCaption = finalCaption.replace("ALL DONE", "");
+        console.log("Final Caption-", finalCaption)
+          if (chat.length == 0) {
+            setToolTipOpen(true);
+          }
+          setChat((prev) => [
+            ...prev,
+            { role: "assistant", content: finalCaption },
+          ]);
+          addMessage("assistant", finalCaption, state);
+          currentBlobIndex.current = 0;
+          setFinalBlobs([]);
+          if (updatedState === "Conclusion") {
+            setTimeout(() => {
+              navigate("/rating");
+            }, 2000);
+          }
       }
     }
   };
@@ -191,19 +198,6 @@ const Helen = ({ setProgress, showRatingModal }) => {
     setIsButtonDisabled(false);
     checkPlaying();
   };
-
-  // useEffect(() => {
-  //   if (queue.length > 0) {
-  //     const processQueue = async () => {
-  //       setQueue((prev) => prev.slice(1));
-  //       const current = queue[0];
-  //       const { text, blob } = await apiCallForAudio(current);
-  //       setFinalBlobs((prev) => [...prev, { text, blob }]);
-  //     };
-
-  //     processQueue();
-  //   }
-  // }, [queue]);
 
   useEffect(() => {
     // console.log('in use effect', finalBlobs, isPlaying)
@@ -245,28 +239,23 @@ const Helen = ({ setProgress, showRatingModal }) => {
       }, 0);
       socket.addEventListener("message", async(event) => {
         const message = event.data;
-        if(message instanceof Blob){
-          console.log(message, 'blob server')
-          setFinalBlobs((prev) => [...prev, message]);
-        }
-        else if (typeof message === "string") {
+        if (typeof message === "string") {
           const res = JSON.parse(message);
           if (res.AI) {
             console.log(res.AI)
-            // setLastResponse(()=> res.AI)
-            const { text, blob } = await apiCallForAudio(res.AI);
-            setFinalBlobs((prev) => [...prev, blob]);
-            setTextArray((prev) => [...prev, text]);
-          } else {
-            console.log("state", res);
-            if (res.done) {
-              // setTextArray((prev) => [...prev, " ALL DONE "]);
-              setTimeout(() => {
-                setTextArray((prev) => [...prev, " ALL DONE "]);
-              }, 2000)
+            if(res.AI !== "ALL DONE"){
+              const { text, blob } = await apiCallForAudio(res.AI);
+              setFinalBlobs((prev) => [...prev, {blob: blob, counter: res.counter, text: text}]);
+            }else{
+              setFinalBlobs((prev) => [...prev, {blob: "", counter: res.counter, text: res.AI}]);
             }
+          } else {
+            // console.log("state", res);
             if (res.percentage) setProgress(res.percentage);
-            if(res.updated_state) setUpdatedState(res.updated_state);
+            if(res.updated_state){
+              console.log("updated state-", res.updated_state);
+              setUpdatedState(res.updated_state);
+            }
           }
         }else{
           console.log("message", typeof(message));
@@ -307,7 +296,7 @@ const Helen = ({ setProgress, showRatingModal }) => {
     console.log("API Request-", transcript);
     if (transcript && transcript.length >= 2) {
       resetTranscript();
-      mistralAPI(transcript);
+      // mistralAPI(transcript);
       socket.send(
         JSON.stringify({
           need: "openai",
