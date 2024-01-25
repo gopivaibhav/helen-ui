@@ -154,17 +154,17 @@ const NewSession = ({ userId, userData }) => {
           className="FeatureCardWrapperDisabled"
           style={{ margin: "30px 8vw 30px 0px", minHeight: "100px" }}
           // onClick={sessionHandler}
-          onClick={() => {
-            if (userId === "") {
-              loginWithRedirect();
-            } else if (
-              sessionStorage.getItem("userData") &&
-              JSON.parse(sessionStorage.getItem("userData")).companion
-            ) {
+          // onClick={() => {
+          //   if (userId === "") {
+          //     loginWithRedirect();
+          //   } else if (
+          //     sessionStorage.getItem("userData") &&
+          //     JSON.parse(sessionStorage.getItem("userData")).companion
+          //   ) {
               
-              navigate("/companion-bot", { state: { sessionId } });
-            } else navigate(`/companion`);
-          }}
+          //     navigate("/companion-bot", { state: { sessionId } });
+          //   } else navigate(`/companion`);
+          // }}
         >
           <div
             style={{
