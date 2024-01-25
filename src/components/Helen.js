@@ -14,7 +14,7 @@ import SpeechRecognition, {
 import { useWebSocket } from "../WebSocketProvider";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import SimplePeer from 'simple-peer';
+import MistralClient from '@mistralai/mistralai';
 
 const addMessage = async (sender, content, session) => {
   const res = await axios.post(
@@ -25,22 +25,19 @@ const addMessage = async (sender, content, session) => {
     }
   );
 };
-const Helen = ({ topic = "", setProgress, showRatingModal }) => {
+const Helen = ({ setProgress, showRatingModal }) => {
   const socket = useWebSocket();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const { transcript, listening, resetTranscript } = useSpeechRecognition();
-  const [loader, setLoader] = useState(false);
   const [listeningLoader, setListeningLoader] = useState(false);
   const [chat, setChat] = useState([]);
-  const [changeButtonFunction, setChangeButtonFunction] = useState(true);
-  const [isHolding, setIsHolding] = useState(false);
   const [textArray, setTextArray] = useState([]);
   const [caption, setCaption] = useState("");
   const [updatedState, setUpdatedState] = useState('');
-  const [peer, setPeer] = useState(null);
   const navigate = useNavigate();
 
   const [finalBlobs, setFinalBlobs] = useState([]);
+  // const [queue, setQueue] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
   const currentBlobIndex = useRef(0);
@@ -61,10 +58,7 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
 
   const location = useLocation();
   const state = location.state.sessionId;
-  let holdTimeout;
   const handleMouseDown = () => {
-    setIsHolding(true);
-    setChangeButtonFunction(false);
     setListeningLoader(true);
     setToolTipOpen(false);
     SpeechRecognition.startListening({
@@ -80,8 +74,6 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
       });
     }, 1000);
 
-    setChangeButtonFunction(true);
-    setIsHolding(false);
   };
 
   useEffect(() => {
@@ -92,46 +84,99 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
     }
   }, [listening]);
 
-  const playNextBlob = () => {
-    // console.log('in play next blob', currentBlobIndex.current, finalBlobs.length)
-    if (currentBlobIndex.current < finalBlobs.length) {
-      // console.log('successs')
-      setIsPlaying(true);
-      setIsButtonDisabled(true);
-      const blob = finalBlobs[currentBlobIndex.current];
-      const blobUrl = URL.createObjectURL(blob);
+  const mistralAPI = async (query) => {
+    const client = new MistralClient(process.env.REACT_APP_MISTRAL_KEY);
+    let prompt = [
+      {
+        role: "user",
+        content:
+          "You have to give me the filler response in less than 10 words because I am getting another main response." + query,
+      }
+    ]
+    // prompt = prompt.concat(chat)
+    // prompt = prompt.concat({ role: "user", content: query })
+    // prompt = prompt.filter((item) => item.role !== "assistant");
+    const chatResponse = await client.chat({
+      model: "mistral-small",
+      messages: prompt
+    });
+    console.log(new Date().toLocaleTimeString(), 'received res from mistral')
+    console.log("Chat from Mistral:", chatResponse.choices[0].message.content);
+    const { text, blob } = await apiCallForAudio(chatResponse.choices[0].message.content);
+    setFinalBlobs((prev) => [...prev, blob]);
+    setTextArray((prev) => [...prev, text]);
+  };
 
-      audioRef.current.src = blobUrl;
-      // audioRef.current.muted = false;
-      audioRef.current
+  const apiCallForAudio = (chunk) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await fetch("https://api.openai.com/v1/audio/speech", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${process.env.REACT_APP_OPENAI_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "tts-1",
+            input: chunk.replace('\n', ' '),
+            voice: "nova",
+            response_format: "mp3",
+            stream: true,
+          }),
+        });
+  
+        if (response.ok) {
+          const audioBlob = await response.blob();
+          const audioUrl = URL.createObjectURL(audioBlob);
+          resolve({text: chunk, blob: audioUrl });
+        } else {
+          reject(new Error(`Error generating speech: ${response.status} ${response.statusText}`));
+        }
+      } catch (error) {
+        reject(new Error(`Error generating speech: ${error}`));
+      }
+    })
+  }
+
+  const playNextBlob = async () => {
+    if (currentBlobIndex.current < finalBlobs.length) {
+      setIsPlaying(() => true);
+      setIsButtonDisabled(true);
+      // console.log(currentBlobIndex.current, textArray[currentBlobIndex.current - 1])
+      const openaiUrl = finalBlobs[currentBlobIndex.current];
+      audioRef.current.src = openaiUrl;
+    }
+  };
+
+  const handleLoaded = () => {
+    console.log('played- ', new Date().toLocaleTimeString())
+    audioRef.current
       .play()
       .then(() => {
-        setCaption(textArray[currentBlobIndex.current - 1]);
+        setCaption(textArray[currentBlobIndex.current]);
+        currentBlobIndex.current += 1;
       })
       .catch((err) => {
         console.log(err, "ERROR in playing audio");
       });
-    
-      
-      currentBlobIndex.current += 1;
-    }
-  };
+  }
 
   const checkPlaying = () => {
     if (currentBlobIndex.current < textArray.length) {
       if (textArray[currentBlobIndex.current] === " ALL DONE ") {
-        console.log("\nFinal Caption-", textArray.join(" ").slice(0, -11));
+        console.log("\nFinal Caption-", textArray.join("").slice(0, -10));
         if (chat.length == 0) {
           setToolTipOpen(true);
         }
         setChat((prev) => [
           ...prev,
-          { role: "assistant", content: textArray.join(" ").slice(0, -11) },
+          { role: "assistant", content: textArray.join("").slice(0, -10) },
         ]);
-        addMessage("assistant", textArray.join(" ").slice(0, -11), state);
+        addMessage("assistant", textArray.join(" ").slice(0, -10), state);
         setTextArray(() => []);
         currentBlobIndex.current = 0;
         setFinalBlobs([]);
+        setCaption("");
         if (updatedState === "Conclusion") {
           setTimeout(() => {
             navigate("/rating");
@@ -142,11 +187,23 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
   };
 
   const handleAudioEnded = () => {
-    setCaption("");
     setIsPlaying(() => false);
     setIsButtonDisabled(false);
     checkPlaying();
   };
+
+  // useEffect(() => {
+  //   if (queue.length > 0) {
+  //     const processQueue = async () => {
+  //       setQueue((prev) => prev.slice(1));
+  //       const current = queue[0];
+  //       const { text, blob } = await apiCallForAudio(current);
+  //       setFinalBlobs((prev) => [...prev, { text, blob }]);
+  //     };
+
+  //     processQueue();
+  //   }
+  // }, [queue]);
 
   useEffect(() => {
     // console.log('in use effect', finalBlobs, isPlaying)
@@ -159,26 +216,24 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
     const handleClose = () => {
       console.log("WebSocket connection ended");
     };
-    const initializePeer = () => {
-      const peerConnection = new SimplePeer({
-        initiator: true,
-        trickle: false,
-      });
-      peerConnection.on('signal', (data) => {
-        socket.send(
-            JSON.stringify({
-              need: "openai",
-              query: "",
-              chat: chat,
-              email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-            })
-          );
-      });
-
-      setPeer(peerConnection);
-    };
     if (socket) {
-      initializePeer();
+      const sendMsg = () => {
+        socket.send(
+          JSON.stringify({
+            need: "openai",
+            query: "",
+            chat: chat,
+            email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+          })
+        );
+        console.log(new Date().toLocaleTimeString(), 'sending req')
+      }
+      if(socket.readyState === 1){
+        sendMsg();
+      }else{
+        console.log('not opened', socket)
+        socket.addEventListener("open", sendMsg);
+      }
       SpeechRecognition.startListening({
         language: "en-UK",
         continuous: true,
@@ -188,24 +243,33 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
           language: "en-UK",
         });
       }, 0);
-      socket.addEventListener("message", (event) => {
+      socket.addEventListener("message", async(event) => {
         const message = event.data;
-        if (typeof message === "string") {
+        if(message instanceof Blob){
+          console.log(message, 'blob server')
+          setFinalBlobs((prev) => [...prev, message]);
+        }
+        else if (typeof message === "string") {
           const res = JSON.parse(message);
           if (res.AI) {
-            // console.log(res.AI);
-            setTextArray((prev) => [...prev, res.AI]);
+            console.log(res.AI)
+            // setLastResponse(()=> res.AI)
+            const { text, blob } = await apiCallForAudio(res.AI);
+            setFinalBlobs((prev) => [...prev, blob]);
+            setTextArray((prev) => [...prev, text]);
           } else {
             console.log("state", res);
             if (res.done) {
-              setTextArray((prev) => [...prev, " ALL DONE "]);
+              // setTextArray((prev) => [...prev, " ALL DONE "]);
+              setTimeout(() => {
+                setTextArray((prev) => [...prev, " ALL DONE "]);
+              }, 2000)
             }
             if (res.percentage) setProgress(res.percentage);
             if(res.updated_state) setUpdatedState(res.updated_state);
           }
-        } else {
-          // console.log('blob', message, typeof(message))
-          setFinalBlobs((prev) => [...prev, message]);
+        }else{
+          console.log("message", typeof(message));
         }
       });
       socket.addEventListener("close", handleClose);
@@ -214,9 +278,6 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
     return () => {
       if (socket) {
         socket.removeEventListener("close", handleClose);
-      }
-      if (peer) {
-        peer.destroy();
       }
     };
   }, [socket]);
@@ -246,6 +307,7 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
     console.log("API Request-", transcript);
     if (transcript && transcript.length >= 2) {
       resetTranscript();
+      mistralAPI(transcript);
       socket.send(
         JSON.stringify({
           need: "openai",
@@ -258,7 +320,7 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
       addMessage("user", transcript, state);
     }
   };
-
+  // if(loader)return <></>;
   return (
     <>
       {!showRatingModal && <RippleEffect isPlaying={isPlaying} />}
@@ -270,13 +332,6 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
           height: "10vh",
         }}
       >
-        {loader && (
-          <img
-            style={{ width: "60px", height: "60px" }}
-            src="/loader.gif"
-            alt="loader"
-          />
-        )}
         {listeningLoader && (
           <span className="fade-in-text" style={{ fontSize: "24px" }}>
             Listening...
@@ -300,7 +355,7 @@ const Helen = ({ topic = "", setProgress, showRatingModal }) => {
             <span id="captiontext">{caption}</span>
           </div>
         )}
-        <audio ref={audioRef} onEnded={handleAudioEnded}>
+        <audio ref={audioRef} onEnded={handleAudioEnded} onLoadedData={handleLoaded}>
           Your browser does not support the audio element.
         </audio>
       </div>

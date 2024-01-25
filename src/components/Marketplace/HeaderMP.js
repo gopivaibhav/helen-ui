@@ -11,7 +11,9 @@ const HeaderMP = ({ BackUrl, PageName }) => {
         marginTop: "1rem",
         marginBottom: "1.5rem",
         alignItems: "center",
+        padding: "0.2rem 0px"
       }}
+
     >
       <button
         style={{

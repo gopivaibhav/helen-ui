@@ -1,39 +1,13 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import { useWebSocket } from "../WebSocketProvider";
 
 const NewLoader = ({ setLoader }) => {
-//   const socket = useWebSocket();
   useEffect(() => {
-    // const handleClose = () => {
-    //   console.log("WebSocket connection ended");
-    // };
-
-    // if (socket) {
-    //   console.log("in new loader");
-    //   socket.send(
-    //     JSON.stringify({
-    //       need: "reset",
-    //       email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-    //     })
-    //   );
-    //   socket.send(
-    //     JSON.stringify({
-    //       need: "changefirst",
-    //       email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-    //     })
-    //   );
-      setTimeout(() => {
-        setLoader(() => false);
-      }, 2000);
-    //   socket.addEventListener("close", handleClose);
-    // }
-    // return () => {
-    //   if (socket) {
-    //     socket.removeEventListener("close", handleClose);
-    //   }
-    // };
-  }, []);
+    setTimeout(() => {
+      setLoader(false);
+    }, 1000)
+  })
   const letters = Array.from("Setting Things Up For You");
 
   const container = {
