@@ -15,16 +15,19 @@ const SessionRating = ({ setShowRatingModal }) => {
       rating,
     };
     
-    await axios.post(`${process.env.REACT_APP_PORT}/sessionupdate/${JSON.parse(sessionStorage.getItem("userDetail")).email}`)
+    const session = await axios.post(`${process.env.REACT_APP_PORT}/sessionupdate/${JSON.parse(sessionStorage.getItem("userDetail")).email}`)
+    console.log(session)
     if (sessionId) {
       await axios.patch(
         `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/session/patch/${sessionId}`,
         Payload
-      );
-    }
-    navigate("/");
-  };
-  const handleClick = () => {
+        );
+      }
+      navigate("/");
+    };
+    const handleClick = async() => {
+    const session = await axios.post(`${process.env.REACT_APP_PORT}/sessionupdate/${JSON.parse(sessionStorage.getItem("userDetail")).email}`)
+    console.log(session)
     navigate("/");
   };
   return (
