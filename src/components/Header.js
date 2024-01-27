@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import CustomConfirmModal from "./CustomConfirmModal";
@@ -10,6 +10,9 @@ const Header = ({ setIsActive, progress }) => {
     setShowModal(false);
     navigate("/rating");
   };
+  useEffect(() => {
+    sessionStorage.setItem("progress", progress);
+  }, [progress]);
 
   const handleConfirm = async () => {
     setShowModal(false);
