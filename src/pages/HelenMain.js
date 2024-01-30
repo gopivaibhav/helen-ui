@@ -26,7 +26,7 @@ const HelenMain = () => {
       console.log("fetchuser called", sessionStorage.getItem("ongoingSession"));
       if (
         sessionStorage.getItem("ongoingSession") &&
-        sessionStorage.getItem("progress") > 1
+        sessionStorage.getItem("progress") > 3
       ) {
         await axios.get(
           `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/session/get/${sessionStorage.getItem(
