@@ -18,18 +18,18 @@
     /* transform:scale(1.3); */
     cursor: pointer;
     animation-iteration-count: infinite;
-    animation: Mic 700ms ease-out ;
+    animation: Mic 700ms ease-out;
 } 
 
 #micButton{
     transition: all 700ms ease-out;
 }
 
-#micButton:active{
+#micButton:active{  
     cursor: pointer;
     /* transform:scale(1.4); */
     animation-iteration-count: 1;
-    animation: Mic 700ms ease-out ;
+    animation: Mic 700ms ease-out;
 }
 
 /* @keyframes Mic{

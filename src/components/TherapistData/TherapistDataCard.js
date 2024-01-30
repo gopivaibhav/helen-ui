@@ -11,7 +11,7 @@ const TherapistDataCard = () => {
                 height: "50%",
                 alignItems: "center",
                 marginBottom: "10%",
-                marginTop: "5%",
+                marginTop: "5%",    
             }}>
                 <img src='/doctor.png' alt="" style={{ backgroundColor: grey, width: "100px", height: "100px", borderRadius: "50%" }} />
                 <div className="data-block" style={{ width: "60%", height: "100%", padding: "0 10%", display: "flex", alignItems: "center", flexDirection: "column", justifyContent: "center" }}>
