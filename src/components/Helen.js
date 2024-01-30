@@ -58,6 +58,7 @@ const Helen = ({ setProgress, showRatingModal }) => {
   const location = useLocation();
   const state = location.state.sessionId;
   const handleMouseDown = () => {
+    console.log('pressed down')
     setListeningLoader(true);
     setToolTipOpen(false);
     SpeechRecognition.startListening({
@@ -65,8 +66,9 @@ const Helen = ({ setProgress, showRatingModal }) => {
       continuous: true,
     });
   };
-
+  
   const handleMouseUp = () => {
+    console.log('released up')
     setTimeout(() => {
       SpeechRecognition.abortListening({
         language: "en-UK",
@@ -374,10 +376,12 @@ const Helen = ({ setProgress, showRatingModal }) => {
           >
             <button
               // onClick={ChangeButtonFunctionHandler}
-              onPointerDown={!isButtonDisabled ? handleMouseDown : () => {}}
-              onPointerUp={!isButtonDisabled ? handleMouseUp : () => {}}
+              // onPointerDown={!isButtonDisabled ? handleMouseDown : () => {}}
+              // onPointerUp={!isButtonDisabled ? handleMouseUp : () => {}}
               // onTouchStart={!isButtonDisabled ? handleMouseDown : () => {}}
               // onTouchEnd={!isButtonDisabled ? handleMouseUp : () => {}}
+              onPointerDown={handleMouseDown}
+              onPointerUp={handleMouseUp}
               disabled={isButtonDisabled}
               id="micButton"
               style={{
