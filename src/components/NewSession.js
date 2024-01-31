@@ -117,7 +117,7 @@ const NewSession = ({ userId, userData }) => {
                 letterSpacing: "0px",
               }}
             >
-              Begin your journey to well-being: Engage with compassionate, AI-guided therapy at your own pace. Your path to emotional balance starts here.
+              Feeling overwhelmed? A friendly ear is just a click away.
             </div>
             <div
               style={{
