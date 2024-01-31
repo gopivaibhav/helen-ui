@@ -10,29 +10,36 @@
     margin-top: 2px;
 }
 
-#MicImage{
+/* #MicImage{
     transition: all 700ms linear;
-}
+} */
 
-#MicImage:active{
-    /* transform:scale(1.3); */
+/* #MicImage:active{
     cursor: pointer;
     animation-iteration-count: infinite;
     animation: Mic 700ms ease-out;
-} 
+}  */
 
-#micButton{
+/* #micButton{
     transition: all 700ms ease-out;
-}
+} */
 
-#micButton:active{  
+/* #micButton:active{  
     cursor: pointer;
-    /* transform:scale(1.4); */
     animation-iteration-count: 1;
     animation: Mic 700ms ease-out;
+} */
+
+/* #micButton.pressed {
+    animation: Mic 700ms ease-out forwards;
+
 }
 
-/* @keyframes Mic{
+#MicImage.pressed {
+    animation: Mic 700ms ease-out forwards;
+} */
+
+@keyframes Mic{
     0%{
         transform:scale(1);
     }
@@ -45,7 +52,7 @@
     100%{
         transform: scale(1.4);
     }
-} */
+}
 
 @media screen and (max-width: 600px) {
     #caption-container{
