@@ -138,8 +138,7 @@ const HelenMain = () => {
               letterSpacing: "0",
             }}
           >
-            Unlock tranquility! Free therapy for the first 100. Hurry, only{" "}
-            {100 - filledUserCount} spots left! Register now!
+            Begin your journey to well-being: Engage with compassionate, AI-guided therapy at your own pace. Your path to emotional balance starts here
           </div>
         </div>
       ) : (

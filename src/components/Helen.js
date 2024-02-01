@@ -29,7 +29,7 @@ const Helen = ({ setProgress, showRatingModal }) => {
   const socket = useWebSocket();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const { transcript, listening, resetTranscript } = useSpeechRecognition();
-  const [listeningLoader, setListeningLoader] = useState(false);
+  // const [listeningLoader, setListeningLoader] = useState(false);
   const [chat, setChat] = useState([]);
   const [caption, setCaption] = useState("");
   const [updatedState, setUpdatedState] = useState('');
@@ -41,6 +41,7 @@ const Helen = ({ setProgress, showRatingModal }) => {
   const audioRef = useRef(null);
   const currentBlobIndex = useRef(0);
   const [toolTipOpen, setToolTipOpen] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
 
   useEffect(() => {
     const handleContextMenu = (e) => {
@@ -58,27 +59,36 @@ const Helen = ({ setProgress, showRatingModal }) => {
   const location = useLocation();
   const state = location.state.sessionId;
   const handleMouseDown = () => {
-    setListeningLoader(true);
+    // setListeningLoader(true);
+    setIsPressed(true);
     setToolTipOpen(false);
-    SpeechRecognition.startListening({
-      language: "en-UK",
-      continuous: true,
-    });
+    document.addEventListener('pointerup', handlePointerUp);
   };
-
-  const handleMouseUp = () => {
-    setTimeout(() => {
-      SpeechRecognition.abortListening({
+  const handlePointerUp = () => {
+    console.log('released finger')
+    document.removeEventListener('pointerup', handlePointerUp);
+    setIsPressed(false);
+  };
+    
+    useEffect(() => {
+      if(isPressed){
+      SpeechRecognition.startListening({
         language: "en-UK",
+        continuous: true,
       });
-    }, 1000);
-
-  };
+    }else{
+      setTimeout(() => {
+        SpeechRecognition.abortListening({
+            language: "en-UK",
+          });
+        }, 200);
+      }
+  }, [isPressed])
 
   useEffect(() => {
     console.log("listening changed to-", listening);
     if (!listening) {
-      setListeningLoader(false);
+      // setListeningLoader(false);
       handleRequest();
     }
   }, [listening]);
@@ -228,15 +238,6 @@ const Helen = ({ setProgress, showRatingModal }) => {
         console.log('not opened', socket)
         socket.addEventListener("open", sendMsg);
       }
-      SpeechRecognition.startListening({
-        language: "en-UK",
-        continuous: true,
-      });
-      setTimeout(() => {
-        SpeechRecognition.abortListening({
-          language: "en-UK",
-        });
-      }, 0);
       socket.addEventListener("message", async(event) => {
         const message = event.data;
         if (typeof message === "string") {
@@ -321,7 +322,7 @@ const Helen = ({ setProgress, showRatingModal }) => {
           height: "10vh",
         }}
       >
-        {listeningLoader && (
+        {isPressed && (
           <span className="fade-in-text" style={{ fontSize: "24px" }}>
             Listening...
           </span>
@@ -374,10 +375,12 @@ const Helen = ({ setProgress, showRatingModal }) => {
           >
             <button
               // onClick={ChangeButtonFunctionHandler}
-              onPointerDown={!isButtonDisabled ? handleMouseDown : () => {}}
-              onPointerUp={!isButtonDisabled ? handleMouseUp : () => {}}
+              // onPointerDown={!isButtonDisabled ? handleMouseDown : () => {}}
+              // onPointerUp={!isButtonDisabled ? handleMouseUp : () => {}}
               // onTouchStart={!isButtonDisabled ? handleMouseDown : () => {}}
               // onTouchEnd={!isButtonDisabled ? handleMouseUp : () => {}}
+              // onPointerUp={handleMouseUp}
+              onPointerDown={handleMouseDown}
               disabled={isButtonDisabled}
               id="micButton"
               style={{
@@ -398,6 +401,8 @@ const Helen = ({ setProgress, showRatingModal }) => {
                 justifyContent: "center",
                 alignItems: "center",
                 top: "-48px",
+                transition: 'all 0.1s ease-in',
+                transform: isPressed ? 'scale(1.4)' : 'scale(1)',
               }}
             >
               <div
