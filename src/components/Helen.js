@@ -380,7 +380,7 @@ const Helen = ({ setProgress, showRatingModal }) => {
               // onTouchStart={!isButtonDisabled ? handleMouseDown : () => {}}
               // onTouchEnd={!isButtonDisabled ? handleMouseUp : () => {}}
               // onPointerUp={handleMouseUp}
-              onPointerDown={handleMouseDown}
+              onPointerDown={!isButtonDisabled ? handleMouseDown : () => {}}
               disabled={isButtonDisabled}
               id="micButton"
               style={{
