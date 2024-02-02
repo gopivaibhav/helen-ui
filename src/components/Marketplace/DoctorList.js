@@ -1,8 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const DoctorList = () => {
   const [data, setData] = useState();
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -193,6 +195,11 @@ const DoctorList = () => {
                       marginRight: "5px",
                       marginTop: "15px",
                     }}
+                    onClick={() =>
+                      navigate(`${therapist._id}`, {
+                        state: { id: therapist._id, isProfile: 1 },
+                      })
+                    }
                   >
                     <div
                       style={{
@@ -224,6 +231,11 @@ const DoctorList = () => {
                       marginLeft: "5px",
                       marginTop: "15px",
                     }}
+                    onClick={() =>
+                      navigate(`${therapist._id}`, {
+                        state: { id: therapist._id, isProfile: 0 },
+                      })
+                    }
                   >
                     <div
                       style={{

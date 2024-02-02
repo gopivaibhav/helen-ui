@@ -1,11 +1,11 @@
 import AppointmentButton from "./AppointmentButton";
 import TimingButton from "./TimingButton";
-const VirtualSession = () => {
+const VirtualSession = ({therapistInfo}) => {
     return (
         <>
             <div className="heading-appointment" style={{ width: "100%", display: "flex", marginBottom: "10px" }}>
                 <h3 style={{ width: "70%", marginBottom: "15px" }}>Virtual Appointment</h3>
-                <h3 style={{ width: "30%", textAlign: "center" }}>INR 1000</h3>
+                <h3 style={{ width: "30%", textAlign: "center" }}>INR {therapistInfo.pricePerSession}</h3>
             </div>
             <div className="outer-container" style={{ width: "100%", overflowX: "auto", display: "flex",marginBottom:"35px" }}>
                 <div className="inner-container" style={{ width: "100%", display: "flex" }}>
