@@ -11,7 +11,7 @@ const InPersonSession = () => {
                 Address:
                 No 150, Saket Rd, Block E, Saket, New Delhi, Delhi 110017
             </div>
-            <div className="outer-container" style={{ width: "100%", overflowX: "auto", display: "flex",marginBottom:"35px" }}>
+            {/* <div className="outer-container" style={{ width: "100%", overflowX: "auto", display: "flex",marginBottom:"35px" }}>
                 <div className="inner-container" style={{ width: "100%", display: "flex" }}>
                     <AppointmentButton />
                     <AppointmentButton />
@@ -30,7 +30,7 @@ const InPersonSession = () => {
                 <TimingButton></TimingButton>
                 <TimingButton></TimingButton>
                 <TimingButton></TimingButton>
-            </div>
+            </div> */}
 
             <div style={{display:"flex",justifyContent:"center"}}>
             <button style={{width:"85%",height:"50px",alignSelf:"center",border:"none",background:"#758BFF",color:"white",borderRadius:"15px",fontWeight:"600",fontSize:"16px"}}>BOOK SESSION</button>
