@@ -1,12 +1,15 @@
 import AppointmentButton from "./AppointmentButton";
 import TimingButton from "./TimingButton";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import { useAuth0 } from "@auth0/auth0-react";
 const VirtualSession = ({ therapistInfo }) => {
   const [slots, setSlots] = useState([]);
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0]
   );
   const [selectedTime, setSelectedTime] = useState();
+  const { loginWithRedirect } = useAuth0();
 
   useEffect(() => {
     const isSlotAheadOfCurrentTime = (slot) => {
@@ -59,6 +62,7 @@ const VirtualSession = ({ therapistInfo }) => {
         {slots[selectedDate]?.slots.length > 0 ? (
           slots[selectedDate].slots.map((slot) => (
             <TimingButton
+              key={slot.startTime}
               time={slot.startTime}
               setSelectedTime={setSelectedTime}
               selectedTime={selectedTime}
@@ -82,7 +86,27 @@ const VirtualSession = ({ therapistInfo }) => {
       </div>
     );
   };
-
+  const submitHandler = async() => {
+    // console.log(JSON.parse(sessionStorage.getItem("userData")).email)
+    if(sessionStorage.getItem("userData") === null){
+        loginWithRedirect()
+    }else{
+        console.log("Selected Date: ", selectedDate);
+        console.log("Selected Time: ", selectedTime);
+        const filteredSlot = therapistInfo.slots.filter(i => i.slotDate === selectedDate && i.startTime === selectedTime);
+        console.log("Filtered Slot: ", filteredSlot);
+        const slotId = filteredSlot[0].slotId;
+        const bodyObj = {
+            slot_id: slotId,
+            therapistId: therapistInfo.therapistId,
+            userId: JSON.parse(sessionStorage.getItem("userData")).email,
+        }
+        const response = await axios.post("https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/marketplace/post/updateallslot",
+            bodyObj
+        );
+        console.log(response.data);
+    }
+  }
   return (
     <>
       <div
@@ -124,6 +148,7 @@ const VirtualSession = ({ therapistInfo }) => {
       <AddTimings />
       <div style={{ display: "flex", justifyContent: "center" }}>
         <button
+            onClick={submitHandler}
           style={{
             width: "85%",
             height: "50px",
