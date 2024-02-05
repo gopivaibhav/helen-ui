@@ -222,14 +222,14 @@ const Helen = ({ setProgress, showRatingModal }) => {
     };
     if (socket) {
       const sendMsg = () => {
-        socket.send(
-          JSON.stringify({
-            need: "openai",
-            query: "",
-            chat: chat,
-            email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-          })
-        );
+        // socket.send(
+        //   JSON.stringify({
+        //     need: "openai",
+        //     query: "",
+        //     chat: chat,
+        //     email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+        //   })
+        // );
         console.log(new Date().toLocaleTimeString(), 'sending req')
       }
       if(socket.readyState === 1){
@@ -365,6 +365,17 @@ const Helen = ({ setProgress, showRatingModal }) => {
             margin: 0,
           }}
         >
+          <button onClick={
+            socket.send(
+              JSON.stringify({
+                need: "openai",
+                query: "",
+                chat: chat,
+                email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+              })
+            )
+          }
+          >SEND AUDIO</button>
           <CustomToolTip
             TransitionComponent={Fade}
             TransitionProps={{ timeout: 0 }}
