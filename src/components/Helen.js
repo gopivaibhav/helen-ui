@@ -164,7 +164,7 @@ const Helen = ({ setProgress, showRatingModal }) => {
           console.log("  Playing")
           setTimeout(() => {
             audioRef.current.muted = false;
-          }, 1000);
+          }, 10);
         })
           .catch((err) => {
             console.log(err, "ERROR in playing audio");
