@@ -157,12 +157,12 @@ const Helen = ({ setProgress, showRatingModal }) => {
         setCaption(() => foundObj[0].text);
         const openaiUrl = foundObj[0].blob;
         audioRef.current.src = openaiUrl;
-        audioRef.current
-        .play()
-        .then(() => console.log("  Playing"))
-          .catch((err) => {
-            console.log(err, "ERROR in playing audio");
-          });
+        // audioRef.current
+        // .play()
+        // .then(() => console.log("  Playing"))
+        //   .catch((err) => {
+        //     console.log(err, "ERROR in playing audio");
+        //   });
         currentBlobIndex.current += 1
       }
     }
@@ -237,13 +237,22 @@ const Helen = ({ setProgress, showRatingModal }) => {
         //     email: JSON.parse(sessionStorage.getItem("userDetail")).email,
         //   })
         // );
+        if(socket.readyState === 1){
+          console.log('opened')
+        }else{
+          console.log('not opened')
+          setTimeout(() => {
+            sendMsg();
+          }, 1000);
+        }
         console.log(new Date().toLocaleTimeString(), 'sending req')
       }
       if(socket.readyState === 1){
         sendMsg();
       }else{
-        console.log('not opened', socket)
-        socket.addEventListener("open", sendMsg);
+        console.log('not opened initially', socket)
+        sendMsg();
+        // socket.addEventListener("open", sendMsg);
       }
       socket.addEventListener("message", async(event) => {
         const message = event.data;
@@ -352,22 +361,35 @@ const Helen = ({ setProgress, showRatingModal }) => {
             <span id="captiontext">{caption}</span>
           </div>
         )}
-        <audio ref={audioRef} onEnded={handleAudioEnded} onLoadedData={handleLoaded}>
+        <audio ref={audioRef} onEnded={handleAudioEnded} onLoadedData={handleLoaded} playsInline>
           Your browser does not support the audio element.
         </audio>
+      {audioRef.current !== null && 
         <button onClick={() =>{
-          socket.send(
-            JSON.stringify({
-              need: "openai",
-              query: "",
-              chat: chat,
-              email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-            })
-            )
-            console.log('sent to openai')
-          }
+          audioRef.current
+          .play()
+          .then(() => console.log("  Playing"))
+          .catch((err) => {
+            console.log(err, "ERROR in playing audio");
+          })
         }
-        >SEND AUDIO</button>
+        }>
+          Play audio
+        </button>
+    }
+      <button onClick={() =>{
+        socket.send(
+          JSON.stringify({
+            need: "openai",
+            query: "",
+            chat: chat,
+            email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+          })
+          )
+          console.log('sent req to openai')
+        }
+      }
+      >SEND AUDIO</button>
       </div>
       {!showRatingModal && (
         <div
