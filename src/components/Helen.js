@@ -345,18 +345,19 @@ const Helen = ({ setProgress, showRatingModal }) => {
         <audio ref={audioRef} onEnded={handleAudioEnded}>
           Your browser does not support the audio element.
         </audio>
-      </div>
-      <button onClick={
-        socket.send(
+        <button onClick={()=>{
+          socket.send(
           JSON.stringify({
-            need: "openai",
-            query: "",
-            chat: chat,
-            email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-          })
-        )
-      }
-      >SEND AUDIO</button>
+                need: "openai",
+                query: "",
+                chat: chat,
+                email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+              })
+            )
+          }
+        }
+        >SEND AUDIO</button>
+      </div>
       {!showRatingModal && (
         <div
           style={{
