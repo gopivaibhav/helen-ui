@@ -157,9 +157,15 @@ const Helen = ({ setProgress, showRatingModal }) => {
         setCaption(() => foundObj[0].text);
         const openaiUrl = foundObj[0].blob;
         audioRef.current.src = openaiUrl;
+        audioRef.current.muted = true;
         audioRef.current
         .play()
-        .then(() => console.log("  Playing"))
+        .then(() => {
+          console.log("  Playing")
+          setTimeout(() => {
+            audioRef.current.muted = false;
+          }, 1000);
+        })
           .catch((err) => {
             console.log(err, "ERROR in playing audio");
           });
