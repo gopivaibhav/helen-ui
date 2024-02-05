@@ -235,14 +235,14 @@ const Helen = ({ setProgress, showRatingModal }) => {
     };
     if (socket) {
       const sendMsg = () => {
-        // socket.send(
-        //   JSON.stringify({
-        //     need: "openai",
-        //     query: "",
-        //     chat: chat,
-        //     email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-        //   })
-        // );
+        socket.send(
+          JSON.stringify({
+            need: "openai",
+            query: "",
+            chat: chat,
+            email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+          })
+        );
         if(socket.readyState === 1){
           console.log('opened')
         }else{
@@ -383,7 +383,7 @@ const Helen = ({ setProgress, showRatingModal }) => {
           Play audio
         </button>
     } */}
-      <button onClick={() =>{
+      {/* <button onClick={() =>{
         socket.send(
           JSON.stringify({
             need: "openai",
@@ -395,7 +395,7 @@ const Helen = ({ setProgress, showRatingModal }) => {
           console.log('sent req to openai')
         }
       }
-      >SEND AUDIO</button>
+      >SEND AUDIO</button> */}
       </div>
       {!showRatingModal && (
         <div
