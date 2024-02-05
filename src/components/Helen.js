@@ -128,7 +128,7 @@ const Helen = ({ setProgress, showRatingModal }) => {
             model: "tts-1",
             input: chunk.replace('\n', ' '),
             voice: "nova",
-            response_format: "mp3",
+            response_format: "aac",
             stream: true,
           }),
         });
@@ -157,19 +157,16 @@ const Helen = ({ setProgress, showRatingModal }) => {
         setCaption(() => foundObj[0].text);
         const openaiUrl = foundObj[0].blob;
         audioRef.current.src = openaiUrl;
+        audioRef.current
+          .play()
+          .then(() => console.log("  Playing"))
+            .catch((err) => {
+              console.log(err, "ERROR in playing audio");
+            });
         currentBlobIndex.current += 1
       }
     }
   };
-
-  const handleLoaded = () => {
-    audioRef.current
-    .play()
-    .then(() => console.log("  Playing"))
-      .catch((err) => {
-        console.log(err, "ERROR in playing audio");
-      });
-  }
 
   const checkPlaying = () => {
     if (finalBlobs.length == currentBlobIndex.current + 1) {
@@ -345,10 +342,21 @@ const Helen = ({ setProgress, showRatingModal }) => {
             <span id="captiontext">{caption}</span>
           </div>
         )}
-        <audio ref={audioRef} onEnded={handleAudioEnded} onLoadedData={handleLoaded}>
+        <audio ref={audioRef} onEnded={handleAudioEnded}>
           Your browser does not support the audio element.
         </audio>
       </div>
+      <button onClick={
+        socket.send(
+          JSON.stringify({
+            need: "openai",
+            query: "",
+            chat: chat,
+            email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+          })
+        )
+      }
+      >SEND AUDIO</button>
       {!showRatingModal && (
         <div
           style={{
@@ -365,17 +373,6 @@ const Helen = ({ setProgress, showRatingModal }) => {
             margin: 0,
           }}
         >
-          <button onClick={
-            socket.send(
-              JSON.stringify({
-                need: "openai",
-                query: "",
-                chat: chat,
-                email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-              })
-            )
-          }
-          >SEND AUDIO</button>
           <CustomToolTip
             TransitionComponent={Fade}
             TransitionProps={{ timeout: 0 }}
