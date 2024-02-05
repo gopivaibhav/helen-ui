@@ -157,12 +157,12 @@ const Helen = ({ setProgress, showRatingModal }) => {
         setCaption(() => foundObj[0].text);
         const openaiUrl = foundObj[0].blob;
         audioRef.current.src = openaiUrl;
-        // audioRef.current
-        // .play()
-        // .then(() => console.log("  Playing"))
-        //   .catch((err) => {
-        //     console.log(err, "ERROR in playing audio");
-        //   });
+        audioRef.current
+        .play()
+        .then(() => console.log("  Playing"))
+          .catch((err) => {
+            console.log(err, "ERROR in playing audio");
+          });
         currentBlobIndex.current += 1
       }
     }
@@ -364,7 +364,7 @@ const Helen = ({ setProgress, showRatingModal }) => {
         <audio ref={audioRef} onEnded={handleAudioEnded} onLoadedData={handleLoaded} playsInline>
           Your browser does not support the audio element.
         </audio>
-      {audioRef.current !== null && 
+      {/* {audioRef.current !== null && 
         <button onClick={() =>{
           audioRef.current
           .play()
@@ -376,7 +376,7 @@ const Helen = ({ setProgress, showRatingModal }) => {
         }>
           Play audio
         </button>
-    }
+    } */}
       <button onClick={() =>{
         socket.send(
           JSON.stringify({
