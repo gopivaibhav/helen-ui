@@ -158,15 +158,25 @@ const Helen = ({ setProgress, showRatingModal }) => {
         const openaiUrl = foundObj[0].blob;
         audioRef.current.src = openaiUrl;
         audioRef.current
-          .play()
-          .then(() => console.log("  Playing"))
-            .catch((err) => {
-              console.log(err, "ERROR in playing audio");
-            });
+        .play()
+        .then(() => console.log("  Playing"))
+          .catch((err) => {
+            console.log(err, "ERROR in playing audio");
+          });
         currentBlobIndex.current += 1
       }
     }
   };
+
+  const handleLoaded = () => {
+    console.log('click play')
+    // audioRef.current
+    // .play()
+    // .then(() => console.log("  Playing"))
+    //   .catch((err) => {
+    //     console.log(err, "ERROR in playing audio");
+    //   });
+  }
 
   const checkPlaying = () => {
     if (finalBlobs.length == currentBlobIndex.current + 1) {
@@ -342,18 +352,19 @@ const Helen = ({ setProgress, showRatingModal }) => {
             <span id="captiontext">{caption}</span>
           </div>
         )}
-        <audio ref={audioRef} onEnded={handleAudioEnded}>
+        <audio ref={audioRef} onEnded={handleAudioEnded} onLoadedData={handleLoaded}>
           Your browser does not support the audio element.
         </audio>
-        <button onClick={()=>{
+        <button onClick={() =>{
           socket.send(
-          JSON.stringify({
-                need: "openai",
-                query: "",
-                chat: chat,
-                email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-              })
+            JSON.stringify({
+              need: "openai",
+              query: "",
+              chat: chat,
+              email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+            })
             )
+            console.log('sent to openai')
           }
         }
         >SEND AUDIO</button>
