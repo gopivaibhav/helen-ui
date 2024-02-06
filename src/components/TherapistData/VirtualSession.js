@@ -54,7 +54,7 @@ const VirtualSession = ({ therapistInfo }) => {
       }
     });
     setSlots(() => groupedSlots);
-  }, []);
+  }, [therapistInfo]);
 
   const AddTimings = () => {
     return (
@@ -148,7 +148,7 @@ const VirtualSession = ({ therapistInfo }) => {
       <AddTimings />
       <div style={{ display: "flex", justifyContent: "center" }}>
         <button
-            onClick={submitHandler}
+          onClick={submitHandler}
           style={{
             width: "85%",
             height: "50px",

@@ -61,7 +61,7 @@ const BookAppointment = ({therapistInfo}) => {
       {selection === 1 ? (
         <VirtualSession therapistInfo={therapistInfo} />
       ) : (
-        <InPersonSession />
+        <InPersonSession therapistInfo={therapistInfo} />
       )}
     </>
   );
