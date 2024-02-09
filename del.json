@@ -1,0 +1,67 @@
+{
+    "_id": { "$oid": "65c5da05a960c9e9474ac46c" },
+    "name": "Priyadarshini Sethia",
+    "email": "Sethia.priyadarshini@gmail.com ",
+    "profilePic": "https://university-database-bucket.s3.ap-south-1.amazonaws.com/therapist-profile/doctor.png",
+    "languagesSpoken": ["English", "Hindi"],
+    "experience": "2",
+    "education": [
+      "M.Sc Counselling Psychology "
+    ],
+    "headline": "Counselling Psychologist",
+    "description": "I offers empathetic and compassionate therapy. I have 2 years of experience in counselling with expertise in trauma-informed care and diverse therapeutic modalities. I provide personalized support for emotional and psychological concerns. Experienced in individual and group counselling, I empower clients to navigate life's challenges and foster meaningful growth. I am passionate about hearing your story and care about your holistic well-being, therefore strive to create a safe and supportive space for healing and self-discovery.",
+    "specialization": [
+      "Cognitive Behavioural Therapy",
+      "Solution Focused Brief Therapy",
+      "Dialectical Behavioural Therapy",
+      "Mindfulness Based Therapies",
+      "Trauma informed therapy"
+    ],
+    "mode": ["Virtual"],
+    "rating": "",
+    "pricePerSession": { "$numberInt": "1000" },
+    "slotDuration": { "$numberInt": "50" },
+    "slotStartedAt": { "$numberInt": "1" },
+    "slotEndedAt": { "$numberInt": "24" },
+    "slots": [
+
+      {
+        "slotId": "9f8b50c4-5b85-443e-9572-a24b29a344dc",
+        "isAvailable": true,
+        "slotDate": "2024-03-02T08:58:57.338Z",
+        "startTime": "17:00",
+        "endTime": "18:00",
+        "userId": "",
+        "createdAt": {
+          "$date": {
+            "$numberLong": "1707209937383"
+          }
+        },
+        "_id": {
+          "$oid": "65c1f4d16e454b5a228060fa"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": { "$numberLong": "1707203044138" }
+    },
+    "updatedAt": {
+      "$date": { "$numberLong": "1707209937405" }
+    },
+    "__v": { "$numberInt": "1" },
+    "servicesOffered": [
+      "Trauma",
+      "Abuse",
+      "Emotion Management",
+      "Anxiety",
+      "depression",
+      "low self esteem",
+      "lack of self love and self compassion",
+      "stress",
+      "relationship issues",
+      "work-life imbalance",
+      "grief",
+      "Overthinking",
+      "Procrastination"
+    ]
+  }

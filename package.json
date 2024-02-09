@@ -24,6 +24,8 @@
     "react-speech-recognition": "^3.10.0",
     "react-spinners": "^0.13.8",
     "simple-peer": "^9.11.1",
+    "twilio-client": "^1.15.1",
+    "util": "^0.12.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
