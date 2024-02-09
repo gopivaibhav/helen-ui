@@ -14,7 +14,6 @@ import SpeechRecognition, {
 import { useWebSocket } from "../WebSocketProvider";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import DisclaimerPopup from "./DisclaimerPopup";
 // import MistralClient from '@mistralai/mistralai';
 
 const addMessage = async (sender, content, session) => {
@@ -43,7 +42,6 @@ const Helen = ({ setProgress, showRatingModal }) => {
   const currentBlobIndex = useRef(0);
   const [toolTipOpen, setToolTipOpen] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
-  const [showDisclaimer, setDisclaimer] = useState(true);
 
   useEffect(() => {
     const handleContextMenu = (e) => {
@@ -137,7 +135,6 @@ const Helen = ({ setProgress, showRatingModal }) => {
   
         if (response.ok) {
           const audioBlob = await response.blob();
-          console.log(audioBlob.type, 'MIME type of openAi Blob')
           const audioUrl = URL.createObjectURL(audioBlob);
           resolve({text: chunk, blob: audioUrl });
         } else {
@@ -231,20 +228,6 @@ const Helen = ({ setProgress, showRatingModal }) => {
       playNextBlob();
     }
   }, [finalBlobs, isPlaying]);
-
-  useEffect(() => {
-    if (showDisclaimer === false) {
-      socket.send(
-        JSON.stringify({
-          need: "openai",
-          query: "",
-          chat: chat,
-          email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-        })
-      );
-      console.log("sent req to openai");
-    }
-  }, [showDisclaimer]);
 
   useEffect(() => {
     const handleClose = () => {
@@ -352,13 +335,6 @@ const Helen = ({ setProgress, showRatingModal }) => {
   // if(loader)return <></>;
   return (
     <>
-      {showDisclaimer && (
-          <DisclaimerPopup
-          message="Welcome to the session. Select agree to continue."
-          setDisclaimer={setDisclaimer}
-          showDisclaimer={showDisclaimer}
-        />
-        )}
       {!showRatingModal && <RippleEffect isPlaying={isPlaying} />}
       <div
         style={{
@@ -407,6 +383,19 @@ const Helen = ({ setProgress, showRatingModal }) => {
           Play audio
         </button>
     } */}
+      <button onClick={() =>{
+        socket.send(
+          JSON.stringify({
+            need: "openai",
+            query: "",
+            chat: chat,
+            email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+          })
+          )
+          console.log('sent req to openai')
+        }
+      }
+      >DISCLAIMER POPUP- USER interaction</button>
       </div>
       {!showRatingModal && (
         <div
