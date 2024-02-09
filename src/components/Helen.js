@@ -290,7 +290,7 @@ const Helen = ({ setProgress, showRatingModal }) => {
               setFinalBlobs((prev) => [...prev, {blob: "", counter: res.counter, text: res.AI}]);
             }
           } else {
-            console.log("Other Logs-", res);
+            // console.log("state", res);
             if (res.percentage) setProgress(res.percentage);
             if(res.updated_state){
               console.log("updated state-", res.updated_state);
@@ -298,7 +298,7 @@ const Helen = ({ setProgress, showRatingModal }) => {
             }
           }
         }else{
-          console.log("Other message", typeof(message));
+          console.log("message", typeof(message));
         }
       });
       socket.addEventListener("close", handleClose);
