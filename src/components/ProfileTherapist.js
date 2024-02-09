@@ -5,11 +5,19 @@ const Profile = ({ therapistInfo }) => {
       <p style={{ fontWeight: "400", color: "#424242", marginBottom: "10%" }}>
         {therapistInfo.description}
       </p>
-      <h3 style={{ marginBottom: "5%" }}>What can I help you with?</h3>
+      <h3 style={{ marginBottom: "3%" }}>What can I help you with?</h3>
       <div className="tags" style={{ marginBottom: "5%" }}>
         {therapistInfo &&
           therapistInfo.servicesOffered &&
           therapistInfo.servicesOffered.map((tag, index) => (
+            <MarketplaceButton key={index} data={tag} />
+          ))}
+      </div>
+      <h3 style={{ marginBottom: "3%" }}>What kind of therapy do I specialize in?</h3>
+      <div className="tags" style={{ marginBottom: "5%" }}>
+        {therapistInfo &&
+          therapistInfo.specialization &&
+          therapistInfo.specialization.map((tag, index) => (
             <MarketplaceButton key={index} data={tag} />
           ))}
       </div>
@@ -27,7 +35,7 @@ const Profile = ({ therapistInfo }) => {
         therapistInfo.education &&
         therapistInfo.education.map((tag, index) => (
           <p style={{ marginBottom: "3%" }} key={index}>
-            -{tag}
+            - {tag}
           </p>
         ))}
     </div>

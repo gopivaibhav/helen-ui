@@ -12,53 +12,63 @@ const VirtualSession = ({ therapistInfo }) => {
   const { loginWithRedirect } = useAuth0();
 
   useEffect(() => {
-    const isSlotAheadOfCurrentTime = (slot) => {
-      const currentTimeIST = new Date().toLocaleString("en-US", {
-        timeZone: "Asia/Kolkata",
-      });
-      const currentDateIST = new Date(currentTimeIST);
-      const slotDateTime = new Date(`${slot.slotDate} ${slot.startTime}`);
-      return slotDateTime > currentDateIST;
-    };
-
-    const filteredSlots = therapistInfo.slots.filter((slot) =>
-      isSlotAheadOfCurrentTime(slot)
-    );
-
-    const next7Days = Array.from({ length: 7 }, (_, index) => {
-      const nextDay = new Date();
-      nextDay.setDate(nextDay.getDate() + index);
-      return nextDay.toISOString().split("T")[0];
-    });
-
-    const groupedSlots = Object.fromEntries(
-      next7Days.map((date) => [
-        date,
-        {
-          date,
-          day: new Date(date).toLocaleDateString("en-US", { weekday: "long" }), // Full day name
-          slots: [],
-        },
-      ])
-    );
-
-    filteredSlots.forEach((slot) => {
-      const slotDate = new Date(slot.slotDate);
-      const key = slotDate.toISOString().split("T")[0];
-
-      if (groupedSlots[key]) {
-        groupedSlots[key].slots.push({
-          startTime: slot.startTime,
-          isAvailable: slot.isAvailable,
+    if (therapistInfo.slots !== undefined) {
+      const isSlotAheadOfCurrentTime = (slot) => {
+        const currentTimeIST = new Date().toLocaleString("en-US", {
+          timeZone: "Asia/Kolkata",
         });
-      }
-    });
-    setSlots(() => groupedSlots);
+        const currentDateIST = new Date(currentTimeIST);
+        const slotDateTime = new Date(`${slot.slotDate} ${slot.startTime}`);
+        return slotDateTime > currentDateIST;
+      };
+      const filteredSlots = therapistInfo.slots.filter((slot) =>
+        isSlotAheadOfCurrentTime(slot)
+      );
+
+      const next7Days = Array.from({ length: 7 }, (_, index) => {
+        const nextDay = new Date();
+        nextDay.setDate(nextDay.getDate() + index);
+        return nextDay.toISOString().split("T")[0];
+      });
+
+      const groupedSlots = Object.fromEntries(
+        next7Days.map((date) => [
+          date,
+          {
+            date,
+            day: new Date(date).toLocaleDateString("en-US", {
+              weekday: "long",
+            }), // Full day name
+            slots: [],
+          },
+        ])
+      );
+
+      filteredSlots.forEach((slot) => {
+        const slotDate = new Date(slot.slotDate);
+        const key = slotDate.toISOString().split("T")[0];
+
+        if (groupedSlots[key]) {
+          groupedSlots[key].slots.push({
+            startTime: slot.startTime,
+            isAvailable: slot.isAvailable,
+          });
+        }
+      });
+      setSlots(() => groupedSlots);
+    }
   }, [therapistInfo]);
 
   const AddTimings = () => {
     return (
-      <div className="timings" style={{ marginBottom: "30px", display: "flex", justifyContent: "center" }}>
+      <div
+        className="timings"
+        style={{
+          marginBottom: "30px",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
         {slots[selectedDate]?.slots.length > 0 ? (
           slots[selectedDate].slots.map((slot) => (
             <TimingButton
@@ -69,7 +79,7 @@ const VirtualSession = ({ therapistInfo }) => {
             />
           ))
         ) : (
-            <button
+          <button
             style={{
               width: "42%",
               padding: "14px",
@@ -86,27 +96,30 @@ const VirtualSession = ({ therapistInfo }) => {
       </div>
     );
   };
-  const submitHandler = async() => {
+  const submitHandler = async () => {
     // console.log(JSON.parse(sessionStorage.getItem("userData")).email)
-    if(sessionStorage.getItem("userData") === null){
-        loginWithRedirect()
-    }else{
-        console.log("Selected Date: ", selectedDate);
-        console.log("Selected Time: ", selectedTime);
-        const filteredSlot = therapistInfo.slots.filter(i => i.slotDate === selectedDate && i.startTime === selectedTime);
-        console.log("Filtered Slot: ", filteredSlot);
-        const slotId = filteredSlot[0].slotId;
-        const bodyObj = {
-            slot_id: slotId,
-            therapistId: therapistInfo.therapistId,
-            userId: JSON.parse(sessionStorage.getItem("userData")).email,
-        }
-        const response = await axios.post("https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/marketplace/post/updateallslot",
-            bodyObj
-        );
-        console.log(response.data);
+    if (sessionStorage.getItem("userData") === null) {
+      loginWithRedirect();
+    } else {
+      console.log("Selected Date: ", selectedDate);
+      console.log("Selected Time: ", selectedTime);
+      const filteredSlot = therapistInfo.slots.filter(
+        (i) => i.slotDate === selectedDate && i.startTime === selectedTime
+      );
+      console.log("Filtered Slot: ", filteredSlot);
+      const slotId = filteredSlot[0].slotId;
+      const bodyObj = {
+        slot_id: slotId,
+        therapistId: therapistInfo.therapistId,
+        userId: JSON.parse(sessionStorage.getItem("userData")).email,
+      };
+      const response = await axios.post(
+        "https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/marketplace/post/updateallslot",
+        bodyObj
+      );
+      console.log(response.data);
     }
-  }
+  };
   return (
     <>
       <div
