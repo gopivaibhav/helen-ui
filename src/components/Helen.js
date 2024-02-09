@@ -12,6 +12,7 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import { useWebSocket } from "../WebSocketProvider";
+import DisclaimerPopup from "./DisclaimerPopup";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 // import MistralClient from '@mistralai/mistralai';
@@ -42,6 +43,7 @@ const Helen = ({ setProgress, showRatingModal }) => {
   const currentBlobIndex = useRef(0);
   const [toolTipOpen, setToolTipOpen] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
+  const [showDisclaimer, setDisclaimer] = useState(true);
 
   useEffect(() => {
     const handleContextMenu = (e) => {
@@ -230,6 +232,20 @@ const Helen = ({ setProgress, showRatingModal }) => {
   }, [finalBlobs, isPlaying]);
 
   useEffect(() => {
+    if (showDisclaimer === false) {
+      socket.send(
+        JSON.stringify({
+          need: "openai",
+          query: "",
+          chat: chat,
+          email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+        })
+      );
+      console.log("sent req to openai");
+    }
+  }, [showDisclaimer]);
+
+  useEffect(() => {
     const handleClose = () => {
       console.log("WebSocket connection ended");
     };
@@ -335,6 +351,13 @@ const Helen = ({ setProgress, showRatingModal }) => {
   // if(loader)return <></>;
   return (
     <>
+      {showDisclaimer && (
+        <DisclaimerPopup
+          message="Welcome to the session. Select agree to continue."
+          setDisclaimer={setDisclaimer}
+          showDisclaimer={showDisclaimer}
+        />
+      )}
       {!showRatingModal && <RippleEffect isPlaying={isPlaying} />}
       <div
         style={{
@@ -367,10 +390,15 @@ const Helen = ({ setProgress, showRatingModal }) => {
             <span id="captiontext">{caption}</span>
           </div>
         )}
-        <audio ref={audioRef} onEnded={handleAudioEnded} onLoadedData={handleLoaded} playsInline>
+        <audio
+          ref={audioRef}
+          onEnded={handleAudioEnded}
+          onLoadedData={handleLoaded}
+          playsInline
+        >
           Your browser does not support the audio element.
         </audio>
-      {/* {audioRef.current !== null && 
+        {/* {audioRef.current !== null && 
         <button onClick={() =>{
           audioRef.current
           .play()
@@ -383,19 +411,6 @@ const Helen = ({ setProgress, showRatingModal }) => {
           Play audio
         </button>
     } */}
-      <button onClick={() =>{
-        socket.send(
-          JSON.stringify({
-            need: "openai",
-            query: "",
-            chat: chat,
-            email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-          })
-          )
-          console.log('sent req to openai')
-        }
-      }
-      >DISCLAIMER POPUP- USER interaction</button>
       </div>
       {!showRatingModal && (
         <div
@@ -449,8 +464,8 @@ const Helen = ({ setProgress, showRatingModal }) => {
                 justifyContent: "center",
                 alignItems: "center",
                 top: "-48px",
-                transition: 'all 0.1s ease-in',
-                transform: isPressed ? 'scale(1.4)' : 'scale(1)',
+                transition: "all 0.1s ease-in",
+                transform: isPressed ? "scale(1.4)" : "scale(1)",
               }}
             >
               <div
