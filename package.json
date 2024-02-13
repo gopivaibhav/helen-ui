@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@auth0/auth0-react": "^2.2.3",
+    "@deepgram/sdk": "^3.1.9",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@mistralai/mistralai": "^0.0.10",
@@ -14,11 +15,12 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@uidotdev/usehooks": "^2.4.1",
     "axios": "^1.6.2",
     "framer-motion": "^6.5.1",
     "mixpanel-browser": "^2.48.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-router-dom": "^6.19.0",
     "react-scripts": "5.0.1",
     "react-speech-recognition": "^3.10.0",
@@ -51,7 +53,8 @@
     ]
   },
   "devDependencies": {
-    "@types/react": "^18.2.46",
-    "@types/react-dom": "^18.2.18"
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
+    "typescript": "^5.3.3"
   }
 }

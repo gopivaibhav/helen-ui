@@ -7,6 +7,7 @@ import { RingLoader } from "react-spinners";
 import NewLoader from "./NewLoader";
 import SessionRating from "./SessionRating";
 import CompanianAi from "../components/CompanionAi";
+import Microphone from "./microphone";
 
 const NewLayout = () => {
   const [isActive, setIsActive] = useState(false);
@@ -28,10 +29,13 @@ const NewLayout = () => {
             // showRatingModal={showRatingModal}
             // setshowRatingModal={setshowRatingModal}
           />
-          <Helen
+          {/* <Helen
             setProgress={setProgress}
             // showRatingModal={showRatingModal}
             // setshowRatingModal={setshowRatingModal}
+          /> */}
+          <Microphone 
+            setProgress={setProgress}
           />
         </div>
       )}
