@@ -20,7 +20,7 @@ const NewSession = ({ userId, userData }) => {
     // console.log("user form ", userId);
     if (userId === "") {
       setShowModal(true);
-      // loginWithRedirect();
+      loginWithRedirect();
     } else {
       const response = await axios.post(
         `https://ixa4owdo1d.execute-api.ap-south-1.amazonaws.com/session/`,
