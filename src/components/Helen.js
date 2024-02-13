@@ -43,7 +43,7 @@ const Helen = ({ setProgress, showRatingModal }) => {
   const currentBlobIndex = useRef(0);
   const [toolTipOpen, setToolTipOpen] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
-  const [showDisclaimer, setDisclaimer] = useState(true);
+  // const [showDisclaimer, setDisclaimer] = useState(true);
 
   useEffect(() => {
     const handleContextMenu = (e) => {
@@ -80,10 +80,10 @@ const Helen = ({ setProgress, showRatingModal }) => {
       });
     }else{
       setTimeout(() => {
-        SpeechRecognition.abortListening({
+        SpeechRecognition.stopListening({
             language: "en-UK",
           });
-        }, 200);
+        }, 300);
       }
   }, [isPressed])
 
@@ -231,19 +231,19 @@ const Helen = ({ setProgress, showRatingModal }) => {
     }
   }, [finalBlobs, isPlaying]);
 
-  useEffect(() => {
-    if (showDisclaimer === false) {
-      socket.send(
-        JSON.stringify({
-          need: "openai",
-          query: "",
-          chat: chat,
-          email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-        })
-      );
-      console.log("sent req to openai");
-    }
-  }, [showDisclaimer]);
+  // useEffect(() => {
+  //   if (showDisclaimer === false) {
+  //     socket.send(
+  //       JSON.stringify({
+  //         need: "openai",
+  //         query: "",
+  //         chat: chat,
+  //         email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+  //       })
+  //     );
+  //     console.log("sent req to openai");
+  //   }
+  // }, [showDisclaimer]);
 
   useEffect(() => {
     const handleClose = () => {
@@ -251,16 +251,16 @@ const Helen = ({ setProgress, showRatingModal }) => {
     };
     if (socket) {
       const sendMsg = () => {
-        // socket.send(
-        //   JSON.stringify({
-        //     need: "openai",
-        //     query: "",
-        //     chat: chat,
-        //     email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-        //   })
-        // );
         if(socket.readyState === 1){
-          console.log('opened')
+          socket.send(
+            JSON.stringify({
+              need: "openai",
+              query: "",
+              chat: chat,
+              email: JSON.parse(sessionStorage.getItem("userDetail")).email,
+            })
+          );
+          console.log("sent req to openai");
         }else{
           console.log('not opened')
           setTimeout(() => {
@@ -351,13 +351,13 @@ const Helen = ({ setProgress, showRatingModal }) => {
   // if(loader)return <></>;
   return (
     <>
-      {showDisclaimer && (
+      {/* {showDisclaimer && (
         <DisclaimerPopup
           message="Welcome to the session. Select agree to continue."
           setDisclaimer={setDisclaimer}
           showDisclaimer={showDisclaimer}
         />
-      )}
+      )} */}
       {!showRatingModal && <RippleEffect isPlaying={isPlaying} />}
       <div
         style={{
