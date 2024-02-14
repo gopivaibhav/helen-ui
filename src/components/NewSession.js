@@ -51,9 +51,11 @@ const NewSession = ({ userId, userData }) => {
       sessionStorage.setItem("progress", 0);
       const y = prompt("A) General B) Streaming bug- Just enter A or B");
       console.log(y)
-      if(y === "A" || y === "a")
+      if(y == "A" || y == "a"){
         navigate("/helen-therapy", { state: { sessionId } });
-      navigate("/newhelen", { state: { sessionId } });
+      }else{
+        navigate("/newhelen", { state: { sessionId } });
+      }
     }
   }, [sessionId, navigate]);
 
