@@ -342,7 +342,7 @@ const Microphone = ({ setProgress }: MicrophoneProps) => {
         interim_results: false,
         smart_format: true,
         // vad_events: true,
-        endpointing: 6000
+        endpointing: 500
       });
 
       connection.on(LiveTranscriptionEvents.Open, () => {
