@@ -51,7 +51,7 @@ const Microphone = ({ setProgress }: MicrophoneProps) => {
   const [microphone, setMicrophone] = useState<MediaRecorder | null>();
   const [userMedia, setUserMedia] = useState<MediaStream | null>();
   const [caption, setCaption] = useState<string | null>();
-  const [lastSpoken, setLastSpoken] = useState(Date.now())
+  const [connectDeepgram, setConnectDeepgram] = useState<boolean>(false)
 
   // Helen JS code
   const socket = useWebSocket();
@@ -164,6 +164,7 @@ const Microphone = ({ setProgress }: MicrophoneProps) => {
         console.log("Final Caption-", finalCaption)
           if (chat.length == 0) {
             setToolTipOpen(true);
+            setConnectDeepgram(true);
           }
           setChat((prev) => [
             ...prev,
@@ -236,6 +237,7 @@ const Microphone = ({ setProgress }: MicrophoneProps) => {
             console.log(res.AI)
             if(res.AI !== "ALL DONE"){
               const { text, blob } = await apiCallForAudio(res.AI);
+              // if(chat.length == 0)setConnectDeepgram(true)
               setFinalBlobs((prev) => [...prev, {blob: blob, counter: res.counter, text: text}]);
             }else{
               setFinalBlobs((prev) => [...prev, {blob: "", counter: res.counter, text: res.AI}]);
@@ -301,7 +303,9 @@ const Microphone = ({ setProgress }: MicrophoneProps) => {
       setMicrophone(null);
 
       microphone.stop();
+      setToolTipOpen(true)
     } else {
+      setToolTipOpen(false)
       const userMedia = await navigator.mediaDevices.getUserMedia({
         audio: true,
       });
@@ -329,60 +333,58 @@ const Microphone = ({ setProgress }: MicrophoneProps) => {
   }, [add, microphone, userMedia]);
 
   useEffect(() => {
-    if (process.env.REACT_APP_DEEPGRAM_API_KEY && socket.readyState === 1) {
+    if (process.env.REACT_APP_DEEPGRAM_API_KEY && connectDeepgram) {
       console.log("connecting to deepgram");
       const deepgram = createClient(process.env.REACT_APP_DEEPGRAM_API_KEY);
       console.log(deepgram, '80')
-      setTimeout(() => {
-        const connection = deepgram.listen.live({
-          model: "nova",
-          interim_results: false,
-          smart_format: true,
-          // vad_events: true,
-          endpointing: 10000
-        });
+      const connection = deepgram.listen.live({
+        model: "nova",
+        interim_results: false,
+        smart_format: true,
+        // vad_events: true,
+        endpointing: 6000
+      });
 
-        connection.on(LiveTranscriptionEvents.Open, () => {
-          console.log("connection established");
-          setListening(true);
-        });
+      connection.on(LiveTranscriptionEvents.Open, () => {
+        console.log("connection established");
+        setListening(true);
+      });
 
-        connection.on(LiveTranscriptionEvents.Close, () => {
-          console.log("connection closed");
-          setListening(false);
-          setConnection(null);
-        });
-        
-        // connection.on(LiveTranscriptionEvents.SpeechStarted, (data) => {
-        //   console.log("voice started", data);
-        // });
+      connection.on(LiveTranscriptionEvents.Close, () => {
+        console.log("connection closed");
+        setListening(false);
+        setConnection(null);
+      });
+      
+      // connection.on(LiveTranscriptionEvents.SpeechStarted, (data) => {
+      //   console.log("voice started", data);
+      // });
 
-        connection.on(LiveTranscriptionEvents.Transcript, (data) => {
-          console.log(data)
-          const words = data.channel.alternatives[0].words;
-          const transcript = words
-            .map((word: any) => word.punctuated_word ?? word.word)
-            .join(" ");
-          if (transcript !== "") {
-            if(caption === undefined){
-              console.log(transcript, 'in if')
-              setCaption(transcript);
-            }else{
-              console.log(transcript, 'in else')
-              setCaption((prev) => prev + " " + transcript);
-            }
-            handleRequest(transcript);
-            // setLastSpoken(Date.now());
-            // setTimeout(() => {
-            //   checkSpoken()
-            // }, 3000)
+      connection.on(LiveTranscriptionEvents.Transcript, (data) => {
+        console.log(data)
+        const words = data.channel.alternatives[0].words;
+        const transcript = words
+          .map((word: any) => word.punctuated_word ?? word.word)
+          .join(" ");
+        if (transcript !== "") {
+          if(caption === undefined){
+            console.log(transcript, 'in if')
+            setCaption(transcript);
+          }else{
+            console.log(transcript, 'in else')
+            setCaption((prev) => prev + " " + transcript);
           }
-        });
+          handleRequest(transcript);
+          // setLastSpoken(Date.now());
+          // setTimeout(() => {
+          //   checkSpoken()
+          // }, 3000)
+        }
+      });
 
-        setConnection(connection);
-      }, 5000)
+      setConnection(connection);
     }
-  }, []);
+  }, [connectDeepgram]);
 
   // const checkSpoken = () => {
   //   console.log("Checking time", Date.now() - lastSpoken);
@@ -454,17 +456,11 @@ const Microphone = ({ setProgress }: MicrophoneProps) => {
         >
           Your browser does not support the audio element.
         </audio>
-        {!!userMedia && !!microphone && micOpen ? (
+        {/* {!!userMedia && !!microphone && micOpen ? (
           <p>Speak to transcribe</p>
         ) : (
           <p>Click mic to Start the call</p>
-        )}
-        <p>
-          {isListening
-            ? "Helen connection open!"
-            : "Helen is connecting..."
-          }
-        </p>
+        )} */}
       </div>
       {!false && (
         <div
@@ -488,7 +484,7 @@ const Microphone = ({ setProgress }: MicrophoneProps) => {
             open={toolTipOpen}
             sx={{ width: "1000 rem", color: "green" }}
             placement="top"
-            title="Press and Hold to Speak Something"
+            title="Click on mic to listen your voice"
           >
             <button
               disabled={isButtonDisabled}
