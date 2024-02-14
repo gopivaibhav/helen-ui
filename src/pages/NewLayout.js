@@ -29,14 +29,19 @@ const NewLayout = () => {
             // showRatingModal={showRatingModal}
             // setshowRatingModal={setshowRatingModal}
           />
-          {/* <Helen
-            setProgress={setProgress}
-            // showRatingModal={showRatingModal}
-            // setshowRatingModal={setshowRatingModal}
-          /> */}
-          <Microphone 
-            setProgress={setProgress}
-          />
+          {
+            location.pathname === "/helen-therapy" ? (
+              <Helen
+                setProgress={setProgress}
+                // showRatingModal={showRatingModal}
+                // setshowRatingModal={setshowRatingModal}
+              />
+            ): (
+              <Microphone 
+                setProgress={setProgress}
+              />
+            )
+          }
         </div>
       )}
       {/* <SessionRating /> */}

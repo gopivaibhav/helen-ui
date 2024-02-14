@@ -29,6 +29,7 @@ function App() {
         <Route path="/rating" element={<SessionRating />} />
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/marketplace/:id" element={<TherapistPageLayout />} />
+        <Route path="/newhelen" element={<SocketHelen />} />
       </Routes>
     </Router>
   );

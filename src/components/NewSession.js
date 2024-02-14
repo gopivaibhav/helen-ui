@@ -49,7 +49,11 @@ const NewSession = ({ userId, userData }) => {
       mixPanelTracking(`newSessionCreated > ${sessionId}`);
       sessionStorage.setItem("ongoingSession", sessionId);
       sessionStorage.setItem("progress", 0);
-      navigate("/helen-therapy", { state: { sessionId } });
+      const y = prompt("A) General B) Streaming bug- Just enter A or B");
+      console.log(y)
+      if(y === "A" || y === "a")
+        navigate("/helen-therapy", { state: { sessionId } });
+      navigate("/newhelen", { state: { sessionId } });
     }
   }, [sessionId, navigate]);
 
