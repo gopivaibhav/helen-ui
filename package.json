@@ -25,7 +25,9 @@
     "react-scripts": "5.0.1",
     "react-speech-recognition": "^3.10.0",
     "react-spinners": "^0.13.8",
+    "retell-client-js-sdk": "^1.2.7",
     "simple-peer": "^9.11.1",
+    "stream": "^0.0.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

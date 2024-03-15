@@ -54,7 +54,7 @@ const NewSession = ({ userId, userData }) => {
       if(y == "A" || y == "a"){
         navigate("/helen-therapy", { state: { sessionId } });
       }else{
-        navigate("/newhelen", { state: { sessionId } });
+        navigate("/premium", { state: { sessionId } });
       }
     }
   }, [sessionId, navigate]);

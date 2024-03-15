@@ -14,6 +14,7 @@ import { mixPanelTracking } from "./utils/mixPanel";
 import SocketCompanion from "./components/SocketCompanion";
 import Marketplace from "./pages/Marketplace";
 import TherapistPageLayout from "./pages/TherapistPageLayout";
+import PremiumCall from "./pages/PremiumCall";
 function App() {
   useEffect(() => {
     mixPanelTracking("page_view");
@@ -30,6 +31,7 @@ function App() {
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/marketplace/:id" element={<TherapistPageLayout />} />
         <Route path="/newhelen" element={<SocketHelen />} />
+        <Route path="/premium" element={<PremiumCall />} />
       </Routes>
     </Router>
   );
