@@ -137,7 +137,7 @@ const CallInterface = () => {
     try {
       // Replace with your server url
       const response = await axios.post(
-        "http://localhost:8000/register-call-on-your-server",
+        `${process.env.REACT_APP_PORT}/register-call-on-your-server`,
         {
           agent_id: agentId,
           email: JSON.parse(sessionStorage.getItem("userDetail")).email
