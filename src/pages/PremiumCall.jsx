@@ -1,7 +1,18 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { RetellWebClient } from "retell-client-js-sdk";
 import axios from "axios";
+
+import "../styles/Menu.css";
+import "../styles/Mic.css";
+import RippleEffect from "../components/RippleEffect";
+import Fade from "@mui/material/Fade";
+import { withStyles } from "@mui/styles";
+import Tooltip from "@mui/material/Tooltip";
+// import { useNavigate } from "react-router-dom";
+import MicIcon from "@mui/icons-material/Mic";
+import MicOffIcon from "@mui/icons-material/MicOff";
+import CallEndIcon from '@mui/icons-material/CallEnd';
 // import { useWebSocket } from "../WebSocketProvider";
 
 const agentId = process.env.REACT_APP_RETELL_AGENT;
@@ -11,6 +22,7 @@ const CallInterface = () => {
   // const socket = useWebSocket();
   const [isCalling, setIsCalling] = useState(false);
   const [caption, setCaption] = useState("");
+  const [tooltipOpen, setTooltipOpen] = useState(false);
   // const [isAI, setisAI] = useState(true)
 
   // Initialize the SDK
@@ -64,75 +76,9 @@ const CallInterface = () => {
       }
     }
   };
-
-  // useEffect(() => {
-  //   const handleClose = () => {
-  //     console.log("WebSocket connection ended");
-  //   };
-  //   if (socket) {
-  //     const sendMsg = () => {
-  //       if(socket.readyState === 1){
-  //         // socket.send(
-  //         //   JSON.stringify({
-  //         //     need: "openai",
-  //         //     query: "",
-  //         //     chat: chat,
-  //         //     email: JSON.parse(sessionStorage.getItem("userDetail")).email,
-  //         //   })
-  //         // );
-  //         console.log("sent req to openai");
-  //       }else{
-  //         console.log('not opened')
-  //         setTimeout(() => {
-  //           sendMsg();
-  //         }, 1000);
-  //       }
-  //       console.log(new Date().toLocaleTimeString(), 'sending req')
-  //     }
-  //     if(socket.readyState === 1){
-  //       sendMsg();
-  //     }else{
-  //       console.log('not opened initially', socket)
-  //       sendMsg();
-  //       // socket.addEventListener("open", sendMsg);
-  //     }
-  //     socket.addEventListener("message", async(event) => {
-  //       const message = event.data;
-  //       console.log("message", message);
-  //       // if (typeof message === "string") {
-  //       //   const res = JSON.parse(message);
-  //       //   if (res.AI) {
-  //       //     console.log(res.AI)
-  //       //     if(res.AI !== "ALL DONE"){
-  //       //       const { text, blob } = await apiCallForAudio(res.AI);
-  //       //       setFinalBlobs((prev) => [...prev, {blob: blob, counter: res.counter, text: text}]);
-  //       //     }else{
-  //       //       setFinalBlobs((prev) => [...prev, {blob: "", counter: res.counter, text: res.AI}]);
-  //       //     }
-  //       //   } else {
-  //       //     console.log("Other logs-", res);
-  //       //     if (res.percentage) setProgress(res.percentage);
-  //       //     if(res.updated_state){
-  //       //       console.log("updated state-", res.updated_state);
-  //       //       setUpdatedState(res.updated_state);
-  //       //     }
-  //       //   }
-  //       // }else{
-  //       //   console.log("Other message", typeof(message));
-  //       // }
-  //     });
-  //     socket.addEventListener("close", handleClose);
-  //   }
-
-  //   return () => {
-  //     if (socket) {
-  //       socket.removeEventListener("close", handleClose);
-  //     }
-  //   };
-  // }, [socket]);
-  useEffect(()=>{
-    console.log(caption)
-  }, [caption])
+  useEffect(() => {
+    console.log(caption);
+  }, [caption]);
   async function registerCall(agentId) {
     try {
       // Replace with your server url
@@ -140,7 +86,7 @@ const CallInterface = () => {
         `${process.env.REACT_APP_PORT}/register-call-on-your-server`,
         {
           agent_id: agentId,
-          email: JSON.parse(sessionStorage.getItem("userDetail")).email
+          email: JSON.parse(sessionStorage.getItem("userDetail")).email,
         },
         {
           headers: {
@@ -165,31 +111,174 @@ const CallInterface = () => {
     toggleConversation();
     if (mute === "Unmute") {
       setMute("Mute");
+      setTooltipOpen(true);
+      setTimeout(() => {
+        setTooltipOpen(false);
+      }, 1500);
       // setImgsrc("/icons/MicroPhone.svg");
     } else {
       setMute("Unmute");
       // setImgsrc("/icons/MicroPhoneMuted.svg");
     }
   };
+
+  const CustomToolTip = withStyles({
+    tooltip: {
+      width: "1000px",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      fontSize: "1rem",
+      textAlign: "center",
+      color: "F2F1EB",
+      backgroundColor: "#707070",
+    },
+  })(Tooltip);
+  console.log(mute)
   return (
-    <div>
-      {/* <Footer mute={mute} setMute={setMute} toggleConversation={toggleConversation} webClient={webClient} /> */}
-      <div style={{ display: "flex" }}>
-        <button onClick={handleButtonClick}>
-          <span style={{ width: "62px", color: "black" }}>{mute}</span>
-        </button>
+    <>
+      <RippleEffect isPlaying={false} />
+      {/* {!showRatingModal && <RippleEffect isPlaying={isPlaying} />} */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "10vh",
+        }}
+      >
+        {/* {isPressed && (
+          <span className="fade-in-text" style={{ fontSize: "24px" }}>
+            Listening...
+          </span>
+        )} */}
+      </div>
+      <div
+        style={{
+          width: "100%",
+          height: "25vh",
+          textAlign: "center",
+          color: "black",
+          fontSize: 18,
+          fontFamily: "'Nunito Sans', sans-serif ",
+          fontWeight: "400",
+          wordWrap: "break-word",
+        }}
+      >
+        {caption !== "" && (
+          <div id="caption-container">
+            <span id="captiontext">{caption}</span>
+          </div>
+        )}
+      </div>
+      <div
+        style={{
+          width: "100%",
+          height: "100px",
+          background: "rgba(117, 139, 255, 1)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          padding: 0,
+          margin: 0,
+        }}
+      >
+        <CustomToolTip
+          TransitionComponent={Fade}
+          TransitionProps={{ timeout: 0 }}
+          open={tooltipOpen}
+          sx={{ width: "1000 rem", color: "green" }}
+          placement="top"
+          title="Click to End the Call"
+        >
+          <button
+            id="micButton"
+            onClick={handleButtonClick}
+            style={{
+              width: "100px",
+              height: "100px",
+              background: "white",
+              borderRadius: "50%",
+              borderColor: "white",
+              textAlign: "center",
+              color: "rgba(117, 139, 255, 1)",
+              fontSize: 40,
+              border: "none",
+              fontFamily: "'Nunito Sans', sans-serif ",
+              fontWeight: "700",
+              wordWrap: "break-word",
+              position: "absolute",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              top: "-48px",
+            }}
+          >
+            <div
+              style={{
+                width: "92px",
+                height: "92px",
+                background: "rgba(117, 139, 255, 1)",
+                borderRadius: "50%",
+                textAlign: "center",
+                color: "white",
+                borderColor: "white",
+                fontSize: 12,
+                fontFamily: "'Nunito Sans', sans-serif ",
+                fontWeight: "700",
+                wordWrap: "break-word",
+                border: "none",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {mute === "Unmute" ? (
+                <MicOffIcon
+                  id="MicImage"
+                  sx={{ width: "45px", height: "45px" }}
+                />
+              ) : (
+                <CallEndIcon id="EndCall" sx={{ width: "45px", height: "45px" }} />
+              )}
+            </div>
+          </button>
+        </CustomToolTip>
         <button
           onClick={() => {
             webClient.stopConversation();
             // history.push("/usc");
           }}
         >
-          Leave
+          Leave Call
         </button>
       </div>
-      <div>{caption}</div>
-    </div>
+    </>
   );
+
+  // OLD CODE FOR CALL INTERFACE
+  // return (
+  //   <div>
+  //     {/* <Footer mute={mute} setMute={setMute} toggleConversation={toggleConversation} webClient={webClient} /> */}
+  //     <div style={{ display: "flex" }}>
+  //       <button onClick={handleButtonClick}>
+  //         <span style={{ width: "62px", color: "black" }}>{mute}</span>
+  //       </button>
+  //       <button
+  //         onClick={() => {
+  //           webClient.stopConversation();
+  //           // history.push("/usc");
+  //         }}
+  //       >
+  //         Leave
+  //       </button>
+  //     </div>
+  //     <div>{caption}</div>
+  //   </div>
+  // );
 };
 
 export default CallInterface;
